@@ -1,18 +1,19 @@
 // required modules
-const path = require('path');
-const http = require('http');
-const express = require('express');
+import * as path from 'path';
+import * as http from 'http';
+import express, { Express, NextFunction, Request, Response, ErrorRequestHandler } from 'express';
 const cors = require('cors');
-require('dotenv').config();
+import * as dotenv from 'dotenv'
+dotenv.config();
 // import router
 const apiRouter = require('./routes/api');
 // db connection
 const db = require('./models/whereaboutsModel');
 // define server port
-const PORT = process.env.PORT || 3500;
+const PORT = 3500;
 
 // create express server instance
-const app = express();
+const app: Express = express();
 
 // enable cors on all incoming requests
 app.use(cors()); // allows communication between different domains
@@ -22,14 +23,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // handle requests for static files
-app.use(express.static(path.resolve(__dirname, '../client')));
+// app.use(express.static(path.resolve(__dirname, '../client')));
 
 // define route handler
 app.use('/api', apiRouter);
 
 /* START Implement SSE server-side to regularly stream trips data back to FE */
-const dbQuery = async (phoneNumber) => {
-	// const { rows } = await db.query(`SELECT * FROM users WHERE phone_number = '${phoneNumber}'`);
+const dbQuery = async (phoneNumber:string) => {
 	const { rows } = await db.query(`
     SELECT t.start_timestamp, t.start_lat, t.start_lng, t.sos_timestamp, t.sos_lat, t.sos_lng, t.end_timestamp,j.trips_id, jt.user_phone_number AS traveler_phone_number, u.name AS traveler_name
     FROM trips t
