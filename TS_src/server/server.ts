@@ -1,9 +1,10 @@
 // required modules
-import * as path from 'path';
 import * as http from 'http';
 import express, { Express, NextFunction, Request, Response, ErrorRequestHandler } from 'express';
-const cors = require('cors');
-import * as dotenv from 'dotenv'
+import cors from 'cors';
+// initialize Server instance of socket.io by passing it HTTP server obj on which to mount the socket server
+import { Server } from 'socket.io';
+import * as dotenv from 'dotenv';
 dotenv.config();
 // import router
 const apiRouter = require('./routes/api');
@@ -15,12 +16,13 @@ const PORT = 3500;
 // create express server instance
 const app: Express = express();
 
-// enable cors on all incoming requests
-app.use(cors()); // allows communication between different domains
 
 // handle parsing request body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// enable cors on all incoming requests
+app.use(cors()); // allows communication between different domains
 
 // handle requests for static files
 // app.use(express.static(path.resolve(__dirname, '../client')));
@@ -56,7 +58,7 @@ const dbQuery = async (phoneNumber:string) => {
 	return rows;
 };
 
-app.get('/stream/:phone_number', (req, res) => {
+app.get('/stream/:phone_number', (req: Request, res: Response) => {
 	const phoneNumber = req.params.phone_number;
 	if (req.headers.accept === 'text/event-stream') {
 		// console.log('accept/content type is event-stream');
@@ -80,7 +82,7 @@ app.get('/stream/:phone_number', (req, res) => {
 app.use((req, res) => res.status(404).send("This is not the page you're looking for..."));
 
 // global error handler
-app.use((err, req, res, next) => {
+app.use((err: ErrorRequestHandler, req: Request, res: Response, next: NextFunction) => {
 	const defaultErr = {
 		log: 'Express error handler caught unknown middleware error.',
 		status: 500,
@@ -98,8 +100,6 @@ app.use((err, req, res, next) => {
 const httpServer = http.createServer(app);
 // const httpServer = require('http').Server(app); // app is a handler function supplied to HTTP server
 
-// initialize new Server instance of socket.io by passing it HTTP server obj on which to mount the socket server
-const { Server } = require('socket.io');
 const io = new Server(httpServer, {
 	// pingTimeout: 30000, // https://socket.io/docs/v4/troubleshooting-connection-issues/#the-browser-tab-was-minimized-and-heartbeat-has-failed
 	cors: {
