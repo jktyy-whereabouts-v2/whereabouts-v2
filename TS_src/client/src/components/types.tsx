@@ -4,7 +4,7 @@ export interface User {
   password: string;
 }
 
-export interface Props {
+export interface UserProps {
   userInfo: User;
   setUserInfo: React.Dispatch<React.SetStateAction<User>>;
 }

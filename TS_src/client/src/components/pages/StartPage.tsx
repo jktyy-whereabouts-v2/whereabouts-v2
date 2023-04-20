@@ -1,7 +1,7 @@
 import React from "react";
 import Login from "./Login";
 import { Link } from "react-router-dom";
-import { User, Props } from "../types";
+import { User, UserProps } from "../types";
 // interface userInfoType {
 //   name: string;
 //   phone_number: string;
@@ -20,7 +20,7 @@ import { User, Props } from "../types";
 //   return <div>StartPage</div>;
 // };
 
-function StartPage({ userInfo, setUserInfo }: Props) {
+function StartPage({ userInfo, setUserInfo }: UserProps) {
   return (
     <>
       <div className="startpage-cont">

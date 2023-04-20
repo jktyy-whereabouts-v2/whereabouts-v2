@@ -7,6 +7,7 @@ import Registration from "./components/pages/Registration";
 import Dashboard from "./components/pages/Dashboard";
 import ChatPage from "./components/ChatPage";
 import { User } from "./components/types";
+import socket from "./main";
 
 function App() {
   const [userInfo, setUserInfo] = useState<User>({
@@ -42,7 +43,17 @@ function App() {
               <Dashboard userInfo={userInfo} setUserInfo={setUserInfo} />
             }
           />
-          <Route path="/chat" element={<ChatPage userInfo={userInfo} />} />
+          <Route
+            path="/chat"
+            element={
+              <ChatPage
+                userInfo={userInfo}
+                setUserInfo={setUserInfo}
+                path="/chat"
+                socket={socket}
+              />
+            }
+          />
         </Routes>
       </Router>
     </>

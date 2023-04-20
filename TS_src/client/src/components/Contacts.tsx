@@ -1,14 +1,14 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import axios from "axios";
-import ContactsList from "./ContactsList";
-import { Routes, Route } from "react-router-dom";
-import MyTripCard from "./MyTripCard";
+import ContactsList from "./ContactList";
+// import { Routes, Route } from "react-router-dom";
+// import MyTripCard from "./MyTripCard";
 import { User } from "./types";
 
 interface Props {
   userInfo: User;
-  contacts: Array<User>;
-  setContacts: Dispatch<SetStateAction<Array<User>>>;
+  contacts: Array<any>;
+  setContacts: Dispatch<SetStateAction<Array<any>>>;
   setActiveComponent: Dispatch<SetStateAction<string>>;
 }
 
@@ -19,7 +19,7 @@ function Contacts({
   setActiveComponent,
 }: Props) {
   // hook to manage contacts checked from list
-  const [checkedContacts, setCheckedContacts] = useState<Array<User>>([]);
+  const [checkedContacts, setCheckedContacts] = useState<any>([]);
   // hook to redirect to MyTripStart
   // const [redirect, setRedirect] = useState(false);
 

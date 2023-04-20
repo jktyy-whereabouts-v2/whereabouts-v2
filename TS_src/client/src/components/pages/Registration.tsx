@@ -49,7 +49,7 @@ function Registration({ userInfo, setUserInfo }: UserProps) {
     */
   const handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
-    console.log("submitting user data");
+    // console.log("submitting user data");
     if (!passMatch) {
       setSubStatus((prevState) => {
         return {
@@ -78,7 +78,7 @@ function Registration({ userInfo, setUserInfo }: UserProps) {
       } else {
         throw new Error();
       }
-    } catch (err) {
+    } catch (err: any) {
       // render user alert that submission failed
       console.log("this is the error =>", err.response.data.error);
       setSubStatus((prevState) => {

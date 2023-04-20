@@ -1,60 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Navigate, redirect, Link, Routes, Route } from "react-router-dom";
+import {
+  Navigate,
+  redirect,
+  Link,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import { Button, TextField } from "@mui/material";
 import { User, UserProps } from "../types";
 
+const LOGIN_URL = "/api/login";
+
 function Login({ userInfo, setUserInfo }: UserProps) {
+  const navigate = useNavigate();
+
   // hook to redirect after successful login
   const [redirect, setRedirect] = useState<boolean>(false);
 
-  // handles input updates in input forms
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserInfo((prevState) => ({
-      ...prevState,
-      [event.target.name]: event.target.value,
-    }));
-  };
-
   const handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
-
-    const userLogin = {
-      phone_number: userInfo.phone_number,
-      password: userInfo.password,
-    };
-
-    //console.log(`userLogin: ${JSON.stringify(userLogin)}`);
-
-    // Send post request to BE. Must verify user. Looking for 200 status in order to proceed
-
-    axios
-      .post("/api/login/", userLogin)
-      .then((response) => {
-        // checking response from server
-        console.log(`this is response: ${JSON.stringify(response)}`);
-        if (response.status === 200) {
-          // console.log(`response: ${response.json()}`);
-          setRedirect(true);
-          setUserInfo(() => {
-            return {
-              name: response.data.name,
-              phone_number: response.data.phone_number,
-            };
-          });
+    try {
+      const response = await axios.post(
+        LOGIN_URL,
+        JSON.stringify({ userInfo }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
         }
-      })
-      .catch((error) => {
-        if (error) {
-          alert(`Please check login information and try again`);
-        }
-      });
+      );
+      if (response.data) {
+        setRedirect(true);
+      }
+    } catch (error) {
+      if (error) {
+        alert(`Please check login information and try again`);
+      }
+    }
   };
+
+  useEffect(() => {
+    if (redirect) {
+      navigate("/dashboard");
+    }
+  });
 
   return (
     <div className="login-container">
-      {/* Invoking redirect hook in event of successful login */}
-      {redirect && <Navigate to="/dashboard" replace={true} />}
       <form onSubmit={handleSubmit} className="form-container">
         <br></br>
         <h3>Already a member?</h3>
@@ -71,7 +64,9 @@ function Login({ userInfo, setUserInfo }: UserProps) {
             size="small"
             required={true}
             value={userInfo.phone_number}
-            onChange={onChange}
+            onChange={(e) =>
+              setUserInfo({ ...userInfo, phone_number: e.target.value })
+            }
           />
         </div>
         <div className="input-container">
@@ -85,7 +80,9 @@ function Login({ userInfo, setUserInfo }: UserProps) {
             size="small"
             required={true}
             value={userInfo.password}
-            onChange={onChange}
+            onChange={(e) =>
+              setUserInfo({ ...userInfo, password: e.target.value })
+            }
           />
         </div>
         <br></br>
