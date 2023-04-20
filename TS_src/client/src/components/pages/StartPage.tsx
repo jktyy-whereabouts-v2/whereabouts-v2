@@ -1,7 +1,7 @@
 import React from "react";
 import Login from "./Login";
 import { Link } from "react-router-dom";
-import { User } from "../types";
+import { User, UserProps } from "../types";
 // interface userInfoType {
 //   name: string;
 //   phone_number: string;
@@ -16,16 +16,11 @@ import { User } from "../types";
 // 	setFunction: React.Dispatch<React.SetStateAction<User>>
 // }
 
-interface Props {
-  userInfo: User;
-  setUserInfo: React.Dispatch<React.SetStateAction<User>>;
-}
-
 // const StartPage = ({ userInfo }: Props) => {
 //   return <div>StartPage</div>;
 // };
 
-function StartPage({ userInfo, setUserInfo }: Props) {
+function StartPage({ userInfo, setUserInfo }: UserProps) {
   return (
     <>
       <div className="startpage-cont">
