@@ -1,35 +1,37 @@
 // required modules
-const path = require('path');
-const http = require('http');
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+import * as http from 'http';
+import express, { Express, NextFunction, Request, Response, ErrorRequestHandler } from 'express';
+import cors from 'cors';
+// initialize Server instance of socket.io by passing it HTTP server obj on which to mount the socket server
+import { Server } from 'socket.io';
+import * as dotenv from 'dotenv';
+dotenv.config();
 // import router
 const apiRouter = require('./routes/api');
 // db connection
 const db = require('./models/whereaboutsModel');
 // define server port
-const PORT = process.env.PORT || 3500;
+const PORT = 3500;
 
 // create express server instance
-const app = express();
+const app: Express = express();
 
-// enable cors on all incoming requests
-app.use(cors()); // allows communication between different domains
 
 // handle parsing request body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// enable cors on all incoming requests
+app.use(cors()); // allows communication between different domains
+
 // handle requests for static files
-app.use(express.static(path.resolve(__dirname, '../client')));
+// app.use(express.static(path.resolve(__dirname, '../client')));
 
 // define route handler
 app.use('/api', apiRouter);
 
 /* START Implement SSE server-side to regularly stream trips data back to FE */
-const dbQuery = async (phoneNumber) => {
-	// const { rows } = await db.query(`SELECT * FROM users WHERE phone_number = '${phoneNumber}'`);
+const dbQuery = async (phoneNumber:string) => {
 	const { rows } = await db.query(`
     SELECT t.start_timestamp, t.start_lat, t.start_lng, t.sos_timestamp, t.sos_lat, t.sos_lng, t.end_timestamp,j.trips_id, jt.user_phone_number AS traveler_phone_number, u.name AS traveler_name
     FROM trips t
@@ -56,7 +58,7 @@ const dbQuery = async (phoneNumber) => {
 	return rows;
 };
 
-app.get('/stream/:phone_number', (req, res) => {
+app.get('/stream/:phone_number', (req: Request, res: Response) => {
 	const phoneNumber = req.params.phone_number;
 	if (req.headers.accept === 'text/event-stream') {
 		// console.log('accept/content type is event-stream');
@@ -80,7 +82,7 @@ app.get('/stream/:phone_number', (req, res) => {
 app.use((req, res) => res.status(404).send("This is not the page you're looking for..."));
 
 // global error handler
-app.use((err, req, res, next) => {
+app.use((err: ErrorRequestHandler, req: Request, res: Response, next: NextFunction) => {
 	const defaultErr = {
 		log: 'Express error handler caught unknown middleware error.',
 		status: 500,
@@ -98,8 +100,6 @@ app.use((err, req, res, next) => {
 const httpServer = http.createServer(app);
 // const httpServer = require('http').Server(app); // app is a handler function supplied to HTTP server
 
-// initialize new Server instance of socket.io by passing it HTTP server obj on which to mount the socket server
-const { Server } = require('socket.io');
 const io = new Server(httpServer, {
 	// pingTimeout: 30000, // https://socket.io/docs/v4/troubleshooting-connection-issues/#the-browser-tab-was-minimized-and-heartbeat-has-failed
 	cors: {
