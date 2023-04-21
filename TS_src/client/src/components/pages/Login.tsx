@@ -29,20 +29,18 @@ function Login({ userInfo, setUserInfo, login }: LoginProps) {
 
 	const handleSubmit = async (event: React.SyntheticEvent) => {
 		event.preventDefault();
-
-		const userLogin = {
-			phone_number: userInfo.phone_number,
-			password: userInfo.password,
-		};
 		try {
-			const response = await axios.post(LOGIN_URL, userLogin);
-			if (response.status === 200) {
-				console.log(response.data);
+			const response = await axios.post(LOGIN_URL, JSON.stringify({ userInfo }), {
+				headers: { 'Content-Type': 'application/json' },
+				withCredentials: true,
+			});
+			if (response.data) {
 				setRedirect(true);
-				login(response.data);
 			}
 		} catch (error) {
-			toast.error(`Please check login information and try again`);
+			if (error) {
+				alert(`Please check login information and try again`);
+			}
 		}
 	};
 
