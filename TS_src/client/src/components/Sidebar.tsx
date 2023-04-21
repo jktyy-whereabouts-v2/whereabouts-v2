@@ -2,10 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 interface Props {
-  handleClick: (componentName: string) => void;
+  handleClick: (componentName: any) => any;
 }
 
-function Sidebar({ handleClick }: Props) {
+function Sidebar({ handleClick }: any) {
   return (
     <div className="sidebar">
       <div onClick={() => handleClick("contacts")} className="sidebar-item">
