@@ -1,8 +1,6 @@
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import React, { useState } from "react";
 
-// hard code API key. Keep safe
-const key = "AIzaSyBRzoiY1lCeVlXPEZELkqEdTehWIUcijms";
 
 const containerStyle = {
   height: "300px",
@@ -11,8 +9,8 @@ const containerStyle = {
 
 function MapComponent({ trip }: any) {
   const { isLoaded } = useJsApiLoader({
-    id: import.meta.env.VITE_GOOGLEMAPID,
-    googleMapsApiKey: import.meta.env.VITE_GOOGLEMAPAPIKEY,
+    id: '6dd1b6720588ad3a',
+    googleMapsApiKey: 'AIzaSyA4GiNhPzyhXS98_ziVHrQLimw8VILXUuk',
   });
 
   const center = {

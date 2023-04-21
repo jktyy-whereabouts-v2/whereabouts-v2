@@ -17,7 +17,7 @@
     "jsx": "react-jsx",
     "noImplicitAny": true,
     "outDir": "./dist",
-    "rootDir": "./TS_src"
+    "rootDir": "./TS_src",
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }

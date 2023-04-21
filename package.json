@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"cd ./TS_src && cd ./server npm run dev\" \"cd ./TS_src && cd ./client && npm run vite\""
+    "dev": "concurrently \"cd ./TS_src && cd ./server && npm run dev\" \"cd ./TS_src && cd ./client && npm run dev\""
   },
   "author": "",
   "license": "ISC"

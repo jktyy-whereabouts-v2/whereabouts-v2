@@ -3,7 +3,7 @@ import Sidebar from "../Sidebar";
 import Contacts from "../Contacts";
 import ChatPage from "../ChatPage";
 import TripImWatching from "../TripImWatching";
-// import MyTripCard from "../MyTripCard";
+import MyTripCard from "../MyTripCard";
 import { User, UserProps } from "../types";
 import socket from "../../main";
 
@@ -66,14 +66,14 @@ function Dashboard({ userInfo, setUserInfo }: UserProps) {
             setActiveComponent={setActiveComponent}
           />
         )}
-        {/* {activeComponent === "myTripCard" && (
+        {activeComponent === "myTripCard" && (
           <MyTripCard
             userInfo={userInfo}
             setUserInfo={setUserInfo}
             userTrip={userTrip}
             setUserTrip={setUserTrip}
           />
-        )} */}
+        )}
         {activeComponent === "tripsImWatching" && (
           <TripImWatching userInfo={userInfo} />
         )}
