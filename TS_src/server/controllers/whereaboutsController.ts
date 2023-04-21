@@ -10,7 +10,6 @@ const whereaboutsController = {
       try {
         // check all reqd fields are provided on req body (already checked on FE, so this may not be needed)
         const props = ['phone_number', 'password'];
-        console.log(req.body)
         if (!props.every((prop) => Object.hasOwn(req.body, prop))) {
           return next({
             log: 'Express error handler caught whereaboutsController.checkUserExists error: Missing phone number or password',
@@ -23,8 +22,8 @@ const whereaboutsController = {
         const { phone_number, password } = req.body;
     
         // check that a record for passed phone_number exists in users table
-        const queryStrCheck = 'SELECT * FROM users u WHERE u.phone_number=$1';
-        const existingUser = await db.query(queryStrCheck, [phone_number]);
+        const queryStrCheck = `SELECT * FROM users u WHERE u.phone_number='${phone_number}'`;
+        const existingUser = await db.query(queryStrCheck);
         if (!existingUser.rows[0]) {
           return next({
             log: 'Express error handler caught whereaboutsController.checkUserExists error: No user exists for input phone number',
@@ -102,8 +101,6 @@ const whereaboutsController = {
     
         // salt+hash user-input password
         // const hashedPassword = await bcrypt.hash(password, SALT_WORK_FACTOR);
-        console.log(req.body.password);
-        console.log('hello here')
     
         // insert new user's info (inc hashed password) into users table
         // const queryStrInsert = 'INSERT INTO users(name, phone_number, password) VALUES($1, $2, $3) RETURNING *';
