@@ -5,7 +5,7 @@ function Header() {
   return (
     <header>
       <Link to="/">
-        <img src={require("/client/assets/logo.png")} />
+        <img src={"../assets/logo.png"} />
       </Link>
     </header>
   );
