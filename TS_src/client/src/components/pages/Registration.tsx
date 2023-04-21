@@ -8,6 +8,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { User, UserProps } from '../types';
 import { toast } from 'react-hot-toast';
 import 'react-toastify/dist/ReactToastify.css';
+import GoogleButton from 'react-google-button';
 
 const REGISTER_URL = '/api/register';
 
@@ -38,6 +39,7 @@ function Registration({ userInfo, setUserInfo, login }: RegistrationProps) {
 
 	// hook to redirect after successful registration
 	const [redirect, setRedirect] = useState(false);
+	const [redirectToGoogle, setRedirectToGoogle] = useState(false);
 
 	// confirms first password entry & second password entry match
 	const confirmMatch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,13 +69,10 @@ function Registration({ userInfo, setUserInfo, login }: RegistrationProps) {
 			return;
 		}
 		try {
-			// post request with new user data to backend, redirect to dashboard upon completion
-			// console.log("userInfo being sent to BE =>", userInfo);
 			const response = await axios.post(REGISTER_URL, userInfo);
-			// console.log("response from POST req =>", response);
 			if (response.data) {
-				setRedirect(true);
 				login(response.data);
+				setRedirect(true);
 			}
 		} catch (err: any) {
 			// render user alert that submission failed
@@ -94,7 +93,34 @@ function Registration({ userInfo, setUserInfo, login }: RegistrationProps) {
 		}
 	});
 
-	const paperStyle = { padding: 40, height: '75vh', width: 375, margin: '100px auto' };
+	useEffect(() => {
+		if (redirectToGoogle) {
+			setTimeout(() => {
+				window.close();
+			}, 1000);
+			navigate('/dashboard');
+		}
+	}, []);
+
+	const paperStyle = { padding: 40, width: 375, margin: '70px auto' };
+
+	const redirectToGoogleSSO = async () => {
+		const googleLoginURL = 'http://localhost:3500/api/auth/google/callback';
+		const newWindow = window.open(googleLoginURL, '_blank', 'width = 500, height = 600');
+		setRedirectToGoogle(true);
+		fetchAuthUser();
+	};
+
+	const fetchAuthUser = async () => {
+		try {
+			const response = await axios.get('http://localhost:3500/api/auth/google/callback');
+			if (response.data) {
+				console.log(response.data);
+			}
+		} catch (error) {
+			toast.error('Sorry, not authenticated.');
+		}
+	};
 
 	return (
 		<Container maxWidth="xs">
@@ -109,8 +135,12 @@ function Registration({ userInfo, setUserInfo, login }: RegistrationProps) {
 					<Avatar sx={{ m: 1, bgcolor: 'info.main' }}>
 						<LockOutlinedIcon />
 					</Avatar>
-					<Typography variant="h5">Sign up</Typography>
-					<Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+					<Typography sx={{ mb: 3 }} variant="h5">
+						Sign up
+					</Typography>
+					<GoogleButton onClick={redirectToGoogleSSO} />
+					<Typography sx={{ mt: 3 }}>- or -</Typography>
+					<Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
 						<Grid container>
 							<Grid item xs={12}>
 								<TextField margin="normal" required fullWidth id="name" name="name" label="Full Name" value={userInfo.name} onChange={(e) => setUserInfo({ ...userInfo, name: e.target.value })} />

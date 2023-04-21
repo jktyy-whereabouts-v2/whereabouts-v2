@@ -17,8 +17,7 @@ function App() {
 		password: '',
 	});
 
-	const login = (userInfo: any) => {
-		// console.log(userData);
+	const login = (userData: any) => {
 		setUserInfo({ name: userInfo.name, phone_number: userInfo.phone_number, password: userInfo.password });
 		localStorage.setItem('user', JSON.stringify(userInfo));
 		console.log('logged in confirmed');
@@ -29,7 +28,7 @@ function App() {
 			<Router>
 				{/* <Header /> */}
 				<Routes>
-					<Route path="/" element={<StartPage userInfo={userInfo} setUserInfo={setUserInfo} />} />
+					<Route path="/" element={<StartPage userInfo={userInfo} setUserInfo={setUserInfo} login={login} />} />
 					<Route path="/login" element={<Login userInfo={userInfo} setUserInfo={setUserInfo} login={login} />} />
 					<Route path="/register" element={<Registration userInfo={userInfo} setUserInfo={setUserInfo} login={login} />} />
 					<Route path="/dashboard" element={<Dashboard userInfo={userInfo} setUserInfo={setUserInfo} />} />
