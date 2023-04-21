@@ -49,10 +49,8 @@ const TripImWatching: React.FC<{ userInfo: User }> = ({ userInfo }) => {
           <div key={trip.trips_id} className="view-card">
             <br></br>
             <TripViewingCard trip={trip} />
-            {/* <br></br>
-            <ProgressBar
-              trip={trip}
-            /> */}
+            <br></br>
+            <ProgressBar trip={trip} />
           </div>
         ))}
       </div>
