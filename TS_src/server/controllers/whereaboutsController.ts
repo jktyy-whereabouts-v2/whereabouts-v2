@@ -10,7 +10,7 @@ const whereaboutsController = {
       try {
         // check all reqd fields are provided on req body (already checked on FE, so this may not be needed)
         const props = ['phone_number', 'password'];
-    
+        console.log(req.body)
         if (!props.every((prop) => Object.hasOwn(req.body, prop))) {
           return next({
             log: 'Express error handler caught whereaboutsController.checkUserExists error: Missing phone number or password',
@@ -34,18 +34,27 @@ const whereaboutsController = {
         };
     
         // if user exists in users table, compare user-input password with stored hashed password
-        const passwordIsMatch = await bcrypt.compare(
-          password,
-          existingUser.rows[0].password
-        );
+        // const passwordIsMatch = await bcrypt.compare(
+        //   password,
+        //   existingUser.rows[0].password
+        // );
     
-        if (!passwordIsMatch) {
+        // if (!passwordIsMatch) {
+        //   return next({
+        //     log: 'Express error handler caught whereaboutsController.checkUserExists error: Input password is incorrect',
+        //     status: 400,
+        //     message: { error: 'Input password is incorrect' },
+        //   });
+        // }
+
+        if (password !== existingUser.rows[0].password) {
           return next({
             log: 'Express error handler caught whereaboutsController.checkUserExists error: Input password is incorrect',
             status: 400,
             message: { error: 'Input password is incorrect' },
           });
         }
+
         // no need to persist data, only success message needed on FE
         // now passing name and phone number for use in chat
         res.locals.name = existingUser.rows[0].name;
@@ -79,8 +88,10 @@ const whereaboutsController = {
         const { name, phone_number, password } = req.body;
     
         // check user does NOT already exist in users table
-        const queryStrCheck = 'SELECT * FROM users u WHERE u.phone_number=$1';
-        const existingUser = await db.query(queryStrCheck, [phone_number]);
+        // const queryStrCheck = 'SELECT * FROM users u WHERE u.phone_number=$1';
+        const queryStrCheck = `SELECT * FROM users u WHERE u.phone_number='${phone_number}'`;
+        // const existingUser = await db.query(queryStrCheck, [phone_number]);
+        const existingUser = await db.query(queryStrCheck);
         if (existingUser.rows[0]) {
           return next({
             log: 'Express error handler caught whereaboutsController.insertNewUser error: A user with this phone number already exists',
@@ -90,17 +101,22 @@ const whereaboutsController = {
         }
     
         // salt+hash user-input password
-        const hashedPassword = await bcrypt.hash(password, SALT_WORK_FACTOR);
+        // const hashedPassword = await bcrypt.hash(password, SALT_WORK_FACTOR);
+        console.log(req.body.password);
+        console.log('hello here')
     
         // insert new user's info (inc hashed password) into users table
-        const queryStrInsert =
-          'INSERT INTO users(name, phone_number, password) VALUES($1, $2, $3) RETURNING *';
+        // const queryStrInsert = 'INSERT INTO users(name, phone_number, password) VALUES($1, $2, $3) RETURNING *';
+        const queryStrInsert = `INSERT INTO users(name, phone_number, password) VALUES('${name}', '${phone_number}', '${password}') RETURNING *`;
     
-        const insertedUser = await db.query(queryStrInsert, [
-          name,
-          phone_number,
-          hashedPassword,
-        ]);
+        // const insertedUser = await db.query(queryStrInsert, [
+        //   name,
+        //   phone_number,
+        //   // hashedPassword,
+        //   password,
+        // ]);
+
+        const insertedUser = await db.query(queryStrInsert);
     
         // no need to persist data, only success message needed on FE
         // now passing name and phone number for use in chat

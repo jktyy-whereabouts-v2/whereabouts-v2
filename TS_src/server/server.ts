@@ -1,5 +1,5 @@
 // required modules
-import * as http from 'http';
+const http = require('http');
 import express, { Express, NextFunction, Request, Response, ErrorRequestHandler } from 'express';
 import cors from 'cors';
 // initialize Server instance of socket.io by passing it HTTP server obj on which to mount the socket server
@@ -7,7 +7,7 @@ import { Server } from 'socket.io';
 import * as dotenv from 'dotenv';
 dotenv.config();
 // import router
-const apiRouter = require('./routes/api');
+const apiRouter = require('./routers/apiRouter');
 // db connection
 const db = require('./models/whereaboutsModel');
 // define server port
@@ -15,6 +15,7 @@ const PORT = 3500;
 
 // create express server instance
 const app: Express = express();
+
 
 
 // handle parsing request body
