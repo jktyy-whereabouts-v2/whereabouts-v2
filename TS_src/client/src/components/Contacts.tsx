@@ -1,8 +1,8 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import axios from "axios";
 import ContactsList from "./ContactList";
-// import { Routes, Route } from "react-router-dom";
-// import MyTripCard from "./MyTripCard";
+import { Routes, Route } from "react-router-dom";
+import MyTripCard from "./MyTripCard";
 import { User } from "./types";
 
 interface Props {
@@ -24,7 +24,7 @@ function Contacts({
   // const [redirect, setRedirect] = useState(false);
 
   // Fetch GET request for contact and add to list:
-  const handleSubmit = async (event: React.SyntheticEvent) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
     //console.log('submit: ', event.target[0].value )
 
@@ -32,9 +32,8 @@ function Contacts({
     try {
       const response = await axios.get(
         // event target may need to be broken down
-        `/api/users/${event.target}`
-        // "/api/users/" + event.target[0].value,
-        // event.target[0].value
+        // `/api/users/${event.target}`
+        `/api/users/${event.target[0].value}`
       );
 
       const contactData = response.data[0];
@@ -42,8 +41,8 @@ function Contacts({
 
       // add user to array of contacts
       setContacts([...contacts, contactData]);
-    } catch (err) {
-      console.log(`Fetch request for user with phone_number failed.`, err);
+    } catch (err : any) {
+      console.log(`Fetch request for user with phone_number failed.`, err.response.data);
     }
   };
 

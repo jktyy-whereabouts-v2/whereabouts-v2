@@ -156,8 +156,7 @@ const whereaboutsController = {
     getUserByPhoneNumber: async (req: Request, res: Response, next: NextFunction) => {
       try {
         res.locals.user = await db.query(
-          `SELECT * FROM users WHERE phone_number=$1`,
-          [req.params['phone_number']]
+          `SELECT * FROM users WHERE phone_number = '${req.params.phone_number}'`,
         );
         return next();
       } catch (error) {
@@ -210,12 +209,14 @@ const whereaboutsController = {
         );
         const tripId = rows[0].id;
         //store traveler in join table
+        const traveler = req.body.traveler;
+        console.log(typeof traveler);
         await db.query(
           `INSERT
           INTO trips_users_join
           (trips_id, user_is_traveler, user_phone_number)
           VALUES
-          (${tripId}, TRUE, ${req.body.traveler})`
+          (${tripId}, TRUE, ${traveler})`
         );
         req.body.watchers.forEach(async (watcher: string) => {
           await db.query(
@@ -227,11 +228,11 @@ const whereaboutsController = {
           );
         });
         return next();
-      } catch (error) {
+      } catch (error : any) {
         return next({
           log: 'Express error handler caught whereaboutsController.startNewTrip error',
           status: 500,
-          message: { error: 'Error starting a new trip' },
+          message: { error: error.message },
         });
       }
     },

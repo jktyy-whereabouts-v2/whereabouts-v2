@@ -8,6 +8,8 @@
     "dev": "concurrently \"cd ./TS_src && cd ./server && npm run dev\" \"cd ./TS_src && cd ./client && npm run dev\""
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.0.1"
+  }
 }
-
