@@ -18,6 +18,7 @@
     "noImplicitAny": true,
     "outDir": "./dist",
     "rootDir": "./TS_src",
+    "types": ["vite/client"]
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }

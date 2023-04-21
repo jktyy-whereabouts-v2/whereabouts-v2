@@ -10,7 +10,6 @@ const whereaboutsController = {
     try {
       // check all reqd fields are provided on req body (already checked on FE, so this may not be needed)
       const props = ["phone_number", "password"];
-      console.log(req.body);
       if (!props.every((prop) => Object.hasOwn(req.body, prop))) {
         return next({
           log: "Express error handler caught whereaboutsController.checkUserExists error: Missing phone number or password",
@@ -18,6 +17,100 @@ const whereaboutsController = {
           message: { error: "Missing phone number or password" },
         });
       }
+
+      // destructure / sanitize req body
+      const { phone_number, password } = req.body;
+
+      // check that a record for passed phone_number exists in users table
+      const queryStrCheck = `SELECT * FROM users u WHERE u.phone_number='${phone_number}'`;
+      const existingUser = await db.query(queryStrCheck);
+      if (!existingUser.rows[0]) {
+        return next({
+          log: "Express error handler caught whereaboutsController.checkUserExists error: No user exists for input phone number",
+          status: 400,
+          message: { error: "No user exists for input phone number" },
+        });
+      }
+
+      // if user exists in users table, compare user-input password with stored hashed password
+      // const passwordIsMatch = await bcrypt.compare(
+      //   password,
+      //   existingUser.rows[0].password
+      // );
+
+      // if (!passwordIsMatch) {
+      //   return next({
+      //     log: 'Express error handler caught whereaboutsController.checkUserExists error: Input password is incorrect',
+      //     status: 400,
+      //     message: { error: 'Input password is incorrect' },
+      //   });
+      // }
+
+      if (password !== existingUser.rows[0].password) {
+        return next({
+          log: "Express error handler caught whereaboutsController.checkUserExists error: Input password is incorrect",
+          status: 400,
+          message: { error: "Input password is incorrect" },
+        });
+      }
+
+      // no need to persist data, only success message needed on FE
+      // now passing name and phone number for use in chat
+      res.locals.name = existingUser.rows[0].name;
+      res.locals.phone_number = existingUser.rows[0].phone_number;
+      return next();
+    } catch (error) {
+      return next({
+        log: "Express error handler caught whereaboutsController.checkUserExists error",
+        status: 400,
+        message: { error: "User login failed" },
+      });
+    }
+  },
+
+  // REGISTER component middleware
+  insertNewUser: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // check all reqd fields are provided on req body (already checked on FE, so this may not be needed)
+      const props = ["name", "phone_number", "password"];
+
+      if (!props.every((prop) => Object.hasOwn(req.body, prop))) {
+        return next({
+          log: "Express error handler caught whereaboutsController.insertNewUser error: Missing name, phone number, or password",
+          status: 400,
+          message: { error: "Missing name, phone number, or password" },
+        });
+      }
+
+      // destructure / sanitize req body
+      const { name, phone_number, password } = req.body;
+
+      // check user does NOT already exist in users table
+      // const queryStrCheck = 'SELECT * FROM users u WHERE u.phone_number=$1';
+      const queryStrCheck = `SELECT * FROM users u WHERE u.phone_number='${phone_number}'`;
+      // const existingUser = await db.query(queryStrCheck, [phone_number]);
+      const existingUser = await db.query(queryStrCheck);
+      if (existingUser.rows[0]) {
+        return next({
+          log: "Express error handler caught whereaboutsController.insertNewUser error: A user with this phone number already exists",
+          status: 409,
+          message: { error: "A user with this phone number already exists" },
+        });
+      }
+
+      // salt+hash user-input password
+      // const hashedPassword = await bcrypt.hash(password, SALT_WORK_FACTOR);
+
+      // insert new user's info (inc hashed password) into users table
+      // const queryStrInsert = 'INSERT INTO users(name, phone_number, password) VALUES($1, $2, $3) RETURNING *';
+      const queryStrInsert = `INSERT INTO users(name, phone_number, password) VALUES('${name}', '${phone_number}', '${password}') RETURNING *`;
+
+      // const insertedUser = await db.query(queryStrInsert, [
+      //   name,
+      //   phone_number,
+      //   // hashedPassword,
+      //   password,
+      // ]);
 
       // destructure / sanitize req body
       const { phone_number, password } = req.body;
