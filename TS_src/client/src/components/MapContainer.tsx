@@ -9,8 +9,8 @@ const containerStyle = {
 
 function MapComponent({ trip }: any) {
   const { isLoaded } = useJsApiLoader({
-    id: '6dd1b6720588ad3a',
-    googleMapsApiKey: 'AIzaSyA4GiNhPzyhXS98_ziVHrQLimw8VILXUuk',
+    id: process.env.GOOGLEMAPSID,
+    googleMapsApiKey: process.env.GOOGLEMAPSAPIKEY,
   });
 
   const center = {

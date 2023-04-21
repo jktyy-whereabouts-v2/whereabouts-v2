@@ -20,7 +20,7 @@ function Login({ userInfo, setUserInfo }: UserProps) {
     try {
       const response = await axios.post(
         LOGIN_URL,
-        JSON.stringify({ userInfo }),
+        JSON.stringify(userInfo),
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -30,9 +30,8 @@ function Login({ userInfo, setUserInfo }: UserProps) {
         setRedirect(true);
       }
     } catch (error) {
-      if (error) {
-        alert(`Please check login information and try again`);
-      }
+      console.log(error);
+      alert(`Please check login information and try again`);
     }
   };
 
