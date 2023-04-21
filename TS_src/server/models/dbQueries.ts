@@ -1,4 +1,4 @@
-const db = require('./models/whereaboutsModel');
+const db = require('./whereaboutsModel');
 
 /* START Implement SSE server-side to regularly stream trips data back to FE */
 const dbQuery = async (phoneNumber:string) => {
@@ -27,3 +27,5 @@ const dbQuery = async (phoneNumber:string) => {
 
 	return rows;
 };
+
+module.exports = dbQuery;
