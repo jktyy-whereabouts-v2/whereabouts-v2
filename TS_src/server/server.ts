@@ -1,11 +1,10 @@
 // required modules
+require('dotenv').config('./.env')
 const http = require('http');
 import express, { Express, NextFunction, Request, Response, ErrorRequestHandler } from 'express';
-import cors from 'cors';
+const cors = require('cors')
 // initialize Server instance of socket.io by passing it HTTP server obj on which to mount the socket server
 import { Server } from 'socket.io';
-import * as dotenv from 'dotenv';
-dotenv.config();
 // import router
 const apiRouter = require('./routers/apiRouter');
 // db connection
