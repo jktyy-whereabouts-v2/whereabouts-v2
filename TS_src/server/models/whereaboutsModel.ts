@@ -2,7 +2,7 @@ import * as pg from 'pg';
 const { Pool } = pg;
 
 const pool = new Pool({
-    connectionString: 'postgres://ulksarah:Ug7pmbcxHmBYxCPIZ4D9BPeWWysVW3gF@heffalump.db.elephantsql.com/ulksarah'
+    connectionString: process.env.PG_URI
 }); //pg library will retrieve the variables from the .env file
 
 module.exports = {
