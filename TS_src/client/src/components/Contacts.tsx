@@ -15,8 +15,6 @@ import ContactList from './ContactList';
 // import { Routes, Route } from "react-router-dom";
 // import MyTripCard from "./MyTripCard";
 import { User } from './types';
-import { Box, styled, Typography, Stack, CssBaseline, InputBase } from '@mui/material';
-import { Container } from '@mui/system';
 import Sidebar from './Sidebar';
 import Divider from '@mui/material/Divider';
 
