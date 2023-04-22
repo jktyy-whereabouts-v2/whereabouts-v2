@@ -1,5 +1,5 @@
-import React, { Component, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import StartPage from './components/pages/StartPage';
 import Login from './components/pages/Login';
@@ -8,7 +8,7 @@ import Dashboard from './components/pages/Dashboard';
 import ChatPage from './components/ChatPage';
 import { User, Trip } from './components/types';
 import socket from './main';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import Contacts from './components/Contacts';
 import MyTripCard from './components/MyTripCard';
 import TripImWatching from './components/TripImWatching';
@@ -23,11 +23,6 @@ function App() {
 	const handleClick = (componentName: string) => {
 		setActiveComponent(componentName);
 	};
-
-	interface TripProps {
-		userTrip: Trip;
-		setUserTrip: React.Dispatch<React.SetStateAction<Trip>>;
-	}
 
 	const [userTrip, setUserTrip] = useState<Trip>({
 		active: true,

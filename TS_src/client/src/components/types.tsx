@@ -18,3 +18,8 @@ export interface Trip {
 	sos_lat: string;
 	sos_lng: string;
 }
+
+export interface TripProps {
+	userTrip: Trip;
+	setUserTrip: React.Dispatch<React.SetStateAction<Trip>>;
+}

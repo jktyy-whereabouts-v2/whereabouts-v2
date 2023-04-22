@@ -22,9 +22,10 @@ interface MyTripCard {
 	setUserInfo: React.Dispatch<React.SetStateAction<User>>;
 	userTrip: any;
 	setUserTrip: React.Dispatch<React.SetStateAction<any>>;
+	logout: Function;
 }
 
-const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip }: MyTripCard) => {
+const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout }: MyTripCard) => {
 	const trip = {
 		start_lat: 40.6970173,
 		start_lng: -74.310035,
