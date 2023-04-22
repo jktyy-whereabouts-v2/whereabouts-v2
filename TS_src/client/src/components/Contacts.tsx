@@ -15,6 +15,8 @@ import ContactList from './ContactList';
 // import { Routes, Route } from "react-router-dom";
 // import MyTripCard from "./MyTripCard";
 import { User } from './types';
+import { Box, styled, Typography, Stack, CssBaseline, InputBase } from '@mui/material';
+import { Container } from '@mui/system';
 import Sidebar from './Sidebar';
 import Divider from '@mui/material/Divider';
 
@@ -80,16 +82,16 @@ function Contacts({
     setCheckedContacts(newCheckedContacts);
   };
 
-	// function to extract phone numbers from checkedContacts array
-	const extractPhoneNumbers = (array: typeof contacts) => {
-		return array.map((obj) => obj.phone_number);
-	};
+  // function to extract phone numbers from checkedContacts array
+  const extractPhoneNumbers = (array: typeof contacts) => {
+    return array.map((obj) => obj.phone_number);
+  };
 
-	// declare variable to contain proper info to send backend
-	const tripData = {
-		traveler: userInfo.phone_number,
-		watchers: extractPhoneNumbers(checkedContacts),
-	};
+  // declare variable to contain proper info to send backend
+  const tripData = {
+    traveler: userInfo.phone_number,
+    watchers: extractPhoneNumbers(checkedContacts),
+  };
 
   // function to send post request to back end with user information to start trip
   const handleStartTrip = () => {
