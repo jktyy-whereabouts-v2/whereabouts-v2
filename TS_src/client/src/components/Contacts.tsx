@@ -10,11 +10,6 @@ import { User, Trip } from './types';
 import Sidebar from './Sidebar';
 import Divider from '@mui/material/Divider';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
-
-const navigate = useNavigate();
-=======
->>>>>>> dev
 
 interface Props {
 	userInfo: User;
@@ -27,21 +22,8 @@ interface Props {
 
 const googleURL = process.env.GOOGLEMAPSAPIKEY;
 
-<<<<<<< HEAD
-function Contacts({
-    userInfo,
-  contacts,
-  setContacts,
-  setActiveComponent,
-  logout
-}: Props) {
-  // hook to manage contacts checked from list
-  const [checkedContacts, setCheckedContacts] = useState<User[]>([]);
-  const [buttonDisabled, setButtonDisabled] = useState<boolean>(true);
-=======
 function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout, setUserTrip }: Props) {
 	const navigate = useNavigate();
->>>>>>> dev
 
 	// hook to manage contacts checked from list
 
@@ -90,27 +72,6 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 		setCheckedContacts(newCheckedContacts);
 	};
 
-<<<<<<< HEAD
-  // function to send post request to back end with user information to start trip
-  const handleStartTrip = () => {
-    // create a post request to the route: /api/trips/start
-    axios
-      .post('/api/trips/start', tripData)
-      .then((response) => {
-        if (response.status === 204) {
-          console.log('status is 200, redirect to MyTripCard');
-        }
-        console.log('Successful response from back end ', response);
-        navigate('/myTrips');
-      })
-      .catch((error) => {
-        if (error) {
-          alert('Please check contacts information and try again');
-        }
-      });
-  };
-
-=======
 	// function to extract phone numbers from checkedContacts array
 	const extractPhoneNumbers = (array: typeof contacts) => {
 		return array.map((obj) => obj.phone_number);
@@ -161,62 +122,14 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 		// console.log('Current trip data: ', tripData);
 	}, [checkedContacts, userInfo.phone_number, tripData]);
 
->>>>>>> dev
 	return (
 		<>
 			<Divider sx={{ width: '85%', margin: 'auto' }} variant="middle"></Divider>
 			<CssBaseline />
-      <Box sx={{ display: 'flex', mt: '30px' }}>
-        <Container sx={{ width: '40%', ml: '30px' }}>
+			<Box sx={{ display: 'flex', mt: '30px' }}>
+				<Container sx={{ width: '40%', ml: '30px' }}>
 					<Sidebar logout={logout} />
 				</Container>
-<<<<<<< HEAD
-				<Container 
-          maxWidth='md'
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Typography variant='h5'>Add contacts to your list:</Typography>
-          <Box 
-            sx={{
-              display: 'inline-flex',
-              width: '100%'
-            }}
-            component='form' 
-            onSubmit={handleSubmit}
-          >
-            <TextField
-              margin='normal'
-              fullWidth
-              name='addContact'
-              placeholder='Search by phone number'
-            />
-            <IconButton
-              type='submit'
-            >
-              <SearchIcon/>
-            </IconButton>
-          </Box>  
-          <Typography variant='h6'>Select a few contacts to share your trip with:</Typography>
-          <ContactList
-            contacts={contacts}
-            deleteContact={deleteContact}
-            checkedContacts={checkedContacts}
-            setCheckedContacts={setCheckedContacts}
-            setButtonDisabled={setButtonDisabled}
-          />
-          <Button
-            variant='contained'
-            onClick={handleStartTrip}
-            disabled={buttonDisabled}
-          >
-            Start Your Trip!
-          </Button>
-        </Container>
-=======
 
 				<Container sx={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '10px', marginTop: '20px' }}>
 					<Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -233,7 +146,6 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 						Start Your Trip!
 					</Button>
 				</Container>
->>>>>>> dev
 			</Box>
 		</>
 	);
