@@ -32,7 +32,7 @@ function Contacts({
 }: Props) {
   // hook to manage contacts checked from list
   const [checkedContacts, setCheckedContacts] = useState<User[]>([]);
-  const [buttonDisabled, setButtonDisabled] = React.useState<boolean>(true);
+  const [buttonDisabled, setButtonDisabled] = useState<boolean>(true);
 
   // Fetch GET request for contact and add to list:
   const handleSubmit = async (event: any) => {
@@ -52,7 +52,6 @@ function Contacts({
         if(user.phone_number === contactData.phone_number) ++acc;
         return acc;
       }, 0);
-      console.log(contactShown)
       if(!contactShown) setContacts([...contacts, contactData]);
     } catch (err: any) {
       console.log('Fetch request for user with phone_number failed.', err.response.data);
@@ -150,7 +149,6 @@ function Contacts({
         deleteContact={deleteContact}
         checkedContacts={checkedContacts}
         setCheckedContacts={setCheckedContacts}
-        buttonDisabled={buttonDisabled}
         setButtonDisabled={setButtonDisabled}
       />
       <Button

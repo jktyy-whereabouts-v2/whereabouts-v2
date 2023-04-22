@@ -19,7 +19,6 @@ interface Props {
   deleteContact: (index: number, user: User) => void,
   checkedContacts: User[],
   setCheckedContacts: React.Dispatch<React.SetStateAction<User[]>>,
-  buttonDisabled: boolean,
   setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>
 };
 
@@ -29,7 +28,6 @@ export default function ContactsList({
   deleteContact,
   checkedContacts,
   setCheckedContacts,
-  buttonDisabled,
   setButtonDisabled
 }: Props) {
 
