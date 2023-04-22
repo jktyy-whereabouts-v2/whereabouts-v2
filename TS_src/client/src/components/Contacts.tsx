@@ -39,6 +39,7 @@ function Contacts({
     event.preventDefault();
     //console.log('submit: ', event.target[0].value )
     const phone_number = event.target[0].value.replaceAll(/[^0-9]/g, '');
+    event.target[0].value = '';
     //fetch request to get contact info
     try {
       const response = await axios.get(
