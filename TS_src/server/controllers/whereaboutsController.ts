@@ -10,6 +10,7 @@ const whereaboutsController = {
       try {
         // check all reqd fields are provided on req body (already checked on FE, so this may not be needed)
         const props = ['phone_number', 'password'];
+        console.log(req.body)
         if (!props.every((prop) => Object.hasOwn(req.body, prop))) {
           return next({
             log: 'Express error handler caught whereaboutsController.checkUserExists error: Missing phone number or password',
@@ -101,6 +102,8 @@ const whereaboutsController = {
     
         // salt+hash user-input password
         // const hashedPassword = await bcrypt.hash(password, SALT_WORK_FACTOR);
+        console.log(req.body.password);
+        console.log('hello here')
     
         // insert new user's info (inc hashed password) into users table
         // const queryStrInsert = 'INSERT INTO users(name, phone_number, password) VALUES($1, $2, $3) RETURNING *';
@@ -120,11 +123,11 @@ const whereaboutsController = {
         res.locals.name = insertedUser.rows[0].name;
         res.locals.phone_number = insertedUser.rows[0].phone_number;
         return next();
-      } catch (error) {
+      } catch (error: any) {
         return next({
           log: 'Express error handler caught whereaboutsController.insertNewUser error',
           status: 500,
-          message: { error: 'Failed to create new user' },
+          message: { error: error.message},
           // message: { error: error.stack } // for more detailed debugging info
         });
       }
@@ -207,13 +210,12 @@ const whereaboutsController = {
         const tripId = rows[0].id;
         //store traveler in join table
         const traveler = req.body.traveler;
-        console.log(typeof traveler);
         await db.query(
           `INSERT
           INTO trips_users_join
           (trips_id, user_is_traveler, user_phone_number)
           VALUES
-          (${tripId}, TRUE, ${traveler})`
+          (${tripId}, TRUE, '${traveler}')`
         );
         req.body.watchers.forEach(async (watcher: string) => {
           await db.query(
@@ -225,7 +227,7 @@ const whereaboutsController = {
           );
         });
         return next();
-      } catch (error : any) {
+      } catch (error: any) {
         return next({
           log: 'Express error handler caught whereaboutsController.startNewTrip error',
           status: 500,

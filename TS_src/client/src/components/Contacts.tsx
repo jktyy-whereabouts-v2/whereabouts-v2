@@ -1,14 +1,14 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import axios from "axios";
 import ContactsList from "./ContactList";
-import { Routes, Route } from "react-router-dom";
-import MyTripCard from "./MyTripCard";
+// import { Routes, Route } from "react-router-dom";
+// import MyTripCard from "./MyTripCard";
 import { User } from "./types";
 
 interface Props {
   userInfo: User;
-  contacts: Array<any>;
-  setContacts: Dispatch<SetStateAction<Array<any>>>;
+  contacts: Array<User>;
+  setContacts: Dispatch<SetStateAction<Array<User>>>;
   setActiveComponent: Dispatch<SetStateAction<string>>;
 }
 
@@ -19,7 +19,7 @@ function Contacts({
   setActiveComponent,
 }: Props) {
   // hook to manage contacts checked from list
-  const [checkedContacts, setCheckedContacts] = useState<any>([]);
+  const [checkedContacts, setCheckedContacts] = useState<User[]>([]);
   // hook to redirect to MyTripStart
   // const [redirect, setRedirect] = useState(false);
 
@@ -40,8 +40,13 @@ function Contacts({
       // console.log('contactData: ', contactData);
 
       // add user to array of contacts
-      setContacts([...contacts, contactData]);
-    } catch (err : any) {
+      const contactShown = contacts.reduce((acc, user) => {
+        if(user.phone_number === contactData.phone_number) ++acc;
+        return acc;
+      }, 0);
+      console.log(contactShown)
+      if(!contactShown) setContacts([...contacts, contactData]);
+    } catch (err: any) {
       console.log(`Fetch request for user with phone_number failed.`, err.response.data);
     }
   };
@@ -88,9 +93,9 @@ function Contacts({
 
   // // checking state of contacts data:
   useEffect(() => {
-    // console.log('Current checkedContacts:', checkedContacts);
-    // console.log('Current User phone: ', userInfo.phone_number);
-    // console.log('Current trip data: ', tripData);
+    console.log('Current checkedContacts:', checkedContacts);
+    console.log('Current User phone: ', userInfo.phone_number);
+    console.log('Current trip data: ', tripData);
   }, [checkedContacts, userInfo.phone_number, tripData]);
 
   return (

@@ -10,10 +10,10 @@ import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
 import { User } from "./types";
 
 interface Props {
-  contacts: User[];
-  deleteContact: Function;
-  checkedContacts: User[];
-  setCheckedContacts: React.Dispatch<React.SetStateAction<User>>;
+  contacts: User[],
+  deleteContact: (index: number) => void,
+  checkedContacts: User[],
+  setCheckedContacts: React.Dispatch<React.SetStateAction<User[]>>;
 }
 
 export default function ContactsList({
@@ -22,21 +22,22 @@ export default function ContactsList({
   checkedContacts,
   setCheckedContacts,
 }: Props) {
-  const [checked, setChecked] = React.useState<any[]>([0]);
+  const [checked, setChecked] = React.useState<User[]>([]);
 
-  const handleToggle = (contact: any, index: number) => () => {
+  const handleToggle = (contact: User, index: number) => () => {
     const currentIndex = checked.indexOf(contact);
     const newChecked = [...checked];
 
     if (currentIndex === -1) {
       newChecked.push(contact);
-    } else {
-      newChecked.splice(currentIndex, 1);
     }
+    // } else {
+    //   newChecked.splice(currentIndex, 1);
+    // }
     setChecked(newChecked);
 
     // set new checked items in array from Contacts
-    const newCheckedContacts: any = [...checkedContacts];
+    const newCheckedContacts : User[] = [...checkedContacts];
     newCheckedContacts[index] = contact;
     setCheckedContacts(newCheckedContacts);
   };
