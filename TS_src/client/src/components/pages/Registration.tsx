@@ -88,17 +88,24 @@ function Registration({ userInfo, setUserInfo, login }: RegistrationProps) {
 	};
 
 	useEffect(() => {
+		// setUserInfo(JSON.parse(localStorage.getItem('user') || ''));
+		if (userInfo.name.length > 0) {
+			navigate('/dashboard');
+		}
+	}, []);
+
+	useEffect(() => {
 		if (redirect) {
 			navigate('/dashboard');
 		}
 	});
 
-	useEffect(() => {
-		// setUserInfo(JSON.parse(localStorage.getItem('user') || ''));
-		if (userInfo) {
-			navigate('/dashboard');
-		}
-	}, []);
+	// useEffect(() => {
+	// 	// setUserInfo(JSON.parse(localStorage.getItem('user') || ''));
+	// 	if (userInfo) {
+	// 		navigate('/dashboard');
+	// 	}
+	// }, []);
 
 	useEffect(() => {
 		if (redirectToGoogle) {

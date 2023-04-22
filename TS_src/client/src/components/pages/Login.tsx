@@ -53,7 +53,7 @@ function Login({ userInfo, setUserInfo, login }: LoginProps) {
 
 	useEffect(() => {
 		// setUserInfo(JSON.parse(localStorage.getItem('user') || ''));
-		if (userInfo) {
+		if (userInfo.name.length > 0) {
 			navigate('/dashboard');
 		}
 	}, []);
@@ -64,14 +64,14 @@ function Login({ userInfo, setUserInfo, login }: LoginProps) {
 		}
 	});
 
-	useEffect(() => {
-		if (redirectToGoogle) {
-			setTimeout(() => {
-				window.close();
-			}, 1000);
-			navigate('/dashboard');
-		}
-	}, []);
+	// useEffect(() => {
+	// 	if (redirectToGoogle) {
+	// 		setTimeout(() => {
+	// 			window.close();
+	// 		}, 1000);
+	// 		navigate('/dashboard');
+	// 	}
+	// }, []);
 
 	const redirectToGoogleSSO = async () => {
 		const googleLoginURL = 'http://localhost:3500/api/auth/google/callback';
