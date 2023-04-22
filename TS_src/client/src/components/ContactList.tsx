@@ -1,87 +1,93 @@
-import * as React from "react";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
-import { User } from "./types";
+import * as React from 'react';
+import { 
+  List, 
+  ListItem, 
+  ListItemButton, 
+  ListItemIcon, 
+  ListItemText, 
+  IconButton, 
+  Checkbox,
+  CssBaseline,
+  Container
+} from '@mui/material';
+import Delete from '@mui/icons-material/Delete';
+import '@fontsource/roboto/300.css';
+import { User } from './types';
 
 interface Props {
-  contacts: User[];
-  deleteContact: Function;
-  checkedContacts: User[];
-  setCheckedContacts: React.Dispatch<React.SetStateAction<User>>;
-}
+  contacts: User[],
+  deleteContact: (index: number, contact: User) => void,
+  checkedContacts: User[],
+  setCheckedContacts: React.Dispatch<React.SetStateAction<User[]>>,
+  setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>
+};
+
 
 export default function ContactsList({
   contacts,
   deleteContact,
   checkedContacts,
   setCheckedContacts,
+  setButtonDisabled
 }: Props) {
-  const [checked, setChecked] = React.useState<any[]>([0]);
 
-  const handleToggle = (contact: any, index: number) => () => {
-    const currentIndex = checked.indexOf(contact);
-    const newChecked = [...checked];
-
+  const handleToggle = (contact: User) => () => {
+    const currentIndex = checkedContacts.indexOf(contact);
+    const newChecked: User[] = [...checkedContacts];
     if (currentIndex === -1) {
       newChecked.push(contact);
-    } else {
+    }
+    else {
       newChecked.splice(currentIndex, 1);
     }
-    setChecked(newChecked);
-
     // set new checked items in array from Contacts
-    const newCheckedContacts: any = [...checkedContacts];
-    newCheckedContacts[index] = contact;
-    setCheckedContacts(newCheckedContacts);
+    // const newCheckedContacts : User[] = [...checkedContacts];
+    // newCheckedContacts[index] = contact;
+    if(newChecked.length === 0) setButtonDisabled(true);
+    else setButtonDisabled(false);
+    setCheckedContacts(newChecked);
   };
-
   return (
-    <List sx={{ width: "100%", maxWidth: "100%", bgcolor: "background.paper" }}>
-      {[...contacts].map((value, index) => {
+    <Container maxWidth='sm'>
+      <List >
+        <CssBaseline />
+        {contacts.length !== 0 && contacts.map((value, index) => {
         const labelId = `checkbox-list-label-${value}`;
-
         return (
-          <ListItem
+          <ListItem 
             key={index}
             secondaryAction={
               <IconButton
-                edge="end"
-                aria-label="comments"
-                onClick={() => deleteContact(index)}
+                edge='end'
+                onClick={() => deleteContact(index, value)}
               >
-                <DeleteForeverRoundedIcon />
+                <Delete />
               </IconButton>
             }
             disablePadding
           >
             <ListItemButton
-              role={undefined}
-              onClick={handleToggle(value, index)}
+              onClick={handleToggle(value)}
               dense
             >
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={checked.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ "aria-labelledby": labelId }}
-                />
-              </ListItemIcon>
-              <ListItemText
-                id={labelId}
-                primary={`Contact Name: ${contacts[index].name},     Phone Number: ${contacts[index].phone_number}`}
+            <ListItemIcon>
+              <Checkbox
+                edge='start'
+                checked={checkedContacts.indexOf(value) !== -1}
+                tabIndex={-1}
+                disableRipple
+                inputProps={{ 'aria-labelledby': labelId }}
               />
-            </ListItemButton>
-          </ListItem>
-        );
+            </ListItemIcon>
+            <ListItemText
+              id={labelId}
+              primary={`${value.name}`}
+              secondary= {`${value.phone_number}`}
+            />
+          </ListItemButton>
+        </ListItem>)
       })}
-    </List>
+      </List>
+    </Container>
   );
 }

@@ -9,14 +9,14 @@ const whereaboutsController = {
   checkUserExists: async (req: Request, res: Response, next: NextFunction) => {
     try {
       // check all reqd fields are provided on req body (already checked on FE, so this may not be needed)
-      const props = ["phone_number", "password"];
-      if (!props.every((prop) => Object.hasOwn(req.body, prop))) {
-        return next({
-          log: "Express error handler caught whereaboutsController.checkUserExists error: Missing phone number or password",
-          status: 400,
-          message: { error: "Missing phone number or password" },
-        });
-      }
+      // const props = ["phone_number", "password"];
+      // if (!props.every((prop) => Object.hasOwn(req.body, prop))) {
+      //   return next({
+      //     log: "Express error handler caught whereaboutsController.checkUserExists error: Missing phone number or password",
+      //     status: 400,
+      //     message: { error: "Missing phone number or password" },
+      //   });
+      // }
 
       // destructure / sanitize req body
       const { phone_number, password } = req.body;
@@ -60,7 +60,6 @@ const whereaboutsController = {
       res.locals.phone_number = existingUser.rows[0].phone_number;
       return next();
     } catch (error) {
-      console.log(error);
       return next({
         log: "Express error handler caught whereaboutsController.checkUserExists error",
         status: 500,
@@ -74,15 +73,20 @@ const whereaboutsController = {
   insertNewUser: async (req: Request, res: Response, next: NextFunction) => {
     try {
       // check all reqd fields are provided on req body (already checked on FE, so this may not be needed)
-      const props = ["name", "phone_number", "password"];
+      // const props = ["name", "phone_number", "password"];
 
-      if (!props.every((prop) => Object.hasOwn(req.body, prop))) {
-        return next({
-          log: "Express error handler caught whereaboutsController.insertNewUser error: Missing name, phone number, or password",
-          status: 400,
-          message: { error: "Missing name, phone number, or password" },
-        });
-      }
+      // if (
+      //   !props.every((prop) => {
+      //     console.log(prop);
+      //     Object.hasOwn(req.body, prop);
+      //   })
+      // ) {
+      //   return next({
+      //     log: "Express error handler caught whereaboutsController.insertNewUser error: Missing name, phone number, or password",
+      //     status: 400,
+      //     message: { error: "Missing name, phone number, or password" },
+      //   });
+      // }
 
       // destructure / sanitize req body
       const { name, phone_number, password } = req.body;
@@ -122,6 +126,7 @@ const whereaboutsController = {
       res.locals.phone_number = insertedUser.rows[0].phone_number;
       return next();
     } catch (error) {
+      console.log(error);
       return next({
         log: "Express error handler caught whereaboutsController.insertNewUser error",
         status: 500,
@@ -138,44 +143,39 @@ const whereaboutsController = {
         `select u.phone_number, u.name from users u
                 inner join contacts_join cj on u.phone_number = cj.contact_phone_number
                 where cj.traveler_phone_number = $1`,
-        [req.params["phone_number"]]
-      );
-      return next();
-    } catch (error) {
-      return next({
-        log: "Express error handler caught whereaboutsController.getContacts error",
-        status: 500,
-        message: { error: "Retrieving contacts of current user failed" },
-      });
-    }
-  },
-
-  //get single user by phone number
-  getUserByPhoneNumber: async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    try {
-      res.locals.user = await db.query(
-        `SELECT * FROM users WHERE phone_number=$1`,
-        [req.params["phone_number"]]
-      );
-      return next();
-    } catch (error) {
-      return next({
-        log: "Express error handler caught whereaboutsController.getUserByPhoneNumber error",
-        status: 500,
-        message: { error: "Retrieving single user failed" },
-      });
-    }
-  },
-
-  //delete contact
-  deleteContact: async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await db.query(
-        `DELETE FROM contacts_join
+          [req.params['phone_number']]
+        );
+        return next();
+      } catch (error) {
+        return next({
+          log: 'Express error handler caught whereaboutsController.getContacts error',
+          status: 500,
+          message: { error: 'Retrieving contacts of current user failed' },
+        });
+      }
+    },
+    
+    //get single user by phone number
+    getUserByPhoneNumber: async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        res.locals.user = await db.query(
+          `SELECT * FROM users WHERE phone_number = '${req.params.phone_number}'`,
+        );
+        return next();
+      } catch (error) {
+        return next({
+          log: 'Express error handler caught whereaboutsController.getUserByPhoneNumber error',
+          status: 500,
+          message: { error: 'Retrieving single user failed' },
+        });
+      }
+    },
+    
+    //delete contact
+    deleteContact: async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        await db.query(
+          `DELETE FROM contacts_join
                 WHERE traveler_phone_number = $1 AND contact_phone_number = $2`,
         [req.params.travelerPhone, req.params.contactPhone]
       );
@@ -209,19 +209,20 @@ const whereaboutsController = {
           VALUES
           (NOW(), ${lat}, ${lng})
           RETURNING id`
-      );
-      const tripId = rows[0].id;
-      //store traveler in join table
-      await db.query(
-        `INSERT
+        );
+        const tripId = rows[0].id;
+        //store traveler in join table
+        const traveler = req.body.traveler;
+        await db.query(
+          `INSERT
           INTO trips_users_join
           (trips_id, user_is_traveler, user_phone_number)
           VALUES
-          (${tripId}, TRUE, ${req.body.traveler})`
-      );
-      req.body.watchers.forEach(async (watcher: string) => {
-        await db.query(
-          `INSERT
+          (${tripId}, TRUE, '${traveler}')`
+        );
+        req.body.watchers.forEach(async (watcher: string) => {
+          await db.query(
+            `INSERT
             INTO trips_users_join
             (trips_id, user_is_traveler, user_phone_number)
             VALUES
@@ -323,4 +324,4 @@ const whereaboutsController = {
   },
 };
 
-// module.exports = whereaboutsController;
+module.exports = whereaboutsController;

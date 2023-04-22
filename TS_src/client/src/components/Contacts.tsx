@@ -1,57 +1,83 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
-import axios from "axios";
-import ContactsList from "./ContactList";
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { 
+  CssBaseline,
+  Container,
+  Box,
+  Typography,
+  TextField,
+  IconButton,
+  Button,
+} from '@mui/material';
+import '@fontsource/roboto/300.css';
+import SearchIcon from '@mui/icons-material/Search';
+import axios from 'axios';
+import ContactList from './ContactList';
 // import { Routes, Route } from "react-router-dom";
 // import MyTripCard from "./MyTripCard";
-import { User } from "./types";
+import { User } from './types';
+import Sidebar from './Sidebar';
+import Divider from '@mui/material/Divider';
 
 interface Props {
-  userInfo: User;
-  contacts: Array<any>;
-  setContacts: Dispatch<SetStateAction<Array<any>>>;
-  setActiveComponent: Dispatch<SetStateAction<string>>;
-}
+  userInfo: User,
+  contacts: Array<User>,
+  setContacts: Dispatch<SetStateAction<Array<User>>>,
+  setActiveComponent: Dispatch<SetStateAction<string>>,
+  logout: Function
+};
+
 
 function Contacts({
   userInfo,
   contacts,
   setContacts,
   setActiveComponent,
+  logout
 }: Props) {
   // hook to manage contacts checked from list
-  const [checkedContacts, setCheckedContacts] = useState<any>([]);
-  // hook to redirect to MyTripStart
-  // const [redirect, setRedirect] = useState(false);
+  const [checkedContacts, setCheckedContacts] = useState<User[]>([]);
+  const [buttonDisabled, setButtonDisabled] = useState<boolean>(true);
 
   // Fetch GET request for contact and add to list:
-  const handleSubmit = async (event: React.SyntheticEvent) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
     //console.log('submit: ', event.target[0].value )
-
+    const phone_number = event.target[0].value.replaceAll(/[^0-9]/g, '');
+    event.target[0].value = '';
     //fetch request to get contact info
     try {
       const response = await axios.get(
-        // event target may need to be broken down
-        `/api/users/${event.target}`
-        // "/api/users/" + event.target[0].value,
-        // event.target[0].value
+        `/api/users/${phone_number}`
       );
 
       const contactData = response.data[0];
-      // console.log('contactData: ', contactData);
+      if(!contactData.name) return;
 
       // add user to array of contacts
-      setContacts([...contacts, contactData]);
-    } catch (err) {
-      console.log(`Fetch request for user with phone_number failed.`, err);
+      const contactShown = contacts.reduce((acc, user) => {
+        if(user.phone_number === contactData.phone_number) ++acc;
+        return acc;
+      }, 0);
+      if(!contactShown) setContacts([...contacts, contactData]);
+    } catch (err: any) {
+      console.log('Fetch request for user with phone_number failed.', err.response.data);
     }
   };
 
   // function to delete contact from list, pass to contacts list
-  const deleteContact = (index: number) => {
+  const deleteContact = (index: number, contact: User) => {
     const newContacts = [...contacts];
+    const newCheckedContacts = [...checkedContacts];
     newContacts.splice(index, 1);
+
+    const foundIndex = newCheckedContacts.indexOf(contact);
+    if(foundIndex >= 0) newCheckedContacts.splice(foundIndex, 1);
+    if(newContacts.length === 0 || newCheckedContacts.length === 0) setButtonDisabled(true);
+
+    // console.log('new contacts:', newContacts);
+    // console.log('new checked contacts', newCheckedContacts)
     setContacts(newContacts);
+    setCheckedContacts(newCheckedContacts);
   };
 
   // function to extract phone numbers from checkedContacts array
@@ -68,78 +94,91 @@ function Contacts({
   // function to send post request to back end with user information to start trip
   const handleStartTrip = () => {
     // create a post request to the route: /api/trips/start
-    console.log(`inside handleStartTrip`);
     axios
-      .post("/api/trips/start", tripData)
+      .post('/api/trips/start', tripData)
       .then((response) => {
         if (response.status === 204) {
-          console.log(`status is 200, redirect to MyTripCard`);
-          // Move back set Redirect into this bracket for proper rendering.
-          // setRedirect(true);
-          setActiveComponent("myTripCard");
+          console.log('status is 200, redirect to MyTripCard');
+          setActiveComponent('myTripCard');
         }
-        console.log("Successful response from back end ", response);
+        console.log('Successful response from back end ', response);
       })
       .catch((error) => {
         if (error) {
-          alert(`Please check contacts information and try again`);
+          alert('Please check contacts information and try again');
         }
       });
   };
 
   // // checking state of contacts data:
   useEffect(() => {
-    // console.log('Current checkedContacts:', checkedContacts);
-    // console.log('Current User phone: ', userInfo.phone_number);
-    // console.log('Current trip data: ', tripData);
+    console.log('Current checkedContacts:', checkedContacts);
+    console.log('Current User phone: ', userInfo.phone_number);
+    console.log('Current trip data: ', tripData);
   }, [checkedContacts, userInfo.phone_number, tripData]);
+	// // checking state of contacts data:
+	useEffect(() => {
+		// console.log('Current checkedContacts:', checkedContacts);
+		// console.log('Current User phone: ', userInfo.phone_number);
+		// console.log('Current trip data: ', tripData);
+	}, [checkedContacts, userInfo.phone_number, tripData]);
 
-  return (
-    <div className="contacts-container">
-      <br></br>
-      {/* Invoking redirect hook in event of successful post request */}
-      {/* {redirect && 
-        <Routes>
-          <Route path="/" element={<MyTripCard />} replace={true} />
-        </Routes>
-      } */}
-      <div className="add-contact-container">
-        <form onSubmit={handleSubmit} className="add-contact-form">
-          <p>Add contacts to your list:</p>
-          <input
-            type="text"
-            className="add-contact-input"
-            id="contact-phone-number"
-          />
-          <button type="submit" className="add-contact-btn">
-            Add Contact
-          </button>
-        </form>
-      </div>
-      <br></br>
-      <div className="valid-contacts-container">
-        <div className="titles-row">
-          <button
-            className="start-trip-button"
-            role="button"
-            onClick={handleStartTrip}
+	return (
+		<>
+			<Divider sx={{ width: '85%', margin: 'auto' }} variant="middle"></Divider>
+			<CssBaseline />
+			<Box sx={{ display: 'flex', mt: '30px' }}>
+				<Container sx={{ width: '40%', ml: '30px' }}>
+					<Sidebar logout={logout} />
+				</Container>
+				<Container 
+          maxWidth='sm'
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant='h5'>Add contacts to your list:</Typography>
+          <Box 
+            sx={{
+              display: 'inline-flex',
+              width: '100%'
+            }}
+            component='form' 
+            onSubmit={handleSubmit}
           >
-            Start Your Trip!
-          </button>
-        </div>
-
-        <div className="contacts-display">
-          <h3>Select a few contacts to share your trip with:</h3>
-          <ContactsList
+            <TextField
+              margin='normal'
+              fullWidth
+              name='addContact'
+              placeholder='Search by phone number'
+            />
+            <IconButton
+              type='submit'
+            >
+              <SearchIcon/>
+            </IconButton>
+          </Box>  
+          <Typography variant='h6'>Select a few contacts to share your trip with:</Typography>
+          <ContactList
             contacts={contacts}
             deleteContact={deleteContact}
             checkedContacts={checkedContacts}
             setCheckedContacts={setCheckedContacts}
+            setButtonDisabled={setButtonDisabled}
           />
-        </div>
-      </div>
-    </div>
-  );
-}
+          <Button
+            variant='contained'
+            onClick={handleStartTrip}
+            disabled={buttonDisabled}
+          >
+            Start Your Trip!
+          </Button>
+        </Container>
+			</Box>
+		</>
+	)};
+
 
 export default Contacts;
