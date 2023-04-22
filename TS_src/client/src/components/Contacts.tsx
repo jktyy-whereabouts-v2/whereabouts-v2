@@ -131,90 +131,54 @@ function Contacts({
 				<Container sx={{ width: '40%', ml: '30px' }}>
 					<Sidebar logout={logout} />
 				</Container>
-				<Container sx={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '10px' }}>
-					<div className="contacts-container">
-						<br></br>
-						{/* Invoking redirect hook in event of successful post request */}
-						{/* {redirect && 
-        <Routes>
-          <Route path="/" element={<MyTripCard />} replace={true} />
-        </Routes>
-      } */}
-						<div className="add-contact-container">
-							<form onSubmit={handleSubmit} className="add-contact-form">
-								<p>Add contacts to your list:</p>
-								<input type="text" className="add-contact-input" id="contact-phone-number" />
-								<button type="submit" className="add-contact-btn">
-									Add Contact
-								</button>
-							</form>
-						</div>
-						<br></br>
-						<div className="valid-contacts-container">
-							<div className="titles-row">
-								<button className="start-trip-button" role="button" onClick={handleStartTrip}>
-									Start Your Trip!
-								</button>
-							</div>
-
-							<div className="contacts-display">
-								<h3>Select a few contacts to share your trip with:</h3>
-								<ContactList contacts={contacts} deleteContact={deleteContact} checkedContacts={checkedContacts} setCheckedContacts={setCheckedContacts} setButtonDisabled={setButtonDisabled}/>
-							</div>
-						</div>
-					</div>
-				</Container>
+				<Container 
+          maxWidth='sm'
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant='h5'>Add contacts to your list:</Typography>
+          <Box 
+            sx={{
+              display: 'inline-flex',
+              width: '100%'
+            }}
+            component='form' 
+            onSubmit={handleSubmit}
+          >
+            <TextField
+              margin='normal'
+              fullWidth
+              name='addContact'
+              placeholder='Search by phone number'
+            />
+            <IconButton
+              type='submit'
+            >
+              <SearchIcon/>
+            </IconButton>
+          </Box>  
+          <Typography variant='h6'>Select a few contacts to share your trip with:</Typography>
+          <ContactList
+            contacts={contacts}
+            deleteContact={deleteContact}
+            checkedContacts={checkedContacts}
+            setCheckedContacts={setCheckedContacts}
+            setButtonDisabled={setButtonDisabled}
+          />
+          <Button
+            variant='contained'
+            onClick={handleStartTrip}
+            disabled={buttonDisabled}
+          >
+            Start Your Trip!
+          </Button>
+        </Container>
 			</Box>
 		</>
-	);
-  return (
-    <Container 
-      maxWidth='sm'
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
-      <CssBaseline/>
-      <Typography variant='h5'>Add contacts to your list:</Typography>
-      <Box 
-        sx={{
-          display: 'inline-flex',
-          width: '100%'
-        }}
-        component='form' 
-        onSubmit={handleSubmit}
-      >
-        <TextField
-          margin='normal'
-          fullWidth
-          name='addContact'
-          placeholder='Search by phone number'
-        />
-        <IconButton
-          type='submit'
-        >
-          <SearchIcon/>
-        </IconButton>
-      </Box>  
-      <Typography variant='h6'>Select a few contacts to share your trip with:</Typography>
-      <ContactList
-        contacts={contacts}
-        deleteContact={deleteContact}
-        checkedContacts={checkedContacts}
-        setCheckedContacts={setCheckedContacts}
-        setButtonDisabled={setButtonDisabled}
-      />
-      <Button
-        variant='contained'
-        onClick={handleStartTrip}
-        disabled={buttonDisabled}
-      >
-        Start Your Trip!
-      </Button>
-    </Container>
-  );
-}
+	)};
+
 
 export default Contacts;
