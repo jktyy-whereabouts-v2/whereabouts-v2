@@ -15,11 +15,11 @@ import '@fontsource/roboto/300.css';
 import { User } from './types';
 
 interface Props {
-  contacts: User[],
-  deleteContact: (index: number, contact: User) => void,
-  checkedContacts: User[],
-  setCheckedContacts: React.Dispatch<React.SetStateAction<User[]>>,
-  setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>
+  contacts: User[];
+  deleteContact: (index: number, contact: User) => void;
+  checkedContacts: User[];
+  setCheckedContacts: React.Dispatch<React.SetStateAction<User[]>>;
+  setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 
@@ -30,7 +30,6 @@ export default function ContactsList({
   setCheckedContacts,
   setButtonDisabled
 }: Props) {
-
   const handleToggle = (contact: User) => () => {
     const currentIndex = checkedContacts.indexOf(contact);
     const newChecked: User[] = [...checkedContacts];
@@ -48,46 +47,47 @@ export default function ContactsList({
     setCheckedContacts(newChecked);
   };
   return (
-    <Container maxWidth='sm'>
-      <List >
-        <CssBaseline />
-        {contacts.length !== 0 && contacts.map((value, index) => {
+  <Container maxWidth='sm'>
+    <List >
+      <CssBaseline />
+      {contacts.length !== 0 && contacts.map((value, index) => {
         const labelId = `checkbox-list-label-${value}`;
         return (
-          <ListItem 
-            key={index}
-            secondaryAction={
-              <IconButton
-                edge='end'
-                onClick={() => deleteContact(index, value)}
-              >
-                <Delete />
-              </IconButton>
-            }
-            disablePadding
+        <ListItem 
+        key={index}
+        secondaryAction={
+        <IconButton
+        edge='end'
+        onClick={() => deleteContact(index, value)}
+        >
+          <Delete />
+        </IconButton>
+        }
+        disablePadding
+        >
+          <ListItemButton
+          onClick={handleToggle(value)}
+          dense
           >
-            <ListItemButton
-              onClick={handleToggle(value)}
-              dense
-            >
             <ListItemIcon>
               <Checkbox
-                edge='start'
-                checked={checkedContacts.indexOf(value) !== -1}
-                tabIndex={-1}
-                disableRipple
-                inputProps={{ 'aria-labelledby': labelId }}
+              edge='start'
+              checked={checkedContacts.indexOf(value) !== -1}
+              tabIndex={-1}
+              disableRipple
+              inputProps={{ 'aria-labelledby': labelId }}
               />
             </ListItemIcon>
             <ListItemText
-              id={labelId}
-              primary={`${value.name}`}
-              secondary= {`${value.phone_number}`}
+            id={labelId}
+            primary={`${value.name}`}
+            secondary= {`${value.phone_number}`}
             />
           </ListItemButton>
-        </ListItem>)
+        </ListItem>
+        )
       })}
-      </List>
-    </Container>
+    </List>
+  </Container>
   );
-}
+};
