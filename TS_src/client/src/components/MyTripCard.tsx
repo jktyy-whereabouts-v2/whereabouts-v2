@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Box } from "@mui/material";
+import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
+import { Box } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 // import CardMedia from '@mui/material/CardMedia';
 import Button from "@mui/material/Button";
@@ -16,39 +16,45 @@ const googleURL = process.env.GOOGLEMAPSAPIKEY;
 
 const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip }) => {
   const trip = {
-    start_lat: 35.6585805,
-    start_lng: 139.7428526,
-    tripId: "",
+    start_lat: 40.6970173,
+    start_lng: -74.310035,
+    tripId: 99,
   };
-  // // obtain position, submit to server, render SOS map if needed
-  const handleClick = async (name: any) => {
-    //     // CHECK DATABASE FOR PROPER COLUMN NAMES
-    const time_stamp = Date.now();
-    // // google API call to fetch position
-    const response = await axios.post(
-      `https://www.googleapis.com/geolocation/v1/geolocate?key=${googleURL}`
-    );
-    const position = response.data.location;
-    // update state with sos position, if sos was clicked
-    if (name !== "end-trip") {
-      setUserTrip((prevState: any) => {
-        return {
-          ...prevState,
-          sos_lat: position.lat,
-          sos_lng: position.lng,
-        };
-      });
-    }
 
-    // // NEED PROPER ENDPOINT FOR POST REQUEST
-    // // send trip id from props
-    const body =
-      name === "end-trip"
-        ? { end_timestamp: time_stamp }
-        : { sos_timestamp: time_stamp, sos_lat: lat, sos_lng: lng };
-    axios.post("/sos", { ...body, phone_number: userInfo.phone_number });
+  const handleClick = async (name: any) => {
+    try {
+      const response = await axios.post(
+        `https://www.googleapis.com/geolocation/v1/geolocate?key=${googleURL}`
+      );
+      console.log(response);
+      const { lat, lng } = response.data.location;
+      // update state with sos position, if sos was clicked
+      if (name !== "end-trip") {
+        setUserTrip((prevState: any) => {
+          return {
+            ...prevState,
+            sos_lat: lat,
+            sos_lng: lng,
+          };
+        });
+      }
+
+      const body =
+        name === "end-trip"
+          ? { tripId: trip.tripId }
+          : { tripId: trip.tripId, lat: lat, lng: lng };
+      const url = name === "end-trip" ? "/api/trips/reached" : "/api/trips/sos";
+
+      try {
+        axios.post(url, body);
+      } catch (err) {
+        console.log(err);
+      }
+    } catch (err) {
+      console.log("error with fetching position from google api =>", err);
+    }
   };
-  // // // REDIRECT TO CHAT
+
   return (
     <>
       <Box
