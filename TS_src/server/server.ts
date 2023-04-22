@@ -5,8 +5,13 @@ import express, { Express, NextFunction, Request, Response, ErrorRequestHandler 
 const cors = require('cors')
 // initialize Server instance of socket.io by passing it HTTP server obj on which to mount the socket server
 import { Server } from 'socket.io';
-// import router
-const apiRouter = require('./routers/apiRouter');
+// import routers
+// const apiRouter = require('./routers/apiRouter');
+const loginRouter = require('./routers/loginRouter');
+const registerRouter = require('./routers/registerRouter');
+const contactsRouter = require('./routers/contactsRouter');
+const usersRouter = require('./routers/usersRouter');
+const tripsRouter = require('./routers/tripsRouter');
 // db connection
 const db = require('./models/whereaboutsModel');
 // define server port
@@ -30,7 +35,12 @@ app.use(cors()); // allows communication between different domains
 // app.use(express.static(path.resolve(__dirname, '../client')));
 
 // define route handler
-app.use('/api', apiRouter);
+app.use('/api/login', loginRouter);
+app.use('/api/register', registerRouter);
+app.use('/api/users/contacts', contactsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/trips', tripsRouter);
+// app.use('/api', apiRouter);
 
 app.get('/stream/:phone_number', (req: Request, res: Response) => {
 	const phoneNumber = req.params.phone_number;

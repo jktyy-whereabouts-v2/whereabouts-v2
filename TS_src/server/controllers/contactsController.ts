@@ -18,7 +18,7 @@ const contactsController = {
         return next();
       } catch (error) {
         return next({
-          log: 'Express error handler caught whereaboutsController.getContacts error',
+          log: 'Express error handler caught contactsController.getContacts error',
           status: 500,
           message: { error: 'Retrieving contacts of current user failed' },
         });
@@ -36,7 +36,7 @@ const contactsController = {
         return next();
       } catch (error) {
         return next({
-          log: 'Express error handler caught whereaboutsController.deleteContact error',
+          log: 'Express error handler caught contactsController.deleteContact error',
           status: 500,
           message: { error: 'Failed to delete contact' },
         });
@@ -57,7 +57,7 @@ const contactsController = {
         return next();
       } catch (error) {
         return next({
-          log: 'Express error handler caught whereaboutsController.addContact error',
+          log: 'Express error handler caught contactsController.addContact error',
           status: 500,
           message: { error: 'Error storing contacts details' },
         });

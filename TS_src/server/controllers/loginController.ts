@@ -13,7 +13,7 @@ const loginController = {
         console.log(req.body)
         if (!props.every((prop) => Object.hasOwn(req.body, prop))) {
           return next({
-            log: 'Express error handler caught whereaboutsController.checkUserExists error: Missing phone number or password',
+            log: 'Express error handler caught loginController.checkUserExists error: Missing phone number or password',
             status: 400,
             message: { error: 'Missing phone number or password' },
           });
@@ -27,7 +27,7 @@ const loginController = {
         const existingUser = await db.query(queryStrCheck, [phone_number]);
         if (!existingUser.rows[0]) {
           return next({
-            log: 'Express error handler caught whereaboutsController.checkUserExists error: No user exists for input phone number',
+            log: 'Express error handler caught loginController.checkUserExists error: No user exists for input phone number',
             status: 400,
             message: { error: 'No user exists for input phone number' },
           });
@@ -49,7 +49,7 @@ const loginController = {
 
         if (password !== existingUser.rows[0].password) {
           return next({
-            log: 'Express error handler caught whereaboutsController.checkUserExists error: Input password is incorrect',
+            log: 'Express error handler caught loginController.checkUserExists error: Input password is incorrect',
             status: 400,
             message: { error: 'Input password is incorrect' },
           });
@@ -62,7 +62,7 @@ const loginController = {
         return next();
       } catch (error) {
         return next({
-          log: 'Express error handler caught whereaboutsController.checkUserExists error',
+          log: 'Express error handler caught loginController.checkUserExists error',
           status: 500,
           message: { error: 'User login failed' },
           // message: { error: error.stack }, // for more detailed debugging info
@@ -79,7 +79,7 @@ const loginController = {
     
         if (!props.every((prop) => Object.hasOwn(req.body, prop))) {
           return next({
-            log: 'Express error handler caught whereaboutsController.insertNewUser error: Missing name, phone number, or password',
+            log: 'Express error handler caught loginController.insertNewUser error: Missing name, phone number, or password',
             status: 400,
             message: { error: 'Missing name, phone number, or password' },
           });
@@ -95,7 +95,7 @@ const loginController = {
         const existingUser = await db.query(queryStrCheck);
         if (existingUser.rows[0]) {
           return next({
-            log: 'Express error handler caught whereaboutsController.insertNewUser error: A user with this phone number already exists',
+            log: 'Express error handler caught loginController.insertNewUser error: A user with this phone number already exists',
             status: 409,
             message: { error: 'A user with this phone number already exists' },
           });
@@ -126,7 +126,7 @@ const loginController = {
         return next();
       } catch (error) {
         return next({
-          log: 'Express error handler caught whereaboutsController.insertNewUser error',
+          log: 'Express error handler caught loginController.insertNewUser error',
           status: 500,
           message: { error: 'Failed to create new user' },
           // message: { error: error.stack } // for more detailed debugging info

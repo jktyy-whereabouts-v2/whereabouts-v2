@@ -4,7 +4,7 @@ const db = require('../models/whereaboutsModel');
 const axios = require('axios');
 import { Request, Response, NextFunction } from 'express';
 
-const tripController = {
+const tripsController = {
 
 
     //gets current location, stores new trip with current location and stores traveler/watcher relation after user clicks 'start new trip'
@@ -49,7 +49,7 @@ const tripController = {
         return next();
       } catch (error) {
         return next({
-          log: 'Express error handler caught whereaboutsController.startNewTrip error',
+          log: 'Express error handler caught tripsController.startNewTrip error',
           status: 500,
           message: { error: 'Error starting a new trip' },
         });
@@ -72,7 +72,7 @@ const tripController = {
         return next();
       } catch (error) {
         return next({
-          log: 'Express error handler caught whereaboutsController.sendSos error',
+          log: 'Express error handler caught tripsController.sendSos error',
           status: 500,
           message: { error: 'Error storing sos details' },
         });
@@ -91,7 +91,7 @@ const tripController = {
         return next();
       } catch (error) {
         return next({
-          log: 'Express error handler caught whereaboutsController.sendSos error',
+          log: 'Express error handler caught tripsController.sendSos error',
           status: 500,
           message: { error: 'Error storing sos details' },
         });
@@ -112,7 +112,7 @@ const tripController = {
         return next();
       } catch (error) {
         return next({
-          log: 'Express error handler caught whereaboutsController.myTrip error',
+          log: 'Express error handler caught tripsController.myTrip error',
           status: 500,
           message: { error: 'Error retrieving user trip' },
         });
@@ -121,4 +121,4 @@ const tripController = {
 
 };
 
-module.exports = tripController;
+module.exports = tripsController;
