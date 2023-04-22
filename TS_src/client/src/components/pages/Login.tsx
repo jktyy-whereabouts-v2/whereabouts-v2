@@ -52,6 +52,13 @@ function Login({ userInfo, setUserInfo, login }: LoginProps) {
 	};
 
 	useEffect(() => {
+		// setUserInfo(JSON.parse(localStorage.getItem('user') || ''));
+		if (userInfo) {
+			navigate('/dashboard');
+		}
+	}, []);
+
+	useEffect(() => {
 		if (redirect) {
 			navigate('/dashboard');
 		}
@@ -84,7 +91,7 @@ function Login({ userInfo, setUserInfo, login }: LoginProps) {
 		}
 	};
 
-	const paperStyle = { padding: 40, width: 375, margin: '100px auto' };
+	const paperStyle = { padding: 40, width: 375, margin: 'auto' };
 
 	return (
 		<>

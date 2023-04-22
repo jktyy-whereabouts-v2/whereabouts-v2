@@ -94,6 +94,13 @@ function Registration({ userInfo, setUserInfo, login }: RegistrationProps) {
 	});
 
 	useEffect(() => {
+		// setUserInfo(JSON.parse(localStorage.getItem('user') || ''));
+		if (userInfo) {
+			navigate('/dashboard');
+		}
+	}, []);
+
+	useEffect(() => {
 		if (redirectToGoogle) {
 			setTimeout(() => {
 				window.close();
@@ -102,7 +109,7 @@ function Registration({ userInfo, setUserInfo, login }: RegistrationProps) {
 		}
 	}, []);
 
-	const paperStyle = { padding: 40, width: 375, margin: '70px auto' };
+	const paperStyle = { padding: 20, width: 375, margin: 'auto' };
 
 	const redirectToGoogleSSO = async () => {
 		const googleLoginURL = 'http://localhost:3500/api/auth/google/callback';
@@ -140,7 +147,7 @@ function Registration({ userInfo, setUserInfo, login }: RegistrationProps) {
 					</Typography>
 					<GoogleButton onClick={redirectToGoogleSSO} />
 					<Typography sx={{ mt: 3 }}>- or -</Typography>
-					<Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+					<Box component="form" onSubmit={handleSubmit} sx={{ mt: 0 }}>
 						<Grid container>
 							<Grid item xs={12}>
 								<TextField margin="normal" required fullWidth id="name" name="name" label="Full Name" value={userInfo.name} onChange={(e) => setUserInfo({ ...userInfo, name: e.target.value })} />
