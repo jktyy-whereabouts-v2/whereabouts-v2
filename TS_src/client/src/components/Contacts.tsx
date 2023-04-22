@@ -90,7 +90,6 @@ function Contacts({
   // function to send post request to back end with user information to start trip
   const handleStartTrip = () => {
     // create a post request to the route: /api/trips/start
-    console.log('inside handleStartTrip');
     axios
       .post('/api/trips/start', tripData)
       .then((response) => {
