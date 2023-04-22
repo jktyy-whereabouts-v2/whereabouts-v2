@@ -1,7 +1,7 @@
-import React from "react";
-import Login from "./Login";
-import { Link } from "react-router-dom";
-import { User, UserProps } from "../types";
+import React from 'react';
+import Login from './Login';
+import { Link } from 'react-router-dom';
+import { User, UserProps } from '../types';
 // interface userInfoType {
 //   name: string;
 //   phone_number: string;
@@ -20,14 +20,20 @@ import { User, UserProps } from "../types";
 //   return <div>StartPage</div>;
 // };
 
-function StartPage({ userInfo, setUserInfo }: UserProps) {
-  return (
-    <>
-      <div className="startpage-cont">
-        <Login userInfo={userInfo} setUserInfo={setUserInfo} />
-      </div>
-    </>
-  );
+interface StartPageProps {
+	userInfo: User;
+	setUserInfo: React.Dispatch<React.SetStateAction<User>>;
+	login: Function;
+}
+
+function StartPage({ userInfo, setUserInfo, login }: StartPageProps) {
+	return (
+		<>
+			<div className="startpage-cont">
+				<Login userInfo={userInfo} setUserInfo={setUserInfo} login={login} />
+			</div>
+		</>
+	);
 }
 
 export default StartPage;
