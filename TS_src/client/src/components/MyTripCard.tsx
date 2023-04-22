@@ -19,10 +19,12 @@ import { Container } from "@mui/system";
 import Sidebar from "./Sidebar";
 import Divider from "@mui/material/Divider";
 
+
 // When rendering this component, use => <MyTripCard userInfo={userInfo} setUserInfo={setUserInfo} userTrip={userTrip} setUserTrip={setUserTrip} />
 
 // Card media is not needed since it was a component for the stock image that came with MUI
 const googleURL = process.env.GOOGLEMAPSAPIKEY;
+
 
 interface MyTripCard {
   userInfo: User,
@@ -106,7 +108,7 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip } : MyTripCar
               variant="contained"
               color="primary"
               name="end-trip"
-              onClick={(e) => {
+              onClick={(e: any) => {
                 handleClick(e.target.name);
               }}
             >

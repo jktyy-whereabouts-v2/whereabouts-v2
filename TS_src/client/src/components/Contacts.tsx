@@ -17,6 +17,9 @@ import ContactList from './ContactList';
 import { User } from './types';
 import Sidebar from './Sidebar';
 import Divider from '@mui/material/Divider';
+import { useNavigate } from 'react-router-dom';
+
+const navigate = useNavigate();
 
 interface Props {
   userInfo: User,
@@ -28,7 +31,7 @@ interface Props {
 
 
 function Contacts({
-  userInfo,
+    userInfo,
   contacts,
   setContacts,
   setActiveComponent,
@@ -99,9 +102,9 @@ function Contacts({
       .then((response) => {
         if (response.status === 204) {
           console.log('status is 200, redirect to MyTripCard');
-          setActiveComponent('myTripCard');
         }
         console.log('Successful response from back end ', response);
+        navigate('/myTrips');
       })
       .catch((error) => {
         if (error) {
@@ -110,29 +113,16 @@ function Contacts({
       });
   };
 
-  // // checking state of contacts data:
-  useEffect(() => {
-    console.log('Current checkedContacts:', checkedContacts);
-    console.log('Current User phone: ', userInfo.phone_number);
-    console.log('Current trip data: ', tripData);
-  }, [checkedContacts, userInfo.phone_number, tripData]);
-	// // checking state of contacts data:
-	useEffect(() => {
-		// console.log('Current checkedContacts:', checkedContacts);
-		// console.log('Current User phone: ', userInfo.phone_number);
-		// console.log('Current trip data: ', tripData);
-	}, [checkedContacts, userInfo.phone_number, tripData]);
-
 	return (
 		<>
 			<Divider sx={{ width: '85%', margin: 'auto' }} variant="middle"></Divider>
 			<CssBaseline />
-			<Box sx={{ display: 'flex', mt: '30px' }}>
-				<Container sx={{ width: '40%', ml: '30px' }}>
+      <Box sx={{ display: 'flex', mt: '30px' }}>
+        <Container sx={{ width: '40%', ml: '30px' }}>
 					<Sidebar logout={logout} />
 				</Container>
 				<Container 
-          maxWidth='sm'
+          maxWidth='md'
           sx={{
             display: 'flex',
             flexDirection: 'column',
