@@ -46,6 +46,7 @@ function Contacts({
       );
 
       const contactData = response.data[0];
+      if(!contactData.name) return;
 
       // add user to array of contacts
       const contactShown = contacts.reduce((acc, user) => {
@@ -59,17 +60,17 @@ function Contacts({
   };
 
   // function to delete contact from list, pass to contacts list
-  const deleteContact = (index: number, user: User) => {
+  const deleteContact = (index: number, contact: User) => {
     const newContacts = [...contacts];
     const newCheckedContacts = [...checkedContacts];
     newContacts.splice(index, 1);
 
-    const foundIndex = newCheckedContacts.indexOf(user);
+    const foundIndex = newCheckedContacts.indexOf(contact);
     if(foundIndex >= 0) newCheckedContacts.splice(foundIndex, 1);
     if(newContacts.length === 0 || newCheckedContacts.length === 0) setButtonDisabled(true);
 
-    console.log('new contacts:', newContacts);
-    console.log('new checked contacts', newCheckedContacts)
+    // console.log('new contacts:', newContacts);
+    // console.log('new checked contacts', newCheckedContacts)
     setContacts(newContacts);
     setCheckedContacts(newCheckedContacts);
   };

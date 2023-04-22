@@ -16,7 +16,7 @@ import { User } from './types';
 
 interface Props {
   contacts: User[],
-  deleteContact: (index: number, user: User) => void,
+  deleteContact: (index: number, contact: User) => void,
   checkedContacts: User[],
   setCheckedContacts: React.Dispatch<React.SetStateAction<User[]>>,
   setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>
@@ -51,7 +51,7 @@ export default function ContactsList({
     <Container maxWidth='sm'>
       <List >
         <CssBaseline />
-        {[...contacts].map((value, index) => {
+        {contacts.length !== 0 && contacts.map((value, index) => {
         const labelId = `checkbox-list-label-${value}`;
         return (
           <ListItem 
@@ -81,8 +81,8 @@ export default function ContactsList({
             </ListItemIcon>
             <ListItemText
               id={labelId}
-              primary={`${contacts[index].name}`}
-              secondary= {`${contacts[index].phone_number}`}
+              primary={`${value.name}`}
+              secondary= {`${value.phone_number}`}
             />
           </ListItemButton>
         </ListItem>)
