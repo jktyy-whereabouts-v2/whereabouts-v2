@@ -5,9 +5,19 @@ import { Box } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 // import CardMedia from '@mui/material/CardMedia';
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import axios from "axios";
 import MapContainer from "./MapContainer";
+import {
+  Box,
+  styled,
+  Typography,
+  Stack,
+  CssBaseline,
+  InputBase,
+} from "@mui/material";
+import { Container } from "@mui/system";
+import Sidebar from "./Sidebar";
+import Divider from "@mui/material/Divider";
 
 // When rendering this component, use => <MyTripCard userInfo={userInfo} setUserInfo={setUserInfo} userTrip={userTrip} setUserTrip={setUserTrip} />
 
