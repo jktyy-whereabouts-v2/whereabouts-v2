@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
-import { Box } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 // import CardMedia from '@mui/material/CardMedia';
 import Button from "@mui/material/Button";
@@ -15,6 +14,7 @@ import {
   CssBaseline,
   InputBase,
 } from "@mui/material";
+import { User } from './types';
 import { Container } from "@mui/system";
 import Sidebar from "./Sidebar";
 import Divider from "@mui/material/Divider";
@@ -24,7 +24,14 @@ import Divider from "@mui/material/Divider";
 // Card media is not needed since it was a component for the stock image that came with MUI
 const googleURL = process.env.GOOGLEMAPSAPIKEY;
 
-const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip }) => {
+interface MyTripCard {
+  userInfo: User,
+	setUserInfo: React.Dispatch<React.SetStateAction<User>>,
+  userTrip: any,
+  setUserTrip: React.Dispatch<React.SetStateAction<any>>
+}
+
+const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip } : MyTripCard ) => {
   const trip = {
     start_lat: 40.6970173,
     start_lng: -74.310035,
@@ -110,7 +117,7 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip }) => {
               variant="contained"
               color="error"
               name="sos"
-              onClick={(e) => {
+              onClick={(e : any) => {
                 handleClick(e.target.name);
               }}
             >
