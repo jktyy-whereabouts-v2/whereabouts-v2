@@ -60,12 +60,19 @@ function Contacts({
   };
 
   // function to delete contact from list, pass to contacts list
-  const deleteContact = (index: number) => {
+  const deleteContact = (index: number, user: User) => {
     const newContacts = [...contacts];
+    const newCheckedContacts = [...checkedContacts];
     newContacts.splice(index, 1);
-    console.log(newContacts);
-    console.log(checkedContacts);
+
+    const foundIndex = newCheckedContacts.indexOf(user);
+    if(foundIndex >= 0) newCheckedContacts.splice(foundIndex, 1);
+    if(newContacts.length === 0 || newCheckedContacts.length === 0) setButtonDisabled(true);
+
+    console.log('new contacts:', newContacts);
+    console.log('new checked contacts', newCheckedContacts)
     setContacts(newContacts);
+    setCheckedContacts(newCheckedContacts);
   };
 
   // function to extract phone numbers from checkedContacts array

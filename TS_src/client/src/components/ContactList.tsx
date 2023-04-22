@@ -16,7 +16,7 @@ import { User } from './types';
 
 interface Props {
   contacts: User[],
-  deleteContact: (index: number) => void,
+  deleteContact: (index: number, user: User) => void,
   checkedContacts: User[],
   setCheckedContacts: React.Dispatch<React.SetStateAction<User[]>>,
   buttonDisabled: boolean,
@@ -33,7 +33,7 @@ export default function ContactsList({
   setButtonDisabled
 }: Props) {
 
-  const handleToggle = (contact: User, index: number) => () => {
+  const handleToggle = (contact: User) => () => {
     const currentIndex = checkedContacts.indexOf(contact);
     const newChecked: User[] = [...checkedContacts];
     if (currentIndex === -1) {
@@ -61,7 +61,7 @@ export default function ContactsList({
             secondaryAction={
               <IconButton
                 edge='end'
-                onClick={() => deleteContact(index)}
+                onClick={() => deleteContact(index, value)}
               >
                 <Delete />
               </IconButton>
@@ -69,7 +69,7 @@ export default function ContactsList({
             disablePadding
           >
             <ListItemButton
-              onClick={handleToggle(value, index)}
+              onClick={handleToggle(value)}
               dense
             >
             <ListItemIcon>
