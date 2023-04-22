@@ -103,38 +103,49 @@ const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
 	// pingTimeout: 30000, // https://socket.io/docs/v4/troubleshooting-connection-issues/#the-browser-tab-was-minimized-and-heartbeat-has-failed
 	cors: {
-		origin: ['http://localhost:8080'],
+		// origin: ['http://localhost:8080'],
+		origin: 'http://localhost:3000',
 		methods: ['GET', 'POST'],
 	},
 	// path: '/chat',
 });
 
-// on connection event (i.e. on connecting to socket server instance), listening for incoming sockets + connecting with React app
 io.on('connection', (socket) => {
-	console.log('server side connected!');
-	// socket.emit sends a message to only the connecting client
-	socket.emit('autoMsg', 'This message will contain the SOS GMap');
-	// broadcast flag will send a message to everyone but the connecting client
-	// broadcast when a new user connects to the chat
-	socket.broadcast.emit('autoMsg', 'I have joined the SOS chat');
-	// server listens for new message from any client typing into chat
-	socket.on('chatMsg', (msg) => {
-		// io.emit sends a message to ALL users on chat
-		io.emit('disperseMsg', msg);
-		// go to ChatPage.jsx, socket.on('disperseMsg')
-	});
-	// run when a user disconnects from the chat
-	socket.on('disconnect', () => {
-		console.log('server side disconnected!');
-		// io.emit sends a message to all remaining chat users
-		io.emit('autoMsg', 'I have left the SOS chat');
-		// refreshing chat page disconnects and reconnects socket
-		//https://socket.io/docs/v4/troubleshooting-connection-issues/#problem-the-socket-gets-disconnected
-	});
-});
-/* END Implement chat with Socket.io */
+	console.log(`User connected: ${socket.id}`);
 
-// listening on HTTP server!
-httpServer.listen(PORT, () => console.log(`Currently listening on port: ${PORT}`));
+	socket.on('send_message', (data) => {
+		socket.broadcast.emit('received_message', data)
+	})
+})
+
+httpServer.listen(3001, () => console.log("WEBSOCKET SERVER IS RUNNING"))
+
+// // on connection event (i.e. on connecting to socket server instance), listening for incoming sockets + connecting with React app
+// io.on('connection', (socket) => {
+// 	console.log('server side connected!');
+// 	// socket.emit sends a message to only the connecting client
+// 	socket.emit('autoMsg', 'This message will contain the SOS GMap');
+// 	// broadcast flag will send a message to everyone but the connecting client
+// 	// broadcast when a new user connects to the chat
+// 	socket.broadcast.emit('autoMsg', 'I have joined the SOS chat');
+// 	// server listens for new message from any client typing into chat
+// 	socket.on('chatMsg', (msg) => {
+// 		// io.emit sends a message to ALL users on chat
+// 		io.emit('disperseMsg', msg);
+// 		// go to ChatPage.jsx, socket.on('disperseMsg')
+// 	});
+// 	// run when a user disconnects from the chat
+// 	socket.on('disconnect', () => {
+// 		console.log('server side disconnected!');
+// 		// io.emit sends a message to all remaining chat users
+// 		io.emit('autoMsg', 'I have left the SOS chat');
+// 		// refreshing chat page disconnects and reconnects socket
+// 		//https://socket.io/docs/v4/troubleshooting-connection-issues/#problem-the-socket-gets-disconnected
+// 	});
+// });
+// /* END Implement chat with Socket.io */
+
+// // listening on HTTP server!
+// httpServer.listen(PORT, () => console.log(`Currently listening on port: ${PORT}`));
 
 module.exports = app;
