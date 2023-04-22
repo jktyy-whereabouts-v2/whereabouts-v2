@@ -1,14 +1,14 @@
-import React, { Component, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import StartPage from './components/pages/StartPage';
 import Login from './components/pages/Login';
 import Registration from './components/pages/Registration';
 import Dashboard from './components/pages/Dashboard';
 import ChatPage from './components/ChatPage';
-import { User } from './components/types';
+import { User, Trip } from './components/types';
 import socket from './main';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import Contacts from './components/Contacts';
 import MyTripCard from './components/MyTripCard';
 import TripImWatching from './components/TripImWatching';
@@ -23,22 +23,6 @@ function App() {
 	const handleClick = (componentName: string) => {
 		setActiveComponent(componentName);
 	};
-
-	// hook for tracking userTrip data
-	interface Trip {
-		active: boolean;
-		start_timestamp: string;
-		start_lat: string;
-		start_lng: string;
-		sos_timestamp: string;
-		sos_lat: string;
-		sos_lng: string;
-	}
-
-	interface TripProps {
-		userTrip: Trip;
-		setUserTrip: React.Dispatch<React.SetStateAction<Trip>>;
-	}
 
 	const [userTrip, setUserTrip] = useState<Trip>({
 		active: true,
@@ -86,7 +70,10 @@ function App() {
 					<Route path="/register" element={<Registration userInfo={userInfo} setUserInfo={setUserInfo} login={login} />} />
 					<Route path="/dashboard" element={<Dashboard userInfo={userInfo} setUserInfo={setUserInfo} logout={logout} />} />
 					<Route path="/chat" element={<ChatPage userInfo={userInfo} setUserInfo={setUserInfo} path="/chat" socket={socket} logout={logout} />} />
-					<Route path="/contacts" element={<Contacts userInfo={userInfo} contacts={contacts} setContacts={setContacts} setActiveComponent={setActiveComponent} logout={logout} />} />
+					<Route
+						path="/contacts"
+						element={<Contacts userInfo={userInfo} contacts={contacts} setContacts={setContacts} setActiveComponent={setActiveComponent} setUserTrip={setUserTrip} logout={logout} />}
+					/>
 					<Route path="/myTrip" element={<MyTripCard userInfo={userInfo} setUserInfo={setUserInfo} userTrip={userTrip} setUserTrip={setUserTrip} logout={logout} />} />
 					<Route path="/trips" element={<TripImWatching userInfo={userInfo} logout={logout} />} />
 				</Routes>
