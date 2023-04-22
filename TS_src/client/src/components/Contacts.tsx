@@ -6,25 +6,24 @@ import {
   Typography,
   TextField,
   IconButton,
-  Button
+  Button,
 } from '@mui/material';
 import '@fontsource/roboto/300.css';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
-import ContactsList from './ContactList';
+import ContactList from './ContactList';
 // import { Routes, Route } from "react-router-dom";
 // import MyTripCard from "./MyTripCard";
 import { User } from './types';
-import { Box, styled, Typography, Stack, CssBaseline, InputBase } from '@mui/material';
-import { Container } from '@mui/system';
 import Sidebar from './Sidebar';
 import Divider from '@mui/material/Divider';
 
 interface Props {
-  userInfo: User;
-  contacts: Array<User>;
-  setContacts: Dispatch<SetStateAction<Array<User>>>;
-  setActiveComponent: Dispatch<SetStateAction<string>>;
+  userInfo: User,
+  contacts: Array<User>,
+  setContacts: Dispatch<SetStateAction<Array<User>>>,
+  setActiveComponent: Dispatch<SetStateAction<string>>,
+  logout: Function
 };
 
 
@@ -33,6 +32,7 @@ function Contacts({
   contacts,
   setContacts,
   setActiveComponent,
+  logout
 }: Props) {
   // hook to manage contacts checked from list
   const [checkedContacts, setCheckedContacts] = useState<User[]>([]);
@@ -159,7 +159,7 @@ function Contacts({
 
 							<div className="contacts-display">
 								<h3>Select a few contacts to share your trip with:</h3>
-								<ContactsList contacts={contacts} deleteContact={deleteContact} checkedContacts={checkedContacts} setCheckedContacts={setCheckedContacts} />
+								<ContactList contacts={contacts} deleteContact={deleteContact} checkedContacts={checkedContacts} setCheckedContacts={setCheckedContacts} setButtonDisabled={setButtonDisabled}/>
 							</div>
 						</div>
 					</div>
@@ -199,7 +199,7 @@ function Contacts({
         </IconButton>
       </Box>  
       <Typography variant='h6'>Select a few contacts to share your trip with:</Typography>
-      <ContactsList
+      <ContactList
         contacts={contacts}
         deleteContact={deleteContact}
         checkedContacts={checkedContacts}
