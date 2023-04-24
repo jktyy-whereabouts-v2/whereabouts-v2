@@ -13,8 +13,8 @@ import { useNavigate } from 'react-router-dom';
 
 interface Props {
 	userInfo: User;
-	contacts: Array<User>;
-	setContacts: Dispatch<SetStateAction<Array<User>>>;
+	contacts: Array<any>;
+	setContacts: Dispatch<SetStateAction<any>>;
 	setActiveComponent: Dispatch<SetStateAction<string>>;
 	logout: Function;
 	setUserTrip: Dispatch<SetStateAction<Trip>>;
@@ -27,7 +27,7 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 
 	// hook to manage contacts checked from list
 
-	const [checkedContacts, setCheckedContacts] = useState<User[]>([]);
+	const [checkedContacts, setCheckedContacts] = useState<any>([]);
 	const [buttonDisabled, setButtonDisabled] = useState<boolean>(true);
 	const [contactData, addContactData] = useState([]);
 	const [submitted, clickSubmitted] = useState(false);
@@ -50,14 +50,20 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 				if (user.phone_number === contactData.phone_number) ++acc;
 				return acc;
 			}, 0);
-			if (!contactShown) setContacts([...contacts, contactData]);
+			if (!contactShown) {
+				setContacts([...contacts, contactData]);
+				await axios.post('/api/addContact', {
+					traveler_phone_number: userInfo.phone_number,
+					contact_phone_number: contactData.phone_number
+				});
+			}
 		} catch (err: any) {
 			console.log('Fetch request for user with phone_number failed.', err.response.data);
 		}
 	};
 
 	// function to delete contact from list, pass to contacts list
-	const deleteContact = (index: number, contact: User) => {
+	const deleteContact = async (index: number, contact: User) => {
 		const newContacts = [...contacts];
 		const newCheckedContacts = [...checkedContacts];
 		newContacts.splice(index, 1);
@@ -68,6 +74,7 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 
 		// console.log('new contacts:', newContacts);
 		// console.log('new checked contacts', newCheckedContacts)
+		await axios.delete(`/api/deleteContact/traveler/${userInfo.phone_number}/contact/${contact.phone_number}`);
 		setContacts(newContacts);
 		setCheckedContacts(newCheckedContacts);
 	};
@@ -117,10 +124,12 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 
 	// // checking state of contacts data:
 	useEffect(() => {
-		// console.log('Current checkedContacts:', checkedContacts);
-		// console.log('Current User phone: ', userInfo.phone_number);
-		// console.log('Current trip data: ', tripData);
-	}, [checkedContacts, userInfo.phone_number, tripData]);
+		axios.get(`/api/getContacts/${userInfo.phone_number}`)
+			.then(response => {
+				setContacts(response);
+			})
+			.catch(err => console.log(err.message));
+	}, []);
 
 	return (
 		<>

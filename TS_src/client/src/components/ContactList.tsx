@@ -15,10 +15,10 @@ import '@fontsource/roboto/300.css';
 import { User } from './types';
 
 interface Props {
-  contacts: User[];
+  contacts: any;
   deleteContact: (index: number, contact: User) => void;
-  checkedContacts: User[];
-  setCheckedContacts: React.Dispatch<React.SetStateAction<User[]>>;
+  checkedContacts: any;
+  setCheckedContacts: React.Dispatch<React.SetStateAction<any>>;
   setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
