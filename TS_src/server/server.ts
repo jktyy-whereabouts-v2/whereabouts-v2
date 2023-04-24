@@ -2,9 +2,7 @@
 require('dotenv').config('./.env')
 const http = require('http');
 import express, { Express, NextFunction, Request, Response, ErrorRequestHandler } from 'express';
-const cors = require('cors')
-// initialize Server instance of socket.io by passing it HTTP server obj on which to mount the socket server
-import { Server } from 'socket.io';
+const cors = require('cors');
 // import router
 const apiRouter = require('./routers/apiRouter');
 // db connection
@@ -95,62 +93,19 @@ app.use((err: ErrorRequestHandler, req: Request, res: Response, next: NextFuncti
 	return res.status(errorObj.status).json(errorObj.message);
 });
 
-/* START Implement chat with Socket.io */
-// create HTTP server instance
-// const httpServer = http.createServer(app);
-// // const httpServer = require('http').Server(app); // app is a handler function supplied to HTTP server
+interface Args {
+	recipients: any,
+	message: any
+};
+const io = require('socket.io')(3001);
+io.on('connection', (socket: any) => {
+	const id = socket.handshake.query.id;
+	socket.join(id);
+	socket.on('send-message', ({ recipients, message }: Args) => {
+		socket.broadcast.to(recipients).emit('receive-message', message);
+	});
+});
 
-// const io = new Server(httpServer, {
-// 	// pingTimeout: 30000, // https://socket.io/docs/v4/troubleshooting-connection-issues/#the-browser-tab-was-minimized-and-heartbeat-has-failed
-// 	cors: {
-// 		// origin: ['http://localhost:8080'],
-// 		origin: 'http://localhost:3000',
-// 		methods: ['GET', 'POST'],
-// 	},
-// 	// path: '/chat',
-// });
-
-// io.on('connection', (socket) => {
-// 	console.log(`User connected: ${socket.id}`);
-
-// 	socket.on('join_room', (data) => {
-// 		socket.join(data);
-// 	})
-
-// 	socket.on('send_message', (data) => {
-// 		socket.to(data.room).emit('receive_message', data);
-// 	})
-// })
-
-// httpServer.listen(3001, () => console.log("WEBSOCKET SERVER IS RUNNING"))
-
-// // on connection event (i.e. on connecting to socket server instance), listening for incoming sockets + connecting with React app
-// io.on('connection', (socket) => {
-// 	console.log('server side connected!');
-// 	// socket.emit sends a message to only the connecting client
-// 	socket.emit('autoMsg', 'This message will contain the SOS GMap');
-// 	// broadcast flag will send a message to everyone but the connecting client
-// 	// broadcast when a new user connects to the chat
-// 	socket.broadcast.emit('autoMsg', 'I have joined the SOS chat');
-// 	// server listens for new message from any client typing into chat
-// 	socket.on('chatMsg', (msg) => {
-// 		// io.emit sends a message to ALL users on chat
-// 		io.emit('disperseMsg', msg);
-// 		// go to ChatPage.jsx, socket.on('disperseMsg')
-// 	});
-// 	// run when a user disconnects from the chat
-// 	socket.on('disconnect', () => {
-// 		console.log('server side disconnected!');
-// 		// io.emit sends a message to all remaining chat users
-// 		io.emit('autoMsg', 'I have left the SOS chat');
-// 		// refreshing chat page disconnects and reconnects socket
-// 		//https://socket.io/docs/v4/troubleshooting-connection-issues/#problem-the-socket-gets-disconnected
-// 	});
-// });
-// /* END Implement chat with Socket.io */
-
-// // listening on HTTP server!
-// httpServer.listen(PORT, () => console.log(`Currently listening on port: ${PORT}`));
 
 app.listen(PORT);
 

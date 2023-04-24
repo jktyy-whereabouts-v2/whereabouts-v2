@@ -7,7 +7,6 @@ import Registration from './components/pages/Registration';
 import Dashboard from './components/pages/Dashboard';
 import ChatPage from './components/ChatPage';
 import { User, Trip } from './components/types';
-import socket from './main';
 import { Toaster } from 'react-hot-toast';
 import Contacts from './components/Contacts';
 import MyTripCard from './components/MyTripCard';
@@ -69,7 +68,7 @@ function App() {
 					<Route path="/login" element={<Login userInfo={userInfo} setUserInfo={setUserInfo} login={login} />} />
 					<Route path="/register" element={<Registration userInfo={userInfo} setUserInfo={setUserInfo} login={login} />} />
 					<Route path="/dashboard" element={<Dashboard userInfo={userInfo} setUserInfo={setUserInfo} logout={logout} />} />
-					<Route path="/chat" element={<ChatPage userInfo={userInfo} contacts={contacts} socket={socket} logout={logout}/>} />
+					<Route path="/chat" element={<ChatPage userInfo={userInfo} contacts={contacts} logout={logout}/>} />
 					<Route
 						path="/contacts"
 						element={<Contacts userInfo={userInfo} contacts={contacts} setContacts={setContacts} setActiveComponent={setActiveComponent} setUserTrip={setUserTrip} logout={logout} />}

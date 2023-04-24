@@ -1,54 +1,68 @@
-import { User, UserProps } from "./types";
-import React, { useState, useEffect, useRef } from "react";
-import { CssBaseline, Container, Box, Typography, TextField, IconButton, Button } from '@mui/material';
-import { TextareaAutosize } from '@mui/base';
+import { User } from "./types";
+import React, { useState, useEffect } from "react";
+import { CssBaseline, Container, Box, Typography, TextField, IconButton, Card, createTheme } from '@mui/material';
 import '@fontsource/roboto/300.css';
 import SendIcon from '@mui/icons-material/Send';
 import Sidebar from './Sidebar';
 import Divider from '@mui/material/Divider';
-import ChatBar from "./ChatBar";
-import ChatBody from "./ChatBody";
-import ChatFooter from "./ChatFooter";
-import socket from "../main";
+import { SocketProvider, useSocket } from "./SocketProvider";
+
 
 
 interface Props {
   userInfo: User;
   contacts: Array<User>;
-  socket: any;
   logout: Function;
 }
 
 interface Message {
   name: string;
+  phone_number: string;
   date_time: string;
   text: string;
 }
 
-export default function ChatPage ({ userInfo, contacts, socket, logout } : Props){
+export default function ChatPage ({ userInfo, contacts, logout } : Props){
   const [conversation, setConversation] = useState<Array<Message>>([]);
   const [message, setMessage] = useState<Message>({
-    name: userInfo.name,
+    name: '',
+    phone_number: '',
     date_time: '',
     text: ''
   });
+  const socket: any = useSocket();
 
-  const handleSubmit = (event: any) => {
+  const sendMessage = (event: any) => {
     event.preventDefault();
 		const messageInput = event.target[0].value;
-		event.target[0].value = '';
-    setMessage({
-      ...message,
-      date_time: new Date().toDateString(),
+    const today = new Date();
+    if (messageInput !== '') {
+      setMessage({
+      name: userInfo.name,
+      phone_number: userInfo.phone_number,
+      date_time: today.getHours() + ':' + today.getMinutes(),
       text: messageInput
-    });
-
-    setConversation([...conversation, message]);
-
+      });
+    }
+    event.target[0].value = '';
+    socket.emit('send-message', {contacts, message});
   };
 
+  useEffect(() => {
+    if(message.text !== '') setConversation([...conversation, message]);
+  }, [message]);
+
+  useEffect(() => {
+    if(socket == null) return;
+
+    socket.on('receive-message', (msg: Message) => {
+      setConversation([...conversation, msg])
+    })
+    return (() => socket.off('receive-message'));
+  });
+
   return (
-    <>
+    <SocketProvider id={userInfo.phone_number}>
       <Divider sx={{ width: '85%', margin: 'auto' }} variant="middle"></Divider>
       <CssBaseline />
       <Box sx={{ display: 'flex', mt: '30px' }}>
@@ -57,18 +71,48 @@ export default function ChatPage ({ userInfo, contacts, socket, logout } : Props
 				</Container> 
         <Container sx={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '10px', marginTop: '20px' }}>
           <Typography variant='h6'>ChatRoom</Typography>
-          <Box sx={{ borderStyle: 'solid', borderColor: '#DCDCDC', borderRadius: '5%', width: '50%', height: '50vh' }}>
-            Chat messages
-            
+          <Box sx={{ borderStyle: 'solid', borderColor: '#DCDCDC', borderRadius: '5%', width: '50%', height: '50vh', display: 'flex', overflowY: 'scroll', flexDirection: 'column', margin: '3px' }}>
+            <Typography sx= {{width: '100%'}} variant='caption' align='center'>{new Date().toDateString()}</Typography>
+            {
+              conversation.length ? conversation.map((message, index) => {
+                let styling = {
+                  backgroundColor: 'white',
+                  color: 'black',
+                  borderStyle: 'solid',
+                  borderColor: '#DCDCDC',
+                  float: 'left',
+                  margin: '5px',
+                  padding: '10px'
+                };
+                if(message.phone_number === userInfo.phone_number) {
+                  styling = {
+                    ...styling,
+                    backgroundColor: '#4dabf5',
+                    color: 'white',
+                    borderStyle: 'none',
+                    borderColor: 'blue',
+                    float: 'right',
+                  }
+                }
+                return (
+                  <Box>
+                    <Card key={index} sx={styling}>
+                      <Typography align='right'>{message.text}</Typography>
+                      <Typography variant='caption'>{message.name} : {message.date_time}</Typography>
+                    </Card>
+                  </Box>                
+                );
+              }) : null
+            }
           </Box>
-          <Box component='form' onSubmit={handleSubmit} sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-						<TextField rows='2' multiline sx={{ width: '50%' }} placeholder='Message...' id='MessageField' name='sendMessage' />
+          <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+						<TextField sx={{ width: '50%' }} placeholder='Message...' id='MessageField' name='sendMessage' />
 						<IconButton type='submit' color='primary'>
 							<SendIcon />
 						</IconButton>
 					</Box>
         </Container>
       </Box>
-    </>
+    </SocketProvider>
   );
 }
