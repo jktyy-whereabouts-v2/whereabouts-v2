@@ -53,12 +53,12 @@ function App() {
 		console.log('logged out confirmed');
 	};
 
-	useEffect(() => {
-		if (!JSON.parse(localStorage.getItem('user'))) {
-			localStorage.setItem('user', JSON.stringify(userInfo));
-		}
-		setUserInfo(JSON.parse(localStorage.getItem('user')));
-	}, []);
+	// useEffect(() => {
+	// 	if (!JSON.parse(localStorage.getItem('user'))) {
+	// 		localStorage.setItem('user', JSON.stringify(userInfo));
+	// 	}
+	// 	setUserInfo(JSON.parse(localStorage.getItem('user')));
+	// }, []);
 
 	return (
 		<>
@@ -69,7 +69,7 @@ function App() {
 					<Route path="/login" element={<Login userInfo={userInfo} setUserInfo={setUserInfo} login={login} />} />
 					<Route path="/register" element={<Registration userInfo={userInfo} setUserInfo={setUserInfo} login={login} />} />
 					<Route path="/dashboard" element={<Dashboard userInfo={userInfo} setUserInfo={setUserInfo} logout={logout} />} />
-					<Route path="/chat" element={<ChatPage userInfo={userInfo} setUserInfo={setUserInfo} path="/chat" socket={socket} logout={logout} />} />
+					<Route path="/chat" element={<ChatPage userInfo={userInfo} contacts={contacts} socket={socket} logout={logout}/>} />
 					<Route
 						path="/contacts"
 						element={<Contacts userInfo={userInfo} contacts={contacts} setContacts={setContacts} setActiveComponent={setActiveComponent} setUserTrip={setUserTrip} logout={logout} />}

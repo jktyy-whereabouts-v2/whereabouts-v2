@@ -1,91 +1,74 @@
 import { User, UserProps } from "./types";
 import React, { useState, useEffect, useRef } from "react";
+import { CssBaseline, Container, Box, Typography, TextField, IconButton, Button } from '@mui/material';
+import { TextareaAutosize } from '@mui/base';
+import '@fontsource/roboto/300.css';
+import SendIcon from '@mui/icons-material/Send';
+import Sidebar from './Sidebar';
+import Divider from '@mui/material/Divider';
 import ChatBar from "./ChatBar";
 import ChatBody from "./ChatBody";
 import ChatFooter from "./ChatFooter";
 import socket from "../main";
 
 
-// interface Props {
-//   userInfo: User;
-//   setUserInfo: React.Dispatch<React.SetStateAction<User>>;
-//   path: string;
-//   socket: any;
-// }
+interface Props {
+  userInfo: User;
+  contacts: Array<User>;
+  socket: any;
+  logout: Function;
+}
 
-// interface Message {
-//   name: string;
-//   date_time: string;
-//   text: string;
-// }
+interface Message {
+  name: string;
+  date_time: string;
+  text: string;
+}
 
-export default function ChatPage (){
-  const [message, setMessage] = useState<string>('');
-  const [messageReceived, setMessageReceived] = useState<string>('');
-  const sendMessage = () => {
-    socket.emit('send_message', { message });
+export default function ChatPage ({ userInfo, contacts, socket, logout } : Props){
+  const [conversation, setConversation] = useState<Array<Message>>([]);
+  const [message, setMessage] = useState<Message>({
+    name: userInfo.name,
+    date_time: '',
+    text: ''
+  });
+
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+		const messageInput = event.target[0].value;
+		event.target[0].value = '';
+    setMessage({
+      ...message,
+      date_time: new Date().toDateString(),
+      text: messageInput
+    });
+
+    setConversation([...conversation, message]);
+
   };
 
-  useEffect(() => {
-    socket.on('received_message', (data) => {
-      setMessageReceived(data.message);
-    })
-  }, [socket]);
-//   userInfo,
-//   setUserInfo,
-//   path,
-//   socket,
-// }: Props) {
-//   const [messages, setMessages] = useState<Message[]>([]); // have messages state here and NOT on ChatBody b/c socket was not passed down to ChatBody
-//   // to auto-scroll to latest chat message
-//   const lastMsgRef = useRef<HTMLElement>(null);
-
-//   useEffect(() => {
-//     // listens for connecting client
-//     socket.connect();
-//     // cleans up socket
-//     return () => {
-//       socket.disconnect();
-//     };
-//   }, []); // if no dependencies, only runs once (on component mount)
-
-//   // use useEffect to scroll to bottom of chat every time messages updates
-//   useEffect(() => {
-//     // listens for socket server's first msg event
-//     socket.on("autoMsg", (msg: string) => {
-//       // msg contains text only
-//       setMessages([
-//         ...messages,
-//         {
-//           name: userInfo.name,
-//           date_time:
-//             new Date().toDateString() +
-//             " " +
-//             new Date().toLocaleTimeString("en-US"),
-//           text: msg,
-//         },
-//       ]);
-//     });
-//     // listens for socket server's disperseMsg event
-//     socket.on("disperseMsg", (msgObj: Message) => {
-//       setMessages([...messages, msgObj]); // msgObj contains user's name, date_time, and typed text
-//     });
-//     // move scroll bar to bottom
-//     lastMsgRef.current?.scrollIntoView({ behavior: "smooth" });
-//   }, [messages]); // on update of messages
-
   return (
-    <div className="chat">
-      {/* <ChatBar />
-      <div className="chat__main"> */}
-        {/* <ChatBody messages={messages} lastMsgRef={lastMsgRef} /> */}
-        {/* passing down messages to ChatBody to display */}
-        {/* <ChatFooter userInfo={userInfo} setUserInfo={setUserInfo} />
-      </div> */}
-      <input placeholder='Message...' onChange={(e) => setMessage(e.target.value)}/>
-      <button onClick={sendMessage}>Send Message</button>
-      <h1>Message</h1>
-      {messageReceived}
-    </div>
+    <>
+      <Divider sx={{ width: '85%', margin: 'auto' }} variant="middle"></Divider>
+      <CssBaseline />
+      <Box sx={{ display: 'flex', mt: '30px' }}>
+        <Container sx={{ width: '40%', ml: '30px' }}>
+					<Sidebar logout={logout} />
+				</Container> 
+        <Container sx={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '10px', marginTop: '20px' }}>
+          <Typography variant='h6'>ChatRoom</Typography>
+          <Box sx={{ borderStyle: 'solid', borderColor: '#DCDCDC', borderRadius: '5%', width: '50%', height: '50vh' }}>
+            Chat messages
+            
+          </Box>
+          <Box component='form' onSubmit={handleSubmit} sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+						<TextField rows='2' multiline sx={{ width: '50%' }} placeholder='Message...' id='MessageField' name='sendMessage' />
+						<IconButton type='submit' color='primary'>
+							<SendIcon />
+						</IconButton>
+					</Box>
+        </Container>
+      </Box>
+    </>
   );
 }
