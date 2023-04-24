@@ -139,11 +139,12 @@ const whereaboutsController = {
   //get contacts of current user
   getContacts: async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const { phone_number } = req.params;
       res.locals.contacts = await db.query(
         `select u.phone_number, u.name from users u
                 inner join contacts_join cj on u.phone_number = cj.contact_phone_number
-                where cj.traveler_phone_number = $1`,
-          [req.params['phone_number']]
+                where cj.traveler_phone_number = '${phone_number}'`
+          // [req.params['phone_number']]
         );
         return next();
       } catch (error) {
@@ -174,10 +175,11 @@ const whereaboutsController = {
     //delete contact
     deleteContact: async (req: Request, res: Response, next: NextFunction) => {
       try {
+        const { travelerPhone, contactPhone } = req.params;
         await db.query(
           `DELETE FROM contacts_join
-                WHERE traveler_phone_number = $1 AND contact_phone_number = $2`,
-        [req.params.travelerPhone, req.params.contactPhone]
+                WHERE traveler_phone_number = '${travelerPhone}' AND contact_phone_number = '${contactPhone}'`
+        // [req.params.travelerPhone, req.params.contactPhone]
       );
       return next();
     } catch (error) {
@@ -324,4 +326,4 @@ const whereaboutsController = {
   },
 };
 
-module.exports = whereaboutsController;
+// module.exports = whereaboutsController;

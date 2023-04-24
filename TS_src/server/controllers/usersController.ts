@@ -5,12 +5,11 @@ const db = require('../models/whereaboutsModel');
 import { Request, Response, NextFunction } from 'express';
 
 const usersController = {
-    //get single user by phone number
+     //get single user by phone number
     getUserByPhoneNumber: async (req: Request, res: Response, next: NextFunction) => {
       try {
         res.locals.user = await db.query(
-          `SELECT * FROM users WHERE phone_number=$1`,
-          [req.params['phone_number']]
+          `SELECT * FROM users WHERE phone_number = '${req.params.phone_number}'`,
         );
         return next();
       } catch (error) {

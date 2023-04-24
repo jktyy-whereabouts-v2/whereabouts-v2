@@ -3,6 +3,8 @@ const loginController = require('../controllers/loginController');
 const router = Router();
 
 // REGISTER component routes
+// tested on backend w/ Postman, WORKS 
+// registers new user
 router.post('/', loginController.insertNewUser, (req: Request, res: Response) => {
   res.status(200).json({name : res.locals.name, phone_number : res.locals.phone_number});
 });

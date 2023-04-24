@@ -4,6 +4,10 @@ const router = Router();
 
 //get single user by phone number (for adding contacts). If nothing is found, the 'rows' property is an empty array.
 // testing without :phone_number in route
+
+
+// tested on backend w/ Postman, WORKS
+// returns user id, name, phone_number, password if found
 router.get(
   '/:phone_number',
   usersController.getUserByPhoneNumber,

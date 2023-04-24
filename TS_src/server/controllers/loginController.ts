@@ -5,85 +5,89 @@ const db = require('../models/whereaboutsModel');
 import { Request, Response, NextFunction } from 'express';
 
 const loginController = {
-    // LOGIN component middleware
-  checkUserExists: async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      // check all reqd fields are provided on req body (already checked on FE, so this may not be needed)
-      const props = ["phone_number", "password"];
-      if (!props.every((prop) => Object.hasOwn(req.body, prop))) {
-        return next({
-          log: "Express error handler caught loginController.checkUserExists error: Missing phone number or password",
-          status: 400,
-          message: { error: "Missing phone number or password" },
-        });
-      }
+ // LOGIN component middleware
+ checkUserExists: async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // check all reqd fields are provided on req body (already checked on FE, so this may not be needed)
+    // const props = ["phone_number", "password"];
+    // if (!props.every((prop) => Object.hasOwn(req.body, prop))) {
+    //   return next({
+    //     log: "Express error handler caught whereaboutsController.checkUserExists error: Missing phone number or password",
+    //     status: 400,
+    //     message: { error: "Missing phone number or password" },
+    //   });
+    // }
 
-      // destructure / sanitize req body
-      const { phone_number, password } = req.body;
+    // destructure / sanitize req body
+    const { phone_number, password } = req.body;
 
-      // check that a record for passed phone_number exists in users table
-      const queryStrCheck = `SELECT * FROM users u WHERE u.phone_number='${phone_number}'`;
-      const existingUser = await db.query(queryStrCheck);
-      if (!existingUser.rows[0]) {
-        return next({
-          log: "Express error handler caught loginController.checkUserExists error: No user exists for input phone number",
-          status: 400,
-          message: { error: "No user exists for input phone number" },
-        });
-      }
-
-      // if user exists in users table, compare user-input password with stored hashed password
-      // const passwordIsMatch = await bcrypt.compare(
-      //   password,
-      //   existingUser.rows[0].password
-      // );
-
-      // if (!passwordIsMatch) {
-      //   return next({
-      //     log: 'Express error handler caught whereaboutsController.checkUserExists error: Input password is incorrect',
-      //     status: 400,
-      //     message: { error: 'Input password is incorrect' },
-      //   });
-      // }
-
-      if (password !== existingUser.rows[0].password) {
-        return next({
-          log: "Express error handler caught loginController.checkUserExists error: Input password is incorrect",
-          status: 400,
-          message: { error: "Input password is incorrect" },
-        });
-      }
-
-      // no need to persist data, only success message needed on FE
-      // now passing name and phone number for use in chat
-      res.locals.name = existingUser.rows[0].name;
-      res.locals.phone_number = existingUser.rows[0].phone_number;
-      return next();
-    } catch (error) {
-      console.log(error);
+    // check that a record for passed phone_number exists in users table
+    const queryStrCheck = `SELECT * FROM users u WHERE u.phone_number='${phone_number}'`;
+    const existingUser = await db.query(queryStrCheck);
+    if (!existingUser.rows[0]) {
       return next({
-        log: "Express error handler caught loginController.checkUserExists error",
-        status: 500,
-        message: { error: "User login failed" },
-        // message: { error: error.stack }, // for more detailed debugging info
+        log: "Express error handler caught loginController.checkUserExists error: No user exists for input phone number",
+        status: 400,
+        message: { error: "No user exists for input phone number" },
       });
     }
-  },
+
+    // if user exists in users table, compare user-input password with stored hashed password
+    // const passwordIsMatch = await bcrypt.compare(
+    //   password,
+    //   existingUser.rows[0].password
+    // );
+
+    // if (!passwordIsMatch) {
+    //   return next({
+    //     log: 'Express error handler caught whereaboutsController.checkUserExists error: Input password is incorrect',
+    //     status: 400,
+    //     message: { error: 'Input password is incorrect' },
+    //   });
+    // }
+
+    if (password !== existingUser.rows[0].password) {
+      return next({
+        log: "Express error handler caught loginController.checkUserExists error: Input password is incorrect",
+        status: 400,
+        message: { error: "Input password is incorrect" },
+      });
+    }
+
+    // no need to persist data, only success message needed on FE
+    // now passing name and phone number for use in chat
+    res.locals.name = existingUser.rows[0].name;
+    res.locals.phone_number = existingUser.rows[0].phone_number;
+    return next();
+  } catch (error) {
+    return next({
+      log: "Express error handler caught loginController.checkUserExists error",
+      status: 500,
+      message: { error: "User login failed" },
+      // message: { error: error.stack }, // for more detailed debugging info
+    });
+  }
+},
 
         
-    // REGISTER component middleware
-  insertNewUser: async (req: Request, res: Response, next: NextFunction) => {
+   // REGISTER component middleware
+   insertNewUser: async (req: Request, res: Response, next: NextFunction) => {
     try {
       // check all reqd fields are provided on req body (already checked on FE, so this may not be needed)
-      const props = ["name", "phone_number", "password"];
+      // const props = ["name", "phone_number", "password"];
 
-      if (!props.every((prop) => Object.hasOwn(req.body, prop))) {
-        return next({
-          log: "Express error handler caught loginController.insertNewUser error: Missing name, phone number, or password",
-          status: 400,
-          message: { error: "Missing name, phone number, or password" },
-        });
-      }
+      // if (
+      //   !props.every((prop) => {
+      //     console.log(prop);
+      //     Object.hasOwn(req.body, prop);
+      //   })
+      // ) {
+      //   return next({
+      //     log: "Express error handler caught whereaboutsController.insertNewUser error: Missing name, phone number, or password",
+      //     status: 400,
+      //     message: { error: "Missing name, phone number, or password" },
+      //   });
+      // }
 
       // destructure / sanitize req body
       const { name, phone_number, password } = req.body;
@@ -132,6 +136,6 @@ const loginController = {
       });
     }
   },
-};
+}
 
 module.exports = loginController;
