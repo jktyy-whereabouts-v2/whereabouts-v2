@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface Props {
 	userInfo: User;
-	contacts: Array<any>;
+	contacts: any;
 	setContacts: Dispatch<SetStateAction<any>>;
 	setActiveComponent: Dispatch<SetStateAction<string>>;
 	logout: Function;
@@ -26,7 +26,7 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 	const navigate = useNavigate();
 
 	// hook to manage contacts checked from list
-	const [checkedContacts, setCheckedContacts] = useState<any>([]);
+	const [checkedContacts, setCheckedContacts] = useState<Array<User>>([]);
 	// hook to disable starting trip button if no contacts are checked
 	const [buttonDisabled, setButtonDisabled] = useState<boolean>(true);
 	// hook to set status on whether trips has started, for navigation purposes
@@ -49,7 +49,7 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 			// if user exists
 
 			// check if contact is already in user's contact list
-			const contactShown = contacts.reduce((acc, user) => {
+			const contactShown = contacts.reduce((acc: number, user: User) => {
 				if (user.phone_number === contactData.phone_number) ++acc;
 				return acc;
 			}, 0);
@@ -88,8 +88,8 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 	};
 
 	// function to extract phone numbers from checkedContacts array
-	const extractPhoneNumbers = (array: typeof contacts) => {
-		return array.map((obj) => obj.phone_number);
+	const extractPhoneNumbers = (array: any) => {
+		return array.map((obj: any) => obj.phone_number);
 	};
 
 	// declare variable to contain proper info to send backend
@@ -169,36 +169,3 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 }
 
 export default Contacts;
-
-{
-	/* <Box sx={{ display: 'flex', mt: '30px' }}>
-<Container sx={{ width: '40%', ml: '30px' }}>
-	<Sidebar logout={logout} />
-</Container>
-<Container
-	sx={{
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'left',
-	}}>
-	<Typography variant="h5">Add contacts to your list:</Typography>
-	<Box
-		sx={{
-			display: 'flex',
-			alignItems: 'center',
-		}}
-		component="form"
-		onSubmit={handleSubmit}>
-		<TextField margin="normal" fullWidth name="addContact" placeholder="Search by phone number" />
-		<IconButton type="submit">
-			<SearchIcon />
-		</IconButton>
-	</Box>
-	<Typography variant="h6">Select a few contacts to share your trip with:</Typography>
-	<ContactList contacts={contacts} deleteContact={deleteContact} checkedContacts={checkedContacts} setCheckedContacts={setCheckedContacts} setButtonDisabled={setButtonDisabled} />
-	<Button variant="contained" onClick={handleStartTrip} disabled={buttonDisabled}>
-		Start Your Trip!
-	</Button>
-</Container>
-</Box> */
-}

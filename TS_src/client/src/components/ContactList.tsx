@@ -17,8 +17,8 @@ import { User } from './types';
 interface Props {
   contacts: any;
   deleteContact: (index: number, contact: User) => void;
-  checkedContacts: any;
-  setCheckedContacts: React.Dispatch<React.SetStateAction<any>>;
+  checkedContacts: User[];
+  setCheckedContacts: React.Dispatch<React.SetStateAction<Array<User>>>;
   setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
