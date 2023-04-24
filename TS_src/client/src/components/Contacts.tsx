@@ -26,32 +26,38 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 	const navigate = useNavigate();
 
 	// hook to manage contacts checked from list
-
 	const [checkedContacts, setCheckedContacts] = useState<any>([]);
+	// hook to disable starting trip button if no contacts are checked
 	const [buttonDisabled, setButtonDisabled] = useState<boolean>(true);
-	const [contactData, addContactData] = useState([]);
+	// hook to set status on whether trips has started, for navigation purposes
 	const [submitted, clickSubmitted] = useState(false);
 
 	// Fetch GET request for contact and add to list:
 	const handleSubmit = async (event: any) => {
 		event.preventDefault();
-		//console.log('submit: ', event.target[0].value )
+	
 		const phone_number = event.target[0].value.replaceAll(/[^0-9]/g, '');
 		event.target[0].value = '';
-		//fetch request to get contact info
+
 		try {
 			const response = await axios.get(`/api/users/${phone_number}`);
 
 			const contactData = response.data[0];
+			// if contact does not exist
 			if (!contactData.name) return;
 
-			// add user to array of contacts
+			// if user exists
+
+			// check if contact is already in user's contact list
 			const contactShown = contacts.reduce((acc, user) => {
 				if (user.phone_number === contactData.phone_number) ++acc;
 				return acc;
 			}, 0);
+
+			// if contact is not in user's contact list, add it to the list
 			if (!contactShown) {
 				setContacts([...contacts, contactData]);
+				// also updating contact list in the database
 				await axios.post('/api/addContact', {
 					traveler_phone_number: userInfo.phone_number,
 					contact_phone_number: contactData.phone_number
@@ -64,19 +70,21 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 
 	// function to delete contact from list, pass to contacts list
 	const deleteContact = async (index: number, contact: User) => {
+
+		// delete contact from the contact list
 		const newContacts = [...contacts];
 		const newCheckedContacts = [...checkedContacts];
 		newContacts.splice(index, 1);
+		setContacts(newContacts);
 
+		// if contact has also been checked, uncheck it
 		const foundIndex = newCheckedContacts.indexOf(contact);
 		if (foundIndex >= 0) newCheckedContacts.splice(foundIndex, 1);
 		if (newContacts.length === 0 || newCheckedContacts.length === 0) setButtonDisabled(true);
-
-		// console.log('new contacts:', newContacts);
-		// console.log('new checked contacts', newCheckedContacts)
-		await axios.delete(`/api/deleteContact/traveler/${userInfo.phone_number}/contact/${contact.phone_number}`);
-		setContacts(newContacts);
 		setCheckedContacts(newCheckedContacts);
+
+		// updating database
+		await axios.delete(`/api/deleteContact/traveler/${userInfo.phone_number}/contact/${contact.phone_number}`);
 	};
 
 	// function to extract phone numbers from checkedContacts array
@@ -122,7 +130,7 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 		}
 	}, [submitted]);
 
-	// // checking state of contacts data:
+	// initially receiving user's contact list from the database
 	useEffect(() => {
 		axios.get(`/api/getContacts/${userInfo.phone_number}`)
 			.then(response => {

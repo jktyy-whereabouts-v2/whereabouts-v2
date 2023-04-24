@@ -30,18 +30,19 @@ export default function ContactsList({
   setCheckedContacts,
   setButtonDisabled
 }: Props) {
+  // adding contacts to the user's checked contact list
   const handleToggle = (contact: User) => () => {
     const currentIndex = checkedContacts.indexOf(contact);
     const newChecked: User[] = [...checkedContacts];
+    // add to the checked contact list, if not already in the list
     if (currentIndex === -1) {
       newChecked.push(contact);
     }
+    // if contact is already in the list, remove it
     else {
       newChecked.splice(currentIndex, 1);
     }
-    // set new checked items in array from Contacts
-    // const newCheckedContacts : User[] = [...checkedContacts];
-    // newCheckedContacts[index] = contact;
+    // if user's checked contact list is now empty, disable the starting trip button
     if(newChecked.length === 0) setButtonDisabled(true);
     else setButtonDisabled(false);
     setCheckedContacts(newChecked);
@@ -50,7 +51,7 @@ export default function ContactsList({
   <Container maxWidth='sm'>
     <List >
       <CssBaseline />
-      {contacts.length !== 0 && contacts.map((value, index) => {
+      {contacts.length !== 0 && contacts.map((value: User, index: number) => {
         const labelId = `checkbox-list-label-${value}`;
         return (
         <ListItem 
