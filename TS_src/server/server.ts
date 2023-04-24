@@ -97,28 +97,32 @@ app.use((err: ErrorRequestHandler, req: Request, res: Response, next: NextFuncti
 
 /* START Implement chat with Socket.io */
 // create HTTP server instance
-const httpServer = http.createServer(app);
-// const httpServer = require('http').Server(app); // app is a handler function supplied to HTTP server
+// const httpServer = http.createServer(app);
+// // const httpServer = require('http').Server(app); // app is a handler function supplied to HTTP server
 
-const io = new Server(httpServer, {
-	// pingTimeout: 30000, // https://socket.io/docs/v4/troubleshooting-connection-issues/#the-browser-tab-was-minimized-and-heartbeat-has-failed
-	cors: {
-		// origin: ['http://localhost:8080'],
-		origin: 'http://localhost:3000',
-		methods: ['GET', 'POST'],
-	},
-	// path: '/chat',
-});
+// const io = new Server(httpServer, {
+// 	// pingTimeout: 30000, // https://socket.io/docs/v4/troubleshooting-connection-issues/#the-browser-tab-was-minimized-and-heartbeat-has-failed
+// 	cors: {
+// 		// origin: ['http://localhost:8080'],
+// 		origin: 'http://localhost:3000',
+// 		methods: ['GET', 'POST'],
+// 	},
+// 	// path: '/chat',
+// });
 
-io.on('connection', (socket) => {
-	console.log(`User connected: ${socket.id}`);
+// io.on('connection', (socket) => {
+// 	console.log(`User connected: ${socket.id}`);
 
-	socket.on('send_message', (data) => {
-		socket.broadcast.emit('received_message', data)
-	})
-})
+// 	socket.on('join_room', (data) => {
+// 		socket.join(data);
+// 	})
 
-httpServer.listen(3001, () => console.log("WEBSOCKET SERVER IS RUNNING"))
+// 	socket.on('send_message', (data) => {
+// 		socket.to(data.room).emit('receive_message', data);
+// 	})
+// })
+
+// httpServer.listen(3001, () => console.log("WEBSOCKET SERVER IS RUNNING"))
 
 // // on connection event (i.e. on connecting to socket server instance), listening for incoming sockets + connecting with React app
 // io.on('connection', (socket) => {
@@ -147,5 +151,7 @@ httpServer.listen(3001, () => console.log("WEBSOCKET SERVER IS RUNNING"))
 
 // // listening on HTTP server!
 // httpServer.listen(PORT, () => console.log(`Currently listening on port: ${PORT}`));
+
+app.listen(PORT);
 
 module.exports = app;
