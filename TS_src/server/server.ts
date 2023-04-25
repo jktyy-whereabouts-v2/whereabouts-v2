@@ -5,8 +5,10 @@ import express, { Express, NextFunction, Request, Response, ErrorRequestHandler 
 const cors = require('cors')
 // initialize Server instance of socket.io by passing it HTTP server obj on which to mount the socket server
 import { Server } from 'socket.io';
+const session = require('express-session');
 // import router
 const apiRouter = require('./routers/apiRouter');
+import authRouter from './routers/authRouter'
 // db connection
 const db = require('./models/whereaboutsModel');
 // define server port
@@ -29,6 +31,17 @@ app.use(cors()); // allows communication between different domains
 
 // define route handler
 app.use('/api', apiRouter);
+app.use('/auth', authRouter);
+
+// app.use(session({
+// 	secret: 'mysecret',
+// 	resave: false,
+// 	saveUninitialized: true,
+// 	cookie: {
+// 		secure: false,
+// 		maxAge: 300000
+// 	}
+// }))
 
 /* START Implement SSE server-side to regularly stream trips data back to FE */
 const dbQuery = async (phoneNumber:string) => {
@@ -83,6 +96,7 @@ app.use((req, res) => res.status(404).send("This is not the page you're looking 
 
 // global error handler
 app.use((err: ErrorRequestHandler, req: Request, res: Response, next: NextFunction) => {
+	console.log(err)
 	const defaultErr = {
 		log: 'Express error handler caught unknown middleware error.',
 		status: 500,
