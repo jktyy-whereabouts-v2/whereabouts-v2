@@ -5,8 +5,9 @@ import '@fontsource/roboto/300.css';
 import SendIcon from '@mui/icons-material/Send';
 import Sidebar from './Sidebar';
 import Divider from '@mui/material/Divider';
-import { SocketProvider, useSocket } from "./SocketProvider";
+import io from 'socket.io-client';
 
+const socket = io('http://localhost:3001');
 
 
 interface Props {
@@ -23,6 +24,7 @@ interface Message {
 }
 
 export default function ChatPage ({ userInfo, contacts, logout } : Props){
+  socket.emit('join', {phone_number: userInfo.phone_number});
   const [conversation, setConversation] = useState<Array<Message>>([]);
   const [message, setMessage] = useState<Message>({
     name: '',
@@ -30,7 +32,7 @@ export default function ChatPage ({ userInfo, contacts, logout } : Props){
     date_time: '',
     text: ''
   });
-  const socket: any = useSocket();
+  // const socket: any = useSocket();
 
   const sendMessage = (event: any) => {
     event.preventDefault();
@@ -45,7 +47,7 @@ export default function ChatPage ({ userInfo, contacts, logout } : Props){
       });
     }
     event.target[0].value = '';
-    socket.emit('send-message', {contacts, message});
+    socket.emit('send_message', {contacts, message});
   };
 
   useEffect(() => {
@@ -53,16 +55,13 @@ export default function ChatPage ({ userInfo, contacts, logout } : Props){
   }, [message]);
 
   useEffect(() => {
-    if(socket == null) return;
-
-    socket.on('receive-message', (msg: Message) => {
-      setConversation([...conversation, msg])
+    socket.on('receive_message', (msg: Message) => {
+      setConversation([...conversation, msg]);
     })
-    return (() => socket.off('receive-message'));
-  });
+  }, [conversation]);
 
   return (
-    <SocketProvider id={userInfo.phone_number}>
+    <>
       <Divider sx={{ width: '85%', margin: 'auto' }} variant="middle"></Divider>
       <CssBaseline />
       <Box sx={{ display: 'flex', mt: '30px' }}>
@@ -113,6 +112,6 @@ export default function ChatPage ({ userInfo, contacts, logout } : Props){
 					</Box>
         </Container>
       </Box>
-    </SocketProvider>
+    </>
   );
 }

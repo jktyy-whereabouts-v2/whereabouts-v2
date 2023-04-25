@@ -1,7 +1,9 @@
 // required modules
 require('dotenv').config('./.env')
-const http = require('http');
+
 import express, { Express, NextFunction, Request, Response, ErrorRequestHandler } from 'express';
+import { createServer } from "http";
+import { Server, Socket } from "socket.io";
 const cors = require('cors');
 // import router
 const apiRouter = require('./routers/apiRouter');
@@ -9,6 +11,7 @@ const apiRouter = require('./routers/apiRouter');
 const db = require('./models/whereaboutsModel');
 // define server port
 const PORT = 3500;
+import { User } from '../client/src/components/types';
 
 // create express server instance
 const app: Express = express();
@@ -93,18 +96,28 @@ app.use((err: ErrorRequestHandler, req: Request, res: Response, next: NextFuncti
 	return res.status(errorObj.status).json(errorObj.message);
 });
 
-interface Args {
-	recipients: any,
-	message: any
-};
-const io = require('socket.io')(3001);
-io.on('connection', (socket: any) => {
-	const id = socket.handshake.query.id;
-	socket.join(id);
-	socket.on('send-message', ({ recipients, message }: Args) => {
-		socket.broadcast.to(recipients).emit('receive-message', message);
-	});
+
+const httpServer = createServer();
+const io = new Server(httpServer, {
+  // ...
+	cors: {
+		origin: ['http://localhost:3000'],
+		methods: ['GET', 'POST'],
+	},
 });
+
+io.on("connection", (socket: Socket) => {
+  socket.on('join', (data) => {
+		socket.join(data.phone_number);
+	})
+	socket.on('send_message', ({ contacts, message }) => {
+		contacts.forEach((contact: User) => {
+			socket.to(contact.phone_number).emit('receive_message', message);
+		})
+	})
+});
+
+httpServer.listen(3001);
 
 
 app.listen(PORT);
