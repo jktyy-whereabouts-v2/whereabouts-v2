@@ -2,7 +2,7 @@ import * as React from "react";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import MapContainer from "./ContactsMapContainer";
+import ContactsMapContainer from "./ContactsMapContainer";
 import CardActions from "@mui/material/CardActions";
 import { red } from "@mui/material/colors";
 
@@ -39,7 +39,7 @@ export default function TripViewingCard({ trip }: any) {
   return (
     <Card sx={{ maxWidth: 700, backgroundColor: messages[status].bgColor }}>
       <div className="map-container">
-        <MapContainer trip={trip} />
+        <ContactsMapContainer trip={trip} />
       </div>
 
       <Typography variant="h5" color={messages[status].color}>

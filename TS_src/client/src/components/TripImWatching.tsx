@@ -13,6 +13,7 @@ import { Container } from "@mui/system";
 import Sidebar from "./Sidebar";
 import Divider from "@mui/material/Divider";
 import { User } from "./types";
+import Card from "@mui/material/Card";
 
 interface Trips {
   trips_id: string;
@@ -26,7 +27,6 @@ const TripImWatching: React.FC<{ userInfo: User; logout: Function }> = ({
 }) => {
   //SSE - render trips
   const [trips, setTrips] = useState<Trips[]>([]);
-  console.log(trips);
   useEffect(() => {
     const source = new EventSource(
       `http://localhost:3500/stream/${userInfo.phone_number}`,
@@ -42,9 +42,7 @@ const TripImWatching: React.FC<{ userInfo: User; logout: Function }> = ({
     });
 
     source.addEventListener("message", (e) => {
-      console.log(e.data);
       const data = JSON.parse(e.data);
-      console.log(data);
       setTrips(data);
     });
 
@@ -72,11 +70,11 @@ const TripImWatching: React.FC<{ userInfo: User; logout: Function }> = ({
             flexDirection: "column",
             gap: "10px",
             paddingBottom: "10px",
+            marginTop: "10px",
           }}
         >
-          <div className="trip-watching-container">
-            <br />
-            <h1>Trips I'm Watching</h1>
+          <Card sx={{ maxWidth: 700 }}>
+            <Typography>Trips I'm Watching</Typography>
             {trips.map((trip) => (
               <div key={trip.trips_id} className="view-card">
                 <br></br>
@@ -87,7 +85,7 @@ const TripImWatching: React.FC<{ userInfo: User; logout: Function }> = ({
             /> */}
               </div>
             ))}
-          </div>
+          </Card>
         </Container>
       </Box>
     </>

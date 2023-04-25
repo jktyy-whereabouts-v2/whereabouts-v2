@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 // import CardMedia from '@mui/material/CardMedia';
 import Button from "@mui/material/Button";
 import axios from "axios";
-import MapContainer from "./ContactsMapContainer";
+import UserMapContainer from "./UserMapContainer";
 import {
   Box,
   styled,
@@ -100,7 +100,7 @@ const MyTripCard = ({
           <Card sx={{ maxWidth: 700 }}>
             {/* lat={userTrip.start_lat} lng={userTrip.start_lng} */}
             <div className="map-container">
-              <MapContainer trip={trip} />
+              <UserMapContainer userTrip={userTrip} />
             </div>
             {/* <CardMedia
           sx={{ height: 150 }}
