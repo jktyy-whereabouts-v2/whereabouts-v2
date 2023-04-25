@@ -1,14 +1,14 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
-import { CssBaseline, Container, Box, Typography, TextField, IconButton, Button } from '@mui/material';
+import { CssBaseline, Container, Box, Typography, TextField, IconButton, Button, InputAdornment } from '@mui/material';
 import '@fontsource/roboto/300.css';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import ContactList from './ContactList';
 // import MyTripCard from "./MyTripCard";
-import { User, Trip } from './types';
-import Sidebar from './Sidebar';
-import Divider from '@mui/material/Divider';
-import { useNavigate } from 'react-router-dom';
+import { User, Trip } from "./types";
+import Sidebar from "./Sidebar";
+import Divider from "@mui/material/Divider";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
 	userInfo: User;
@@ -21,8 +21,15 @@ interface Props {
 
 const googleURL = process.env.GOOGLEMAPSAPIKEY;
 
-function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout, setUserTrip }: Props) {
-	const navigate = useNavigate();
+function Contacts({
+  userInfo,
+  contacts,
+  setContacts,
+  setActiveComponent,
+  logout,
+  setUserTrip,
+}: Props) {
+  const navigate = useNavigate();
 
 	// hook to manage contacts checked from list
 	const [checkedContacts, setCheckedContacts] = useState<Array<User>>([]);
@@ -91,43 +98,40 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 		return array.map((obj: any) => obj.phone_number);
 	};
 
-	// declare variable to contain proper info to send backend
-	const tripData = {
-		traveler: userInfo.phone_number,
-		watchers: extractPhoneNumbers(checkedContacts),
-	};
 
-	// function to send post request to back end with user information to start trip
-	const handleStartTrip = async () => {
-		// create a post request to the route: /api/trips/start
-		try {
-			const response = await axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${googleURL}`);
-			const { lat, lng } = response.data.location;
-			setUserTrip((prevState: any) => {
-				return {
-					...prevState,
-					start_timestamp: new Date().toDateString(),
-					start_lat: lat,
-					start_lng: lng,
-				};
-			});
-			const res = await axios.post('/api/trips/start', tripData);
-			if (res.status === 204) {
-				console.log('status is 200, redirect to MyTripCard');
-				clickSubmitted(true);
-			}
-		} catch (error) {
-			if (error) {
-				alert('Please check contacts information and try again');
-			}
-		}
-	};
+  // declare variable to contain proper info to send backend
+  const tripData = {
+    traveler: userInfo.phone_number,
+    watchers: extractPhoneNumbers(checkedContacts),
+  };
 
-	useEffect(() => {
-		if (submitted) {
-			navigate('/myTrip');
-		}
-	}, [submitted]);
+  // function to send post request to back end with user information to start trip
+  const handleStartTrip = async () => {
+    // create a post request to the route: /api/trips/start
+    try {
+      const response = await axios.post(
+        `https://www.googleapis.com/geolocation/v1/geolocate?key=${googleURL}`
+      );
+      const { lat, lng } = response.data.location;
+      setUserTrip((prevState: any) => {
+        return {
+          ...prevState,
+          start_timestamp: new Date().toDateString(),
+          start_lat: lat,
+          start_lng: lng,
+        };
+      });
+      const res = await axios.post("/api/trips/start", tripData);
+      if (res.status === 204) {
+        console.log("status is 200, redirect to MyTripCard");
+        clickSubmitted(true);
+      }
+    } catch (error) {
+      if (error) {
+        alert("Please check contacts information and try again");
+      }
+    }
+  };
 
 	// initially receiving user's contact list from the database
 	useEffect(() => {
@@ -138,33 +142,74 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 			.catch(err => console.log(err.message));
 	}, []);
 
-	return (
-		<>
-			<Divider sx={{ width: '85%', margin: 'auto' }} variant="middle"></Divider>
-			<CssBaseline />
-			<Box sx={{ display: 'flex', mt: '30px' }}>
-				<Container sx={{ width: '40%', ml: '30px' }}>
-					<Sidebar logout={logout} />
-				</Container>
+  useEffect(() => {
+    if (submitted) {
+      navigate("/myTrip");
+    }
+  }, [submitted]);
 
-				<Container sx={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '10px', marginTop: '20px' }}>
-					<Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-						<TextField size="small" placeholder="Add Contact..." id="addContact" name="addContact" label="Add Contact" />
-						<IconButton type="submit">
-							<SearchIcon />
-						</IconButton>
-					</Box>
-					<Typography variant="h6">Select a few contacts to share your trip with:</Typography>
+  return (
+    <>
+      <Divider sx={{ width: "85%", margin: "auto" }} variant="middle"></Divider>
+      <CssBaseline />
+      <Box sx={{ display: "flex", mt: "30px" }}>
+        <Container sx={{ width: "40%", ml: "30px" }}>
+          <Sidebar logout={logout} />
+        </Container>
 
-					<ContactList contacts={contacts} deleteContact={deleteContact} checkedContacts={checkedContacts} setCheckedContacts={setCheckedContacts} setButtonDisabled={setButtonDisabled} />
+        <Container
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            paddingBottom: "10px",
+            marginTop: "20px",
+          }}
+        >
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ display: "flex", gap: "10px", alignItems: "center" }}
+          >
+            <TextField
+              sx={{ width: "280px" }}
+              size="small"
+              id="contacts"
+              placeholder="Add Contact"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton type="submit" edge="end">
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+          <Typography sx={{ marginTop: "25px" }} variant="h6">
+            Select to share your trip with:
+          </Typography>
 
-					<Button variant="contained" onClick={handleStartTrip} disabled={buttonDisabled}>
-						Start Your Trip!
-					</Button>
-				</Container>
-			</Box>
-		</>
-	);
+          <ContactList
+            contacts={contacts}
+            deleteContact={deleteContact}
+            checkedContacts={checkedContacts}
+            setCheckedContacts={setCheckedContacts}
+            setButtonDisabled={setButtonDisabled}
+          />
+          <Button
+            sx={{ width: "290px" }}
+            variant="contained"
+            onClick={handleStartTrip}
+            disabled={buttonDisabled}
+          >
+            Start Your Trip!
+          </Button>
+        </Container>
+      </Box>
+    </>
+  );
 }
 
 export default Contacts;

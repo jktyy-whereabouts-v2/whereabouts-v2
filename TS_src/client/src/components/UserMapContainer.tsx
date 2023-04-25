@@ -6,15 +6,15 @@ const containerStyle = {
   width: "700px",
 };
 
-function ContactsMapComponent({ trip }: any) {
+function ContactsMapContainer({ userTrip }: any) {
   const { isLoaded } = useJsApiLoader({
     id: process.env.GOOGLEMAPSID,
     googleMapsApiKey: process.env.GOOGLEMAPSAPIKEY,
   });
 
   const center = {
-    lat: Number(trip.start_lat),
-    lng: Number(trip.start_lng),
+    lat: Number(userTrip.start_lat),
+    lng: Number(userTrip.start_lng),
   };
 
   const [map, setMap] = useState(null);
@@ -37,4 +37,4 @@ function ContactsMapComponent({ trip }: any) {
   );
 }
 
-export default ContactsMapComponent;
+export default ContactsMapContainer;
