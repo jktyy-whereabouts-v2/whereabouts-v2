@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 // import CardMedia from '@mui/material/CardMedia';
 import Button from "@mui/material/Button";
 import axios from "axios";
-import MapContainer from "./MapContainer";
+import MapContainer from "./ContactsMapContainer";
 import {
   Box,
   styled,
@@ -82,57 +82,65 @@ const MyTripCard = ({
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          mt: "100px",
-        }}
-      >
-        <Card sx={{ maxWidth: 700 }}>
-          {/* lat={userTrip.start_lat} lng={userTrip.start_lng} */}
-          <div className="map-container">
-            <MapContainer trip={trip} />
-          </div>
-          {/* <CardMedia
+      <Divider sx={{ width: "85%", margin: "auto" }} variant="middle"></Divider>
+      <CssBaseline />
+      <Box sx={{ display: "flex", mt: "30px" }}>
+        <Container sx={{ width: "40%", ml: "30px" }}>
+          <Sidebar logout={logout} />
+        </Container>
+        <Container
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            paddingBottom: "10px",
+            marginTop: "10px",
+          }}
+        >
+          <Card sx={{ maxWidth: 700 }}>
+            {/* lat={userTrip.start_lat} lng={userTrip.start_lng} */}
+            <div className="map-container">
+              <MapContainer trip={trip} />
+            </div>
+            {/* <CardMedia
           sx={{ height: 150 }}
           src='src only accepts a string'
           title="interactive-map"
         /> */}
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              Your Current Trip
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Secondary text here
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button
-              size="large"
-              variant="contained"
-              color="primary"
-              name="end-trip"
-              onClick={(e: any) => {
-                handleClick(e.target.name);
-              }}
-            >
-              End this Trip
-            </Button>
-            <Button
-              size="large"
-              variant="contained"
-              color="error"
-              name="sos"
-              onClick={(e: any) => {
-                handleClick(e.target.name);
-              }}
-            >
-              ALERT CONTACTS FOR HELP
-            </Button>
-          </CardActions>
-        </Card>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Your Current Trip
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Secondary text here
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button
+                size="large"
+                variant="contained"
+                color="primary"
+                name="end-trip"
+                onClick={(e: any) => {
+                  handleClick(e.target.name);
+                }}
+              >
+                End this Trip
+              </Button>
+              <Button
+                size="large"
+                variant="contained"
+                color="error"
+                name="sos"
+                onClick={(e: any) => {
+                  handleClick(e.target.name);
+                }}
+              >
+                ALERT CONTACTS FOR HELP
+              </Button>
+            </CardActions>
+          </Card>
+        </Container>
       </Box>
     </>
   );

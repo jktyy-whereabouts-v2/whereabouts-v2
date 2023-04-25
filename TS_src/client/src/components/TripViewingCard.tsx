@@ -2,7 +2,7 @@ import * as React from "react";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import MapContainer from "../components/MapContainer";
+import MapContainer from "./ContactsMapContainer";
 import CardActions from "@mui/material/CardActions";
 import { red } from "@mui/material/colors";
 

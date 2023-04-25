@@ -7,6 +7,8 @@ import {
   TextField,
   IconButton,
   Button,
+  InputAdornment,
+  FilledInput,
 } from "@mui/material";
 import "@fontsource/roboto/300.css";
 import SearchIcon from "@mui/icons-material/Search";
@@ -44,19 +46,18 @@ function Contacts({
 
   const [checkedContacts, setCheckedContacts] = useState<User[]>([]);
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(true);
-  const [contactData, addContactData] = useState([]);
   const [submitted, clickSubmitted] = useState(false);
 
   // Fetch GET request for contact and add to list:
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    // console.log("submit: ", event.target[0].value);
     const phone_number = event.target[0].value.replaceAll(/[^0-9]/g, "");
     event.target[0].value = "";
+
     //fetch request to get contact info
     try {
       const response = await axios.get(`/api/users/${phone_number}`);
-      // console.log(response.data);
+
       const contactData = response.data[0];
       if (!contactData.name) return;
 
@@ -136,13 +137,6 @@ function Contacts({
     }
   }, [submitted]);
 
-  // // checking state of contacts data:
-  useEffect(() => {
-    // console.log('Current checkedContacts:', checkedContacts);
-    // console.log('Current User phone: ', userInfo.phone_number);
-    // console.log('Current trip data: ', tripData);
-  }, [checkedContacts, userInfo.phone_number, tripData]);
-
   return (
     <>
       <Divider sx={{ width: "85%", margin: "auto" }} variant="middle"></Divider>
@@ -167,18 +161,23 @@ function Contacts({
             sx={{ display: "flex", gap: "10px", alignItems: "center" }}
           >
             <TextField
+              sx={{ width: "280px" }}
               size="small"
-              placeholder="Add Contact..."
-              id="addContact"
-              name="addContact"
-              label="Add Contact"
+              id="contacts"
+              placeholder="Add Contact"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton type="submit" edge="end">
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
-            <IconButton type="submit">
-              <SearchIcon />
-            </IconButton>
           </Box>
-          <Typography variant="h6">
-            Select a few contacts to share your trip with:
+          <Typography sx={{ marginTop: "25px" }} variant="h6">
+            Select to share your trip with:
           </Typography>
 
           <ContactList
@@ -188,8 +187,8 @@ function Contacts({
             setCheckedContacts={setCheckedContacts}
             setButtonDisabled={setButtonDisabled}
           />
-
           <Button
+            sx={{ width: "290px" }}
             variant="contained"
             onClick={handleStartTrip}
             disabled={buttonDisabled}
@@ -203,36 +202,3 @@ function Contacts({
 }
 
 export default Contacts;
-
-{
-  /* <Box sx={{ display: 'flex', mt: '30px' }}>
-<Container sx={{ width: '40%', ml: '30px' }}>
-	<Sidebar logout={logout} />
-</Container>
-<Container
-	sx={{
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'left',
-	}}>
-	<Typography variant="h5">Add contacts to your list:</Typography>
-	<Box
-		sx={{
-			display: 'flex',
-			alignItems: 'center',
-		}}
-		component="form"
-		onSubmit={handleSubmit}>
-		<TextField margin="normal" fullWidth name="addContact" placeholder="Search by phone number" />
-		<IconButton type="submit">
-			<SearchIcon />
-		</IconButton>
-	</Box>
-	<Typography variant="h6">Select a few contacts to share your trip with:</Typography>
-	<ContactList contacts={contacts} deleteContact={deleteContact} checkedContacts={checkedContacts} setCheckedContacts={setCheckedContacts} setButtonDisabled={setButtonDisabled} />
-	<Button variant="contained" onClick={handleStartTrip} disabled={buttonDisabled}>
-		Start Your Trip!
-	</Button>
-</Container>
-</Box> */
-}

@@ -9,6 +9,7 @@ import {
   Checkbox,
   CssBaseline,
   Container,
+  Box,
 } from "@mui/material";
 import Delete from "@mui/icons-material/Delete";
 import "@fontsource/roboto/300.css";
@@ -46,45 +47,48 @@ export default function ContactsList({
     setCheckedContacts(newChecked);
   };
   return (
-    <Container maxWidth="sm">
-      <List>
-        <CssBaseline />
-        {contacts.length !== 0 &&
-          contacts.map((value, index) => {
-            const labelId = `checkbox-list-label-${value}`;
-            return (
-              <ListItem
-                key={index}
-                secondaryAction={
-                  <IconButton
-                    edge="end"
-                    onClick={() => deleteContact(index, value)}
-                  >
-                    <Delete />
-                  </IconButton>
-                }
-                disablePadding
-              >
-                <ListItemButton onClick={handleToggle(value)} dense>
-                  <ListItemIcon>
-                    <Checkbox
-                      edge="start"
-                      checked={checkedContacts.indexOf(value) !== -1}
-                      tabIndex={-1}
-                      disableRipple
-                      inputProps={{ "aria-labelledby": labelId }}
+    <>
+      <Box sx={{ display: "flex" }}>
+        <List>
+          <CssBaseline />
+          {contacts.length !== 0 &&
+            contacts.map((value, index) => {
+              const labelId = `checkbox-list-label-${value}`;
+              return (
+                <ListItem
+                  key={index}
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      onClick={() => deleteContact(index, value)}
+                    >
+                      <Delete />
+                    </IconButton>
+                  }
+                  disablePadding
+                >
+                  <ListItemButton onClick={handleToggle(value)} dense>
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={checkedContacts.indexOf(value) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                        inputProps={{ "aria-labelledby": labelId }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText
+                      sx={{ marginRight: "150px" }}
+                      id={labelId}
+                      primary={`${value.name}`}
+                      secondary={`${value.phone_number}`}
                     />
-                  </ListItemIcon>
-                  <ListItemText
-                    id={labelId}
-                    primary={`${value.name}`}
-                    secondary={`${value.phone_number}`}
-                  />
-                </ListItemButton>
-              </ListItem>
-            );
-          })}
-      </List>
-    </Container>
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+        </List>
+      </Box>
+    </>
   );
 }
