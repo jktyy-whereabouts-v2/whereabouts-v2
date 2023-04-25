@@ -13,8 +13,8 @@ function MapComponent({ trip }: any) {
   });
 
   const center = {
-    lat: trip.start_lat,
-    lng: trip.start_lng,
+    lat: Number(trip.start_lat),
+    lng: Number(trip.start_lng),
   };
 
   const [map, setMap] = useState(null);
