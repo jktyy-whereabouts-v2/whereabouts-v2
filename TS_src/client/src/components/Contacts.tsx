@@ -4,7 +4,6 @@ import '@fontsource/roboto/300.css';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import ContactList from './ContactList';
-// import MyTripCard from "./MyTripCard";
 import { User, Trip } from "./types";
 import Sidebar from "./Sidebar";
 import Divider from "@mui/material/Divider";
