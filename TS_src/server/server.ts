@@ -17,7 +17,7 @@ const registerRouter = require('./routers/registerRouter');
 const contactsRouter = require('./routers/contactsRouter');
 const usersRouter = require('./routers/usersRouter');
 const tripsRouter = require('./routers/tripsRouter');
-import authRouter from './routers/authRouter'
+// import authRouter from './routers/authRouter'
 // db connection
 const db = require("./models/whereaboutsModel");
 // define server port
@@ -44,7 +44,7 @@ app.use('/api/register', registerRouter);
 app.use('/api/contacts', contactsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/trips', tripsRouter);
-app.use('/auth', authRouter);
+// app.use('/auth', authRouter);
 
 app.get("/stream/:phone_number", (req: Request, res: Response) => {
   const phoneNumber = req.params.phone_number;

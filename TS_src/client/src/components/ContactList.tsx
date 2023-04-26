@@ -8,7 +8,6 @@ import {
   IconButton,
   Checkbox,
   CssBaseline,
-  Container,
   Box,
 } from "@mui/material";
 import Delete from "@mui/icons-material/Delete";
@@ -30,7 +29,7 @@ export default function ContactsList({
   setCheckedContacts,
   setButtonDisabled,
 }: Props) {
-  // adding contacts to the user's checked contact list
+  // adding/deleting contacts to the user's checked contact list
   const handleToggle = (contact: User) => () => {
     const currentIndex = checkedContacts.indexOf(contact);
     const newChecked: User[] = [...checkedContacts];

@@ -20,7 +20,7 @@ interface Props {
 
 const googleURL = process.env.GOOGLEMAPSAPIKEY;
 
-function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout, setUserTrip, userTrip }: Props) {
+function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout, setUserTrip} : Props) {
 	const navigate = useNavigate();
 
 	// hook to manage contacts checked from list
