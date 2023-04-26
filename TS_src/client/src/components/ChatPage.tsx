@@ -1,4 +1,4 @@
-import { User } from "./types";
+import { User , Message } from "./types";
 import React, { useState, useEffect } from "react";
 import { CssBaseline, Container, Box, Typography, TextField, IconButton, Card, createTheme } from '@mui/material';
 import '@fontsource/roboto/300.css';
@@ -16,12 +16,7 @@ interface Props {
   logout: Function;
 }
 
-interface Message {
-  name: string;
-  phone_number: string;
-  date_time: string;
-  text: string;
-}
+
 
 export default function ChatPage ({ userInfo, contacts, logout } : Props){
   socket.emit('join', {phone_number: userInfo.phone_number});

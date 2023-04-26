@@ -23,3 +23,10 @@ export interface TripProps {
 	userTrip: Trip;
 	setUserTrip: React.Dispatch<React.SetStateAction<Trip>>;
 }
+
+export interface Message {
+  name: string;
+  phone_number: string;
+  date_time: string;
+  text: string;
+}
