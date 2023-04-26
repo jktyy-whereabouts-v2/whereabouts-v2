@@ -4,12 +4,16 @@
   "description": "whereabouts-v2",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest --run --reporter verbose",
+    "test:watch": "vitest",
     "dev": "concurrently \"cd ./TS_src && cd ./server && npm run dev\" \"cd ./TS_src && cd ./client && npm run dev\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "concurrently": "^8.0.1"
+  },
+  "devDependencies": {
+    "vitest": "^0.30.1"
   }
 }
