@@ -23,6 +23,7 @@ router.post('/', contactsController.addContact, (req: Request, res: Response) =>
 //delete a contact
 // tested on backend using Postman, WORKS
 // data deleted from contacts_join table
+// this won't work. Controller expects a contact phone number and a traveller phone number. Will need to change to req.query
 router.delete(
   '/traveler/:travelerPhone/contact/:contactPhone',
   contactsController.deleteContact,

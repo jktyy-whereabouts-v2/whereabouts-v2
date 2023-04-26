@@ -1,7 +1,4 @@
-// const bcrypt = require('bcryptjs');
 const db = require('../models/whereaboutsModel');
-// const SALT_WORK_FACTOR = 10;
-// const axios = require('axios');
 import { Request, Response, NextFunction } from 'express';
 
 const usersController = {

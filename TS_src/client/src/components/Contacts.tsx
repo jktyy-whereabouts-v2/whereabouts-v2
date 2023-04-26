@@ -20,15 +20,8 @@ interface Props {
 
 const googleURL = process.env.GOOGLEMAPSAPIKEY;
 
-function Contacts({
-  userInfo,
-  contacts,
-  setContacts,
-  setActiveComponent,
-  logout,
-  setUserTrip,
-}: Props) {
-  const navigate = useNavigate();
+function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout, setUserTrip, userTrip }: Props) {
+	const navigate = useNavigate();
 
 	// hook to manage contacts checked from list
 	const [checkedContacts, setCheckedContacts] = useState<Array<User>>([]);
@@ -97,39 +90,37 @@ function Contacts({
 	};
 
 
-  // declare variable to contain proper info to send backend
-  const tripData = {
-    traveler: userInfo.phone_number,
-    watchers: extractPhoneNumbers(checkedContacts),
-  };
+	// declare variable to contain proper info to send backend
+	const tripData = {
+		traveler: userInfo.phone_number,
+		watchers: extractPhoneNumbers(checkedContacts),
+	};
 
-  // function to send post request to back end with user information to start trip
-  const handleStartTrip = async () => {
-    // create a post request to the route: /api/trips/start
-    try {
-      const response = await axios.post(
-        `https://www.googleapis.com/geolocation/v1/geolocate?key=${googleURL}`
-      );
-      const { lat, lng } = response.data.location;
-      setUserTrip((prevState: any) => {
-        return {
-          ...prevState,
-          start_timestamp: new Date().toDateString(),
-          start_lat: lat,
-          start_lng: lng,
-        };
-      });
-      const res = await axios.post("/api/trips/start", tripData);
-      if (res.status === 204) {
-        console.log("status is 200, redirect to MyTripCard");
-        clickSubmitted(true);
-      }
-    } catch (error) {
-      if (error) {
-        alert("Please check contacts information and try again");
-      }
-    }
-  };
+	// function to send post request to back end with user information to start trip
+	const handleStartTrip = async () => {
+		// create a post request to the route: /api/trips/start
+		try {
+			const response = await axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${googleURL}`);
+			const { lat, lng } = response.data.location;
+			setUserTrip((prevState: any) => {
+				return {
+					...prevState,
+					start_timestamp: new Date().toDateString(),
+					start_lat: lat,
+					start_lng: lng,
+				};
+			});
+			const res = await axios.post('/api/trips/start', tripData);
+			if (res.status === 204) {
+				console.log('status is 200, redirect to MyTripCard');
+				clickSubmitted(true);
+			}
+		} catch (error) {
+			if (error) {
+				alert('Please check contacts information and try again');
+			}
+		}
+	};
 
 	// initially receiving user's contact list from the database
 	useEffect(() => {
@@ -140,75 +131,58 @@ function Contacts({
 			.catch(err => console.log(err.message));
 	}, []);
 
-  useEffect(() => {
-    if (submitted) {
-      navigate("/myTrip");
-    }
-  });
+	useEffect(() => {
+		if (submitted) {
+			navigate('/myTrip');
+		}
+	}, [submitted]);
 
+	return (
+		<>
+			<Divider sx={{ width: '85%', margin: 'auto' }} variant="middle"></Divider>
+			<CssBaseline />
+			<Box sx={{ display: 'flex', mt: '30px' }}>
+				<Container sx={{ width: '40%', ml: '30px' }}>
+					<Sidebar logout={logout} />
+				</Container>
 
-  return (
-    <>
-      <Divider sx={{ width: "85%", margin: "auto" }} variant="middle"></Divider>
-      <CssBaseline />
-      <Box sx={{ display: "flex", mt: "30px" }}>
-        <Container sx={{ width: "40%", ml: "30px" }}>
-          <Sidebar logout={logout} />
-        </Container>
+				<Container
+					sx={{
+						display: 'flex',
+						flexDirection: 'column',
+						gap: '10px',
+						paddingBottom: '10px',
+						marginTop: '20px',
+					}}>
+					<Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+						<TextField
+							sx={{ width: '280px' }}
+							size="small"
+							id="contacts"
+							placeholder="Add Contact"
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<IconButton type="submit" edge="end">
+											<SearchIcon />
+										</IconButton>
+									</InputAdornment>
+								),
+							}}
+						/>
+					</Box>
+					<Typography sx={{ marginTop: '25px' }} variant="h6">
+						Select to share your trip with:
+					</Typography>
 
-        <Container
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-            paddingBottom: "10px",
-            marginTop: "20px",
-          }}
-        >
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ display: "flex", gap: "10px", alignItems: "center" }}
-          >
-            <TextField
-              sx={{ width: "280px" }}
-              size="small"
-              id="contacts"
-              placeholder="Add Contact"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton type="submit" edge="end">
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
-          <Typography sx={{ marginTop: "25px" }} variant="h6">
-            Select to share your trip with:
-          </Typography>
-
-          <ContactList
-            contacts={contacts}
-            deleteContact={deleteContact}
-            checkedContacts={checkedContacts}
-            setCheckedContacts={setCheckedContacts}
-            setButtonDisabled={setButtonDisabled}
-          />
-          <Button
-            sx={{ width: "290px" }}
-            variant="contained"
-            onClick={handleStartTrip}
-            disabled={buttonDisabled}
-          >
-            Start Your Trip!
-          </Button>
-        </Container>
-      </Box>
-    </>
-  );
+					<ContactList contacts={contacts} deleteContact={deleteContact} checkedContacts={checkedContacts} setCheckedContacts={setCheckedContacts} setButtonDisabled={setButtonDisabled} />
+					<Button sx={{ width: '290px' }} variant="contained" onClick={handleStartTrip} disabled={buttonDisabled}>
+						Start Your Trip!
+					</Button>
+				</Container>
+			</Box>
+		</>
+	);
 }
 
 export default Contacts;
