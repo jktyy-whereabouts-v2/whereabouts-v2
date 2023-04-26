@@ -23,7 +23,6 @@ interface Props {
   setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-
 export default function ContactsList({
   contacts,
   deleteContact,
@@ -53,8 +52,8 @@ export default function ContactsList({
       <Box sx={{ display: "flex" }}>
         <List>
           <CssBaseline />
-          {contacts.length !== 0 &&
-            contacts.map((value, index) => {
+          {Array.isArray(contacts) &&
+            contacts.map((value: User, index: number)  => {
               const labelId = `checkbox-list-label-${value}`;
               return (
                 <ListItem

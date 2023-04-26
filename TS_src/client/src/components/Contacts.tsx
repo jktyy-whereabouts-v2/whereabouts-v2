@@ -35,7 +35,7 @@ function Contacts({
 	// hook to disable starting trip button if no contacts are checked
 	const [buttonDisabled, setButtonDisabled] = useState<boolean>(true);
 	// hook to set status on whether trips has started, for navigation purposes
-	const [submitted, clickSubmitted] = useState(false);
+	const [submitted, clickSubmitted] = useState<boolean>(false);
 
 	// Fetch GET request for contact and add to list:
 	const handleSubmit = async (event: any) => {
@@ -46,7 +46,6 @@ function Contacts({
 
 		try {
 			const response = await axios.get(`/api/users/${phone_number}`);
-
 			const contactData = response.data[0];
 			// if contact does not exist
 			if (!contactData.name) return;
@@ -55,15 +54,16 @@ function Contacts({
 
 			// check if contact is already in user's contact list
 			const contactShown = contacts.reduce((acc: number, user: User) => {
+        console.log('inside reduce: ', contactData, userInfo)
 				if (user.phone_number === contactData.phone_number) ++acc;
 				return acc;
 			}, 0);
 
 			// if contact is not in user's contact list, add it to the list
 			if (!contactShown) {
-				setContacts([...contacts, contactData]);
+        setContacts([...contacts, contactData]);
 				// also updating contact list in the database
-				await axios.post('/api/addContact', {
+				await axios.post('/api/contacts', {
 					traveler_phone_number: userInfo.phone_number,
 					contact_phone_number: contactData.phone_number
 				});
@@ -87,9 +87,8 @@ function Contacts({
 		if (foundIndex >= 0) newCheckedContacts.splice(foundIndex, 1);
 		if (newContacts.length === 0 || newCheckedContacts.length === 0) setButtonDisabled(true);
 		setCheckedContacts(newCheckedContacts);
-
 		// updating database
-		await axios.delete(`/api/deleteContact/traveler/${userInfo.phone_number}/contact/${contact.phone_number}`);
+		await axios.delete(`/api/contacts/traveler/${userInfo.phone_number}/contact/${contact.phone_number}`);
 	};
 
 	// function to extract phone numbers from checkedContacts array
@@ -134,9 +133,9 @@ function Contacts({
 
 	// initially receiving user's contact list from the database
 	useEffect(() => {
-		axios.get(`/api/getContacts/${userInfo.phone_number}`)
+		axios.get(`/api/contacts/${userInfo.phone_number}`)
 			.then(response => {
-				setContacts(response);
+				setContacts(response.data);
 			})
 			.catch(err => console.log(err.message));
 	}, []);
@@ -145,7 +144,8 @@ function Contacts({
     if (submitted) {
       navigate("/myTrip");
     }
-  }, [submitted]);
+  });
+
 
   return (
     <>
