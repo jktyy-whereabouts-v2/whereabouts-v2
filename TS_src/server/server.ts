@@ -11,7 +11,7 @@ import express, {
 const cors = require("cors");
 // initialize Server instance of socket.io by passing it HTTP server obj on which to mount the socket server
 import { Server } from 'socket.io';
-const session = require('express-session');
+// const session = require('express-session');
 // import router
 const apiRouter = require('./routers/apiRouter');
 import authRouter from './routers/authRouter'
