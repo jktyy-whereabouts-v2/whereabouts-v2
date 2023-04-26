@@ -47,14 +47,13 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 
 			// check if contact is already in user's contact list
 			const contactShown = contacts.reduce((acc: number, user: User) => {
-        console.log('inside reduce: ', contactData, userInfo)
 				if (user.phone_number === contactData.phone_number) ++acc;
 				return acc;
 			}, 0);
 
 			// if contact is not in user's contact list, add it to the list
 			if (!contactShown) {
-        setContacts([...contacts, contactData]);
+				setContacts([...contacts, contactData]);
 				// also updating contact list in the database
 				await axios.post('/api/contacts', {
 					traveler_phone_number: userInfo.phone_number,
