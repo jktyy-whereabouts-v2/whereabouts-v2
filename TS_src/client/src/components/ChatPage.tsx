@@ -30,7 +30,7 @@ export default function ChatPage ({ userInfo, contacts, logout } : Props){
     name: '',
     phone_number: '',
     date_time: '',
-    text: ''
+    text: '',
   });
   // const socket: any = useSocket();
 
