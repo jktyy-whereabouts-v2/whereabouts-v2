@@ -6,7 +6,7 @@ const containerStyle = {
   width: "700px",
 };
 
-function ContactsMapComponent({ trip }: any) {
+function ContactsMapContainer({ trip }: any) {
   const { isLoaded } = useJsApiLoader({
     id: process.env.GOOGLEMAPSID,
     googleMapsApiKey: process.env.GOOGLEMAPSAPIKEY,
@@ -37,4 +37,4 @@ function ContactsMapComponent({ trip }: any) {
   );
 }
 
-export default ContactsMapComponent;
+export default ContactsMapContainer;
