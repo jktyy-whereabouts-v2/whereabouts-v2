@@ -1,13 +1,15 @@
-import * as pg from 'pg';
-const { Pool } = pg;
+// import * as pg from 'pg';
+const { Pool } = require('pg');
+
+const PG_URI = process.env.PG_URI;
 
 const pool = new Pool({
-    connectionString: process.env.PG_URI
+    connectionString: PG_URI,
 }); //pg library will retrieve the variables from the .env file
 
 module.exports = {
-  query: (text: string) => {
+  query: (text: string, params: any, callback: any) => {
     console.log('executed query', text);
-    return pool.query(text)
+    return pool.query(text, params, callback)
 }
 }
