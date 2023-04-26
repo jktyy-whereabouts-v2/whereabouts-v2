@@ -99,7 +99,7 @@ const tripsController = {
         FROM trips t
         INNER JOIN trips_users_join j ON t.id = j.trips_id
         WHERE j.user_is_traveler = TRUE
-        AND j.user_phone_number = '${req.body.phone_number}'
+        AND j.user_phone_number = '${req.params.phone_number}'
         ORDER BY t.id DESC`
       );
       return next();
