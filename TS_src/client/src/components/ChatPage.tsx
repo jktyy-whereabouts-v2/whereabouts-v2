@@ -1,5 +1,5 @@
 import { User , Message } from "./types";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { CssBaseline, Container, Box, Typography, TextField, IconButton, Card, createTheme } from '@mui/material';
 import '@fontsource/roboto/300.css';
 import SendIcon from '@mui/icons-material/Send';
