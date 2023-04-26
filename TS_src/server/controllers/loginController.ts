@@ -1,4 +1,3 @@
-// const bcrypt = require('bcryptjs');
 const db = require('../models/whereaboutsModel');
 import { Request, Response, NextFunction } from 'express';
 
