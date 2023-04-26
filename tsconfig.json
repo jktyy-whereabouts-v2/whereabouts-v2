@@ -18,7 +18,8 @@
     "noImplicitAny": true,
     "outDir": "./dist",
     "rootDir": "./TS_src",
-    "types": ["vite/client"]
+    "typeRoots": [".TS_src/server/node_modules/@types"],
+    "types": ["vite/client", "express", "passport-google-oauth20", "passport"]
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }

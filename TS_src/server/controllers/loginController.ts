@@ -1,23 +1,10 @@
-// const bcrypt = require('bcryptjs');
 const db = require('../models/whereaboutsModel');
-// const SALT_WORK_FACTOR = 10;
-// const axios = require('axios');
 import { Request, Response, NextFunction } from 'express';
 
 const loginController = {
  // LOGIN component middleware
  checkUserExists: async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // check all reqd fields are provided on req body (already checked on FE, so this may not be needed)
-    // const props = ["phone_number", "password"];
-    // if (!props.every((prop) => Object.hasOwn(req.body, prop))) {
-    //   return next({
-    //     log: "Express error handler caught whereaboutsController.checkUserExists error: Missing phone number or password",
-    //     status: 400,
-    //     message: { error: "Missing phone number or password" },
-    //   });
-    // }
-
     // destructure / sanitize req body
     const { phone_number, password } = req.body;
 
@@ -31,20 +18,6 @@ const loginController = {
         message: { error: "No user exists for input phone number" },
       });
     }
-
-    // if user exists in users table, compare user-input password with stored hashed password
-    // const passwordIsMatch = await bcrypt.compare(
-    //   password,
-    //   existingUser.rows[0].password
-    // );
-
-    // if (!passwordIsMatch) {
-    //   return next({
-    //     log: 'Express error handler caught whereaboutsController.checkUserExists error: Input password is incorrect',
-    //     status: 400,
-    //     message: { error: 'Input password is incorrect' },
-    //   });
-    // }
 
     if (password !== existingUser.rows[0].password) {
       return next({
@@ -67,28 +40,10 @@ const loginController = {
       // message: { error: error.stack }, // for more detailed debugging info
     });
   }
-},
-
-        
+}, 
    // REGISTER component middleware
    insertNewUser: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // check all reqd fields are provided on req body (already checked on FE, so this may not be needed)
-      // const props = ["name", "phone_number", "password"];
-
-      // if (
-      //   !props.every((prop) => {
-      //     console.log(prop);
-      //     Object.hasOwn(req.body, prop);
-      //   })
-      // ) {
-      //   return next({
-      //     log: "Express error handler caught whereaboutsController.insertNewUser error: Missing name, phone number, or password",
-      //     status: 400,
-      //     message: { error: "Missing name, phone number, or password" },
-      //   });
-      // }
-
       // destructure / sanitize req body
       const { name, phone_number, password } = req.body;
 
@@ -104,21 +59,7 @@ const loginController = {
           message: { error: "A user with this phone number already exists" },
         });
       }
-
-      // salt+hash user-input password
-      // const hashedPassword = await bcrypt.hash(password, SALT_WORK_FACTOR);
-
-      // insert new user's info (inc hashed password) into users table
-      // const queryStrInsert = 'INSERT INTO users(name, phone_number, password) VALUES($1, $2, $3) RETURNING *';
       const queryStrInsert = `INSERT INTO users(name, phone_number, password) VALUES('${name}', '${phone_number}', '${password}') RETURNING *`;
-
-      // const insertedUser = await db.query(queryStrInsert, [
-      //   name,
-      //   phone_number,
-      //   // hashedPassword,
-      //   password,
-      // ]);
-
       const insertedUser = await db.query(queryStrInsert);
 
       // no need to persist data, only success message needed on FE
@@ -132,7 +73,6 @@ const loginController = {
         log: "Express error handler caught loginController.insertNewUser error",
         status: 500,
         message: { error: "Failed to create new user" },
-        // message: { error: error.stack } // for more detailed debugging info
       });
     }
   },

@@ -1,12 +1,8 @@
-// const bcrypt = require('bcryptjs');
 const db = require('../models/whereaboutsModel');
-// const SALT_WORK_FACTOR = 10;
 const axios = require('axios');
 import { Request, Response, NextFunction } from 'express';
 
 const tripsController = {
-
-
   //gets current location, stores new trip with current location and stores traveler/watcher relation after user clicks 'start new trip'
   startNewTrip: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -21,30 +17,25 @@ const tripsController = {
       const lng = data.location.lng;
       //store trip in trips table
       const { rows } = await db.query(
+        `INSERT INTO trips (start_timestamp, start_lat, start_lng)
+        VALUES (NOW(), ${lat}, ${lng})
+        RETURNING id`
+        );
+      const tripId = rows[0].id;
+      //store traveler in join table
+      const traveler = req.body.traveler;
+      await db.query(
         `INSERT
-          INTO trips
-          (start_timestamp, start_lat, start_lng)
-          VALUES
-          (NOW(), ${lat}, ${lng})
-          RETURNING id`
-        );
-        const tripId = rows[0].id;
-        //store traveler in join table
-        const traveler = req.body.traveler;
+        INTO trips_users_join
+        (trips_id, user_is_traveler, user_phone_number)
+        VALUES
+        (${tripId}, TRUE, '${traveler}')`
+      );
+      req.body.watchers.forEach(async (watchers: string) => {
         await db.query(
-          `INSERT
-          INTO trips_users_join
+          `INSERT INTO trips_users_join
           (trips_id, user_is_traveler, user_phone_number)
-          VALUES
-          (${tripId}, TRUE, '${traveler}')`
-        );
-        req.body.watchers.forEach(async (watchers: string) => {
-          await db.query(
-            `INSERT
-            INTO trips_users_join
-            (trips_id, user_is_traveler, user_phone_number)
-            VALUES
-            (${tripId}, FALSE, ${watchers})`
+          VALUES (${tripId}, FALSE, ${watchers})`
         );
       });
       return next();
@@ -69,8 +60,8 @@ const tripsController = {
       //update trip sos details
       await db.query(
         `UPDATE trips
-          SET sos_timestamp = NOW(), sos_lat = ${lat}, sos_lng = ${lng}
-          WHERE id = ${req.body.tripId}`
+        SET sos_timestamp = NOW(), sos_lat = ${lat}, sos_lng = ${lng}
+        WHERE id = ${req.body.tripId}`
       );
       return next();
     } catch (error) {
@@ -101,21 +92,20 @@ const tripsController = {
     }
   },
 
-
   myTrip: async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.locals.trip = await db.query(
         `SELECT *
-          FROM trips t
-          INNER JOIN trips_users_join j ON t.id = j.trips_id
-          WHERE j.user_is_traveler = TRUE
-          AND j.user_phone_number = '${req.body.phone_number}'
-          ORDER BY t.id DESC`
+        FROM trips t
+        INNER JOIN trips_users_join j ON t.id = j.trips_id
+        WHERE j.user_is_traveler = TRUE
+        AND j.user_phone_number = '${req.body.phone_number}'
+        ORDER BY t.id DESC`
       );
       return next();
     } catch (error) {
       return next({
-        log: "Express error handler caught whereaboutsController.myTrip error",
+        log: "Express error handler caught tripsController.myTrip error",
         status: 500,
         message: { error: "Error retrieving user trip" },
       });

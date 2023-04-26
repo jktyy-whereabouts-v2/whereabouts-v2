@@ -12,12 +12,12 @@ const cors = require("cors");
 // initialize Server instance of socket.io by passing it HTTP server obj on which to mount the socket server
 import { Server } from 'socket.io';
 // import routers
-// const apiRouter = require('./routers/apiRouter');
 const loginRouter = require('./routers/loginRouter');
 const registerRouter = require('./routers/registerRouter');
 const contactsRouter = require('./routers/contactsRouter');
 const usersRouter = require('./routers/usersRouter');
 const tripsRouter = require('./routers/tripsRouter');
+import authRouter from './routers/authRouter'
 // db connection
 const db = require("./models/whereaboutsModel");
 // define server port
@@ -44,7 +44,7 @@ app.use('/api/register', registerRouter);
 app.use('/api/users/contacts', contactsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/trips', tripsRouter);
-// app.use('/api', apiRouter);
+app.use('/auth', authRouter);
 
 app.get("/stream/:phone_number", (req: Request, res: Response) => {
   const phoneNumber = req.params.phone_number;
@@ -75,25 +75,19 @@ app.use((req, res) =>
 );
 
 // global error handler
-app.use(
-  (
-    err: ErrorRequestHandler,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    const defaultErr = {
-      log: "Express error handler caught unknown middleware error.",
-      status: 500,
-      message: {
-        err: "An error occurred. We inside global error handler. BUT WHY?",
-      },
-    };
-    const errorObj = { ...defaultErr, ...err };
-    console.log(errorObj.log);
-    return res.status(errorObj.status).json(errorObj.message);
-  }
-);
+app.use((err: ErrorRequestHandler, req: Request, res: Response, next: NextFunction) => {
+	console.log(err)
+	const defaultErr = {
+		log: 'Express error handler caught unknown middleware error.',
+		status: 500,
+		message: {
+			err: 'An error occurred. We inside global error handler. BUT WHY?',
+		},
+	};
+	const errorObj = { ...defaultErr, ...err };
+	console.log(errorObj.log);
+	return res.status(errorObj.status).json(errorObj.message);
+});
 
 /* START Implement chat with Socket.io */
 // create HTTP server instance
