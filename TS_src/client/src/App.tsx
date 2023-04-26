@@ -42,7 +42,11 @@ function App() {
 
 	const login = (userData: any) => {
 		console.log(userData);
-		setUserInfo({ name: userData.name, phone_number: userData.phone_number, password: userData.password });
+		setUserInfo({
+			name: userData.name,
+			phone_number: userData.phone_number,
+			password: userData.password,
+		});
 		localStorage.setItem('user', JSON.stringify(userData));
 		console.log('logged in confirmed');
 	};
@@ -72,7 +76,9 @@ function App() {
 					<Route path="/chat" element={<ChatPage userInfo={userInfo} setUserInfo={setUserInfo} path="/chat" socket={socket} logout={logout} />} />
 					<Route
 						path="/contacts"
-						element={<Contacts userInfo={userInfo} contacts={contacts} setContacts={setContacts} setActiveComponent={setActiveComponent} setUserTrip={setUserTrip} logout={logout} />}
+						element={
+							<Contacts userInfo={userInfo} contacts={contacts} setContacts={setContacts} setActiveComponent={setActiveComponent} userTrip={userTrip} setUserTrip={setUserTrip} logout={logout} />
+						}
 					/>
 					<Route path="/myTrip" element={<MyTripCard userInfo={userInfo} setUserInfo={setUserInfo} userTrip={userTrip} setUserTrip={setUserTrip} logout={logout} />} />
 					<Route path="/trips" element={<TripImWatching userInfo={userInfo} logout={logout} />} />

@@ -6,6 +6,7 @@ import { Container } from '@mui/system';
 import Sidebar from './Sidebar';
 import Divider from '@mui/material/Divider';
 import { User } from './types';
+import Card from '@mui/material/Card';
 
 interface Trips {
 	trips_id: string;
@@ -17,22 +18,23 @@ const TripImWatching: React.FC<{ userInfo: User; logout: Function }> = ({ userIn
 	//SSE - render trips
 	const [trips, setTrips] = useState<Trips[]>([]);
 	useEffect(() => {
-		const source = new EventSource(`http://localhost:3000/stream/${userInfo.phone_number}`, {
+		const source = new EventSource(`http://localhost:3500/stream/${userInfo.phone_number}`, {
 			//replace 123456789 with current user's phone_number
 			withCredentials: false,
 		}); //maybe need to add to webpack?
+		console.log(source);
 
 		source.addEventListener('open', () => {
 			console.log('SSE opened!');
 		});
 
 		source.addEventListener('message', (e) => {
-			// console.log(e.data);
 			const data = JSON.parse(e.data);
 			setTrips(data);
 		});
 
 		source.addEventListener('error', (e) => {
+			console.log('hitting error');
 			console.error('Error: ', e);
 		});
 
@@ -55,10 +57,10 @@ const TripImWatching: React.FC<{ userInfo: User; logout: Function }> = ({ userIn
 						flexDirection: 'column',
 						gap: '10px',
 						paddingBottom: '10px',
+						marginTop: '10px',
 					}}>
-					<div className="trip-watching-container">
-						<br />
-						<h1>Trips I'm Watching</h1>
+					<Typography>Trips I'm Watching</Typography>
+					<Card sx={{ maxWidth: 700 }}>
 						{trips.map((trip) => (
 							<div key={trip.trips_id} className="view-card">
 								<br></br>
@@ -69,7 +71,7 @@ const TripImWatching: React.FC<{ userInfo: User; logout: Function }> = ({ userIn
             /> */}
 							</div>
 						))}
-					</div>
+					</Card>
 				</Container>
 			</Box>
 		</>

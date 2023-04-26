@@ -58,38 +58,12 @@ function Login({ userInfo, setUserInfo, login }: LoginProps) {
 		}
 	}, []);
 
+	// once user is logged in, they can no longer go back to the login page
 	useEffect(() => {
 		if (redirect) {
 			navigate('/dashboard');
 		}
 	});
-
-	// useEffect(() => {
-	// 	if (redirectToGoogle) {
-	// 		setTimeout(() => {
-	// 			window.close();
-	// 		}, 1000);
-	// 		navigate('/dashboard');
-	// 	}
-	// }, []);
-
-	const redirectToGoogleSSO = async () => {
-		const googleLoginURL = 'http://localhost:3500/api/auth/google/callback';
-		const newWindow = window.open(googleLoginURL, '_blank', 'width = 500, height = 600');
-		setRedirectToGoogle(true);
-		fetchAuthUser();
-	};
-
-	const fetchAuthUser = async () => {
-		try {
-			const response = await axios.get('http://localhost:3500/api/auth/google/callback');
-			if (response.data) {
-				console.log(response.data);
-			}
-		} catch (error) {
-			toast.error('Sorry, not authenticated.');
-		}
-	};
 
 	const paperStyle = { padding: 40, width: 375, margin: 'auto' };
 
@@ -111,7 +85,9 @@ function Login({ userInfo, setUserInfo, login }: LoginProps) {
 						<Typography sx={{ mb: 3 }} variant="h5">
 							Login
 						</Typography>
-						<GoogleButton onClick={redirectToGoogleSSO} />
+						<Link to='http://localhost:3500/auth/google/oauth' style={{ textDecoration: 'none' }}>
+							<GoogleButton />
+						</Link>
 						<Typography sx={{ mt: 3 }}>- or -</Typography>
 						<Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
 							<TextField
