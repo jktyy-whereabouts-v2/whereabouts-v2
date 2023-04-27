@@ -14,7 +14,7 @@ import MyTripCard from './components/MyTripCard';
 import TripImWatching from './components/TripImWatching';
 
 function App() {
-	const [contacts, setContacts] = useState<Array<User>>([]);
+	const [contacts, setContacts] = useState<any>([]);
 
 	// hook for conditionally rendering components
 	const [activeComponent, setActiveComponent] = useState('');
@@ -26,12 +26,17 @@ function App() {
 
 	const [userTrip, setUserTrip] = useState<Trip>({
 		active: true,
-		start_timestamp: '',
-		start_lat: '',
-		start_lng: '',
-		sos_timestamp: '',
+		id: '',
 		sos_lat: '',
 		sos_lng: '',
+		sos_timestamp: '',
+		start_timestamp: '',
+		end_timestamp: '',
+		start_lat: '',
+		start_lng: '',
+		trips_id: null,
+		user_is_traveler: null,
+		user_phone_number: null,
 	});
 
 	const [userInfo, setUserInfo] = useState<User>({
@@ -53,6 +58,20 @@ function App() {
 
 	const logout = () => {
 		setUserInfo({ name: '', phone_number: '', password: '' });
+		setUserTrip({
+			active: false,
+			id: '',
+			sos_lat: '',
+			sos_lng: '',
+			sos_timestamp: '',
+			start_timestamp: '',
+			end_timestamp: '',
+			start_lat: '',
+			start_lng: '',
+			trips_id: null,
+			user_is_traveler: null,
+			user_phone_number: null,
+		});
 		localStorage.clear();
 		console.log('logged out confirmed');
 	};
