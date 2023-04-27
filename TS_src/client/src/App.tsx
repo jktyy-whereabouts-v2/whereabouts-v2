@@ -14,7 +14,7 @@ import MyTripCard from './components/MyTripCard';
 import TripImWatching from './components/TripImWatching';
 
 function App() {
-	const [contacts, setContacts] = useState<Array<User>>([]);
+	const [contacts, setContacts] = useState<any>([]);
 
 	// hook for conditionally rendering components
 	const [activeComponent, setActiveComponent] = useState('');

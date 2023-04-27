@@ -8,7 +8,6 @@ import {
   IconButton,
   Checkbox,
   CssBaseline,
-  Container,
   Box,
 } from "@mui/material";
 import Delete from "@mui/icons-material/Delete";
@@ -16,12 +15,12 @@ import "@fontsource/roboto/300.css";
 import { User } from "./types";
 
 interface Props {
-  contacts: User[];
+  contacts: any;
   deleteContact: (index: number, contact: User) => void;
   checkedContacts: User[];
-  setCheckedContacts: React.Dispatch<React.SetStateAction<User[]>>;
+  setCheckedContacts: React.Dispatch<React.SetStateAction<Array<User>>>;
   setButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-}
+};
 
 export default function ContactsList({
   contacts,
@@ -30,19 +29,20 @@ export default function ContactsList({
   setCheckedContacts,
   setButtonDisabled,
 }: Props) {
+  // adding/deleting contacts to the user's checked contact list
   const handleToggle = (contact: User) => () => {
     const currentIndex = checkedContacts.indexOf(contact);
     const newChecked: User[] = [...checkedContacts];
-
+    // add to the checked contact list, if not already in the list
     if (currentIndex === -1) {
       newChecked.push(contact);
-    } else {
+    }
+    // if contact is already in the list, remove it
+    else {
       newChecked.splice(currentIndex, 1);
     }
-    // set new checked items in array from Contacts
-    // const newCheckedContacts : User[] = [...checkedContacts];
-    // newCheckedContacts[index] = contact;
-    if (newChecked.length === 0) setButtonDisabled(true);
+    // if user's checked contact list is now empty, disable the starting trip button
+    if(newChecked.length === 0) setButtonDisabled(true);
     else setButtonDisabled(false);
     setCheckedContacts(newChecked);
   };
@@ -51,8 +51,8 @@ export default function ContactsList({
       <Box sx={{ display: "flex" }}>
         <List>
           <CssBaseline />
-          {contacts.length !== 0 &&
-            contacts.map((value, index) => {
+          {Array.isArray(contacts) &&
+            contacts.map((value: User, index: number)  => {
               const labelId = `checkbox-list-label-${value}`;
               return (
                 <ListItem
@@ -91,4 +91,4 @@ export default function ContactsList({
       </Box>
     </>
   );
-}
+};

@@ -18,6 +18,7 @@ import toast from 'react-hot-toast';
 // Card media is not needed since it was a component for the stock image that came with MUI
 const googleURL = process.env.GOOGLEMAPSAPIKEY;
 
+
 interface MyTripCard {
 	userInfo: User;
 	setUserInfo: React.Dispatch<React.SetStateAction<User>>;
