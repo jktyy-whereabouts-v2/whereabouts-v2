@@ -67,6 +67,22 @@ const tripsController = {
 		}
 	},
 
+	deleteTrip: async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			await db.query(
+				`DELETE FROM trips
+          where id = '${req.params.phone_number}'`
+			);
+			return next();
+		} catch (error) {
+			return next({
+				log: 'Express error handler caught tripsController.deleteTrip error',
+				status: 500,
+				message: { error: 'Error deleting userTrip' },
+			});
+		}
+	},
+
 	//updates trip with end timestamp
 	endTrip: async (req: Request, res: Response, next: NextFunction) => {
 		try {
@@ -79,7 +95,7 @@ const tripsController = {
 			return next();
 		} catch (error) {
 			return next({
-				log: 'Express error handler caught tripsController.sendSos error',
+				log: 'Express error handler caught tripsController.endTrip error',
 				status: 500,
 				message: { error: 'Error storing sos details' },
 			});

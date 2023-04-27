@@ -18,7 +18,6 @@ import toast from 'react-hot-toast';
 // Card media is not needed since it was a component for the stock image that came with MUI
 const googleURL = process.env.GOOGLEMAPSAPIKEY;
 
-
 interface MyTripCard {
 	userInfo: User;
 	setUserInfo: React.Dispatch<React.SetStateAction<User>>;
@@ -42,6 +41,8 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout }: My
 		},
 	});
 
+	const [endTrip, setEndTrip] = useState(false);
+
 	const handleClick = async (name: any) => {
 		try {
 			const response = await axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${googleURL}`);
@@ -58,8 +59,18 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout }: My
 
 			if (body && url) {
 				try {
-					const response = await axios.post(url, body);
+					console.log(body);
+					const postResponse = await axios.post(url, body);
 					console.log('confirmed End Trip or SOS');
+
+					try {
+						const deleteResponse = await axios.delete(`/api/trips/reached/${userInfo.phone_number}`);
+						console.log(deleteResponse.data);
+					} catch (error) {
+						toast.error('Server did not delete location');
+					}
+
+					setEndTrip(true);
 				} catch (error) {
 					toast.error('End Trip or SOS not working');
 				}
@@ -83,7 +94,6 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout }: My
 		if (userInfo.name) {
 			const getMyLocation = async () => {
 				try {
-					console.log(userInfo.phone_number);
 					const response = await axios.get(`/api/trips/my/${userInfo.phone_number}`);
 
 					if (response.data.length > 0) {
@@ -104,6 +114,21 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout }: My
 		}
 	}, [userInfo]);
 
+	console.log(userTrip);
+
+	// useEffect(() => {
+	// 	console.log('here');
+	// 	const deleteMyLocation = async () => {
+	// 		try {
+	// 			const response = await axios.delete(`/api/trips/reached/${userInfo.phone_number}`);
+	// 			console.log(response.data);
+	// 		} catch (error) {
+	// 			toast.error('Server did not retrieve data appropriately');
+	// 		}
+	// 		deleteMyLocation();
+	// 	};
+	// }, [endTrip]);
+
 	return (
 		<>
 			<Divider sx={{ width: '85%', margin: 'auto' }} variant="middle"></Divider>
@@ -120,49 +145,48 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout }: My
 						paddingBottom: '10px',
 						marginTop: '10px',
 					}}>
-					{userTrip.start_lat && userTrip.start_lng ? (
-						<>
-							<Card sx={{ maxWidth: 700 }}>
-								<div className="map-container">
-									<UserMapContainer userTrip={userTrip} />
-								</div>
-								<CardContent>
-									<Typography gutterBottom variant="h5" component="div">
-										Your Current Trip
-									</Typography>
-									<Typography variant="body2" color="text.secondary">
-										Secondary text here
-									</Typography>
-								</CardContent>
-								<CardActions>
-									<Button
-										size="large"
-										variant="contained"
-										color="primary"
-										name="end-trip"
-										onClick={(e: any) => {
-											handleClick(e.target.name);
-										}}>
-										End this Trip
-									</Button>
-									<Button
-										size="large"
-										variant="contained"
-										color="error"
-										name="sos"
-										onClick={(e: any) => {
-											handleClick(e.target.name);
-										}}>
-										ALERT CONTACTS FOR HELP
-									</Button>
-								</CardActions>
-							</Card>
-						</>
-					) : (
-						<>
-							<Typography>Start your trip...</Typography>
-						</>
-					)}
+					<>
+						{userTrip.start_lat && userTrip.start_lng ? (
+							<>
+								<Card sx={{ maxWidth: 700 }}>
+									<div className="map-container">
+										<UserMapContainer userTrip={userTrip} />
+									</div>
+									<CardContent>
+										<Typography gutterBottom variant="h5" component="div">
+											Your Current Trip
+										</Typography>
+									</CardContent>
+									<CardActions>
+										<Button
+											size="large"
+											variant="contained"
+											color="primary"
+											name="end-trip"
+											onClick={(e: any) => {
+												handleClick(e.target.name);
+											}}>
+											End this Trip
+										</Button>
+										<Button
+											size="large"
+											variant="contained"
+											color="error"
+											name="sos"
+											onClick={(e: any) => {
+												handleClick(e.target.name);
+											}}>
+											ALERT CONTACTS FOR HELP
+										</Button>
+									</CardActions>
+								</Card>
+							</>
+						) : (
+							<>
+								<Typography variant="h5">Start your trip...</Typography>
+							</>
+						)}
+					</>
 				</Container>
 			</Box>
 		</>
@@ -170,3 +194,9 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout }: My
 };
 
 export default MyTripCard;
+
+// {endTrip ? (
+// 	<>
+// 		<Typography>Your trip has ended. Start another trip...</Typography>
+// 	</>
+// ) : (
