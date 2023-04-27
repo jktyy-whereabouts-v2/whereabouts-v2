@@ -6,7 +6,6 @@ const contactsController = {
   getContacts: async (req: Request, res: Response, next: NextFunction) => {
     try {
     const { phone_number } = req.params;
-    console.log(phone_number);
     res.locals.contacts = await db.query(
       `select u.phone_number, u.name from users u 
         inner join contacts_join cj on u.phone_number = cj.contact_phone_number

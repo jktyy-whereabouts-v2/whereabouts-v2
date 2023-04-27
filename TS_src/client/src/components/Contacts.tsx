@@ -57,7 +57,6 @@ function Contacts({
     //fetch request to get contact info
     try {
       const response = await axios.get(`/api/users/${phone_number}`);
-
       const contactData = response.data[0];
       if (!contactData.name) return;
 
@@ -83,11 +82,7 @@ function Contacts({
 
     const foundIndex = newCheckedContacts.indexOf(contact);
     if (foundIndex >= 0) newCheckedContacts.splice(foundIndex, 1);
-    if (newContacts.length === 0 || newCheckedContacts.length === 0)
-      setButtonDisabled(true);
-
-    // console.log('new contacts:', newContacts);
-    // console.log('new checked contacts', newCheckedContacts)
+    if (newContacts.length === 0 || newCheckedContacts.length === 0) setButtonDisabled(true);
     setContacts(newContacts);
     setCheckedContacts(newCheckedContacts);
   };
