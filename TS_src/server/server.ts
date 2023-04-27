@@ -42,7 +42,7 @@ app.use(cors()); // allows communication between different domains
 // define route handler
 app.use('/api/login', loginRouter);
 app.use('/api/register', registerRouter);
-app.use('/api/users/contacts', contactsRouter);
+app.use('/api/contacts', contactsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/trips', tripsRouter);
 app.use('/auth', authRouter);

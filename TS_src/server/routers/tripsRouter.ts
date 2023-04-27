@@ -28,7 +28,7 @@ router.post('/start', tripsController.startNewTrip, (req: Request, res: Response
 //   "user_is_traveler": true,
 //   "user_phone_number": "742"
 // }],
-router.get('/my', tripsController.myTrip, (req: Request, res: Response) => {
+router.get('/my/:phone_number', tripsController.myTrip, (req: Request, res: Response) => {
   const { rows } = res.locals.trip;
   res.status(200).json(rows);
 });
