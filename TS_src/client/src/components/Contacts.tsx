@@ -4,7 +4,7 @@ import '@fontsource/roboto/300.css';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import ContactList from './ContactList';
-import { User, Trip } from "./types";
+import { User, Trip, Nullable } from "./types";
 import Sidebar from "./Sidebar";
 import Divider from "@mui/material/Divider";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +20,7 @@ interface Props {
 
 const googleURL = process.env.GOOGLEMAPSAPIKEY;
 
-function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout, setUserTrip} : Props) {
+function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout, setUserTrip, } : Props) {
 	const navigate = useNavigate();
 
 	// hook to manage contacts checked from list
@@ -122,20 +122,19 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 		}
 	};
 
-	// initially receiving user's contact list from the database
-	useEffect(() => {
-		axios.get(`/api/contacts/${userInfo.phone_number}`)
-			.then(response => {
-				setContacts(response.data);
-			})
-			.catch(err => console.log(err.message));
-	}, []);
-
 	useEffect(() => {
 		if (submitted) {
 			navigate('/myTrip');
 		}
 	}, [submitted]);
+
+	useEffect(() => {
+		axios.get(`/api/contacts/${userInfo.phone_number}`)
+		.then(response => {
+			setContacts(response.data);
+		})
+		.catch(err => console.log(err.message));
+	}, [userInfo]);
 
 	return (
 		<>

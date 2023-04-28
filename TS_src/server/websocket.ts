@@ -21,7 +21,7 @@ const addUser = (phoneNumber: string, socketId: string) => {
   users.reduce((acc: number, user: SocketUser) => {
     if(user.phoneNumber === phoneNumber) acc++;
     return acc;
-  }, 0) === 0 ? users.push({ phoneNumber, socketId });
+  }, 0) === 0 && users.push({ phoneNumber, socketId });
 };
 
 const deleteUser = (socketId: string) => {

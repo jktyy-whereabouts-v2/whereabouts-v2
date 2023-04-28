@@ -56,6 +56,8 @@ function App() {
 		console.log('logged out confirmed');
 	};
 
+	// initially receiving user's contact list from the database
+
 	// useEffect(() => {
 	// 	if (!JSON.parse(localStorage.getItem('user'))) {
 	// 		localStorage.setItem('user', JSON.stringify(userInfo));
@@ -71,12 +73,12 @@ function App() {
 					<Route path="/" element={<StartPage userInfo={userInfo} setUserInfo={setUserInfo} login={login} />} />
 					<Route path="/login" element={<Login userInfo={userInfo} setUserInfo={setUserInfo} login={login} />} />
 					<Route path="/register" element={<Registration userInfo={userInfo} setUserInfo={setUserInfo} login={login} />} />
-					<Route path="/dashboard" element={<Dashboard userInfo={userInfo} setUserInfo={setUserInfo} logout={logout} />} />
-					<Route path="/chat" element={<ChatPage userInfo={userInfo} contacts={contacts} logout={logout}/>} />
+					<Route path="/dashboard" element={<Dashboard userInfo={userInfo} setUserInfo={setUserInfo} logout={logout} setContacts={setContacts} />} />
+					<Route path="/chat" element={<ChatPage userInfo={userInfo} contacts={contacts} setContacts={setContacts} logout={logout}/>} />
 					<Route
 						path="/contacts"
 						element={
-							<Contacts userInfo={userInfo} contacts={contacts} setContacts={setContacts} setActiveComponent={setActiveComponent} userTrip={userTrip} setUserTrip={setUserTrip} logout={logout} />
+							<Contacts userInfo={userInfo} contacts={contacts} setContacts={setContacts} setActiveComponent={setActiveComponent} setUserTrip={setUserTrip} logout={logout} />
 						}
 					/>
 					<Route path="/myTrip" element={<MyTripCard userInfo={userInfo} setUserInfo={setUserInfo} userTrip={userTrip} setUserTrip={setUserTrip} logout={logout} />} />

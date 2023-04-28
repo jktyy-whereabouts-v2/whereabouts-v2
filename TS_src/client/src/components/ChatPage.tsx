@@ -1,11 +1,13 @@
-import { User , Message } from "./types";
-import { useState, useEffect } from "react";
-import { CssBaseline, Container, Box, Typography, TextField, IconButton, Card, createTheme } from '@mui/material';
+import { User, Message, Nullable, Conversation } from "./types";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { CssBaseline, Container, Box, Typography, TextField, IconButton, Card, createTheme, List, InputAdornment } from '@mui/material';
 import '@fontsource/roboto/300.css';
 import SendIcon from '@mui/icons-material/Send';
 import Sidebar from './Sidebar';
 import Divider from '@mui/material/Divider';
 import io from 'socket.io-client';
+import Conversations from './Conversations';
+import axios from 'axios';
 
 const socket = io('http://localhost:3001');
 
@@ -14,99 +16,54 @@ interface Props {
   userInfo: User;
   contacts: Array<User>;
   logout: Function;
+  setContacts: Dispatch<SetStateAction<any>>;
 }
 
-
-
-export default function ChatPage ({ userInfo, contacts, logout } : Props){
-  socket.emit('join', {phone_number: userInfo.phone_number});
-  const [conversation, setConversation] = useState<Array<Message>>([]);
-  const [message, setMessage] = useState<Message>({
-    name: '',
-    phone_number: '',
-    date_time: '',
-    text: '',
-  });
-  // const socket: any = useSocket();
-
-  const sendMessage = (event: any) => {
-    event.preventDefault();
-		const messageInput = event.target[0].value;
-    const today = new Date();
-    if (messageInput !== '') {
-      setMessage({
-      name: userInfo.name,
-      phone_number: userInfo.phone_number,
-      date_time: today.getHours() + ':' + today.getMinutes(),
-      text: messageInput
-      });
-    }
-    event.target[0].value = '';
-    socket.emit('send_message', {contacts, message});
-  };
+export default function ChatPage ({ userInfo, contacts, setContacts, logout } : Props){
+  const [currentConv, setCurrentConv]  = useState<Nullable<Conversation>>(null);
+  const [messages, setMessages] = useState<Array<Message>>([]);
 
   useEffect(() => {
-    if(message.text !== '') setConversation([...conversation, message]);
-  }, [message]);
-
-  useEffect(() => {
-    socket.on('receive_message', (msg: Message) => {
-      setConversation([...conversation, msg]);
-    })
-  }, [conversation]);
+		axios.get(`/api/contacts/${userInfo.phone_number}`)
+		.then(response => {
+			setContacts(response.data);
+		})
+		.catch(err => console.log(err.message));
+	}, [userInfo]);
 
   return (
-    <>
-      <Divider sx={{ width: '85%', margin: 'auto' }} variant="middle"></Divider>
-      <CssBaseline />
-      <Box sx={{ display: 'flex', mt: '30px' }}>
-        <Container sx={{ width: '40%', ml: '30px' }}>
-					<Sidebar logout={logout} />
-				</Container> 
-        <Container sx={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '10px', marginTop: '20px' }}>
-          <Typography variant='h6'>ChatRoom</Typography>
-          <Box sx={{ borderStyle: 'solid', borderColor: '#DCDCDC', borderRadius: '5%', width: '50%', height: '50vh', display: 'flex', overflowY: 'scroll', flexDirection: 'column', margin: '3px' }}>
-            <Typography sx= {{width: '100%'}} variant='caption' align='center'>{new Date().toDateString()}</Typography>
-            {
-              conversation.length ? conversation.map((message, index) => {
-                let styling = {
-                  backgroundColor: 'white',
-                  color: 'black',
-                  borderStyle: 'solid',
-                  borderColor: '#DCDCDC',
-                  float: 'left',
-                  margin: '5px',
-                  padding: '10px'
-                };
-                if(message.phone_number === userInfo.phone_number) {
-                  styling = {
-                    ...styling,
-                    backgroundColor: '#4dabf5',
-                    color: 'white',
-                    borderStyle: 'none',
-                    borderColor: 'blue',
-                    float: 'right',
-                  }
-                }
-                return (
-                  <Box>
-                    <Card key={index} sx={styling}>
-                      <Typography align='right'>{message.text}</Typography>
-                      <Typography variant='caption'>{message.name} : {message.date_time}</Typography>
-                    </Card>
-                  </Box>                
-                );
-              }) : null
-            }
-          </Box>
-          <Box component="form" onSubmit={sendMessage} sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-						<TextField sx={{ width: '50%' }} placeholder='Message...' id='MessageField' name='sendMessage' />
-						<IconButton type='submit' color='primary'>
-							<SendIcon />
-						</IconButton>
-					</Box>
-        </Container>
+  <>
+  <Divider sx={{ width: '85%', margin: 'auto' }} variant='middle'></Divider>
+  <CssBaseline />
+  <Box sx={{ display: 'flex', mt: '30px' }}>
+    <Container sx={{ width: '40%', ml: '30px' }}>
+      <Sidebar logout={logout} />
+    </Container>
+    <Container sx={{ width: '40%', ml: '30px' }}>
+      <List>
+        {
+        contacts.length > 0 && contacts.map((contact: User) => (
+        <Conversations contact={contact}/>
+        ))
+        }
+      </List>
+    </Container>  
+    <Container sx={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '10px', marginTop: '20px' }}>
+      <Box sx={{ borderStyle: 'solid', borderColor: '#DCDCDC', borderRadius: '5%', width: '50%', height: '50vh', display: 'flex', overflowY: 'scroll', flexDirection: 'column', margin: '3px' }}>
       </Box>
-    </>
+      <Box component='form' sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <TextField sx={{ width: '50%' }} placeholder='Message...' id='MessageField' name='sendMessage' InputProps={{
+          endAdornment: (
+          <InputAdornment position='end'>
+            <IconButton type='submit' edge='end' color='primary'>
+              <SendIcon />
+            </IconButton>
+          </InputAdornment>
+          ),
+        }}/>
+      </Box>
+    </Container>
+  </Box>
+  </>
   );
-}
+};

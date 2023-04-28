@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { User, UserProps } from '../types';
-import socket from '../../main';
 import { Box, styled, Typography, Stack, CssBaseline, InputBase } from '@mui/material';
 import { Container } from '@mui/system';
 import Sidebar from '../Sidebar';
 import Divider from '@mui/material/Divider';
+import axios from 'axios';
 
 interface DashboardProps {
 	userInfo: User;
 	setUserInfo: React.Dispatch<React.SetStateAction<User>>;
 	logout: Function;
+	setContacts: React.Dispatch<React.SetStateAction<any>>
 }
 
-function Dashboard({ userInfo, setUserInfo, logout }: DashboardProps) {
+function Dashboard({ userInfo, setUserInfo, logout, setContacts}: DashboardProps) {
 	useEffect(() => {
 		setUserInfo(JSON.parse(localStorage.getItem('user') || ''));
 	}, []);

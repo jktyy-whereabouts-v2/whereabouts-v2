@@ -24,9 +24,17 @@ export interface TripProps {
 	setUserTrip: React.Dispatch<React.SetStateAction<Trip>>;
 }
 
+export type Nullable<T> = T | null;
+
+export interface Conversation {
+  id: number;
+  member1: string;
+  member2: string;
+}
+
 export interface Message {
-  name: string;
-  phone_number: string;
-  date_time: string;
+  senderPhone: string;
   text: string;
+  receiverPhone: string;
+  convId: number;
 }
