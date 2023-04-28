@@ -6,10 +6,9 @@ const router = Router();
 // tested on backend w/ Postman, DOES NOT WORK
 // route not set up correctly, middleware does not get phone number from params, no variable in endpoint set up
 // how are we getting phone number from front end?
-router.get('/:phone_number', contactsController.getContacts,
+router.get('/', contactsController.getContacts,
   (req: Request, res: Response) => {
-    const { rows } = res.locals.contacts;
-    res.status(200).json(rows);
+    res.status(200).json(res.locals.contacts);
   }
 );
 

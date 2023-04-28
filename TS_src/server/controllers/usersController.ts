@@ -8,7 +8,6 @@ const usersController = {
         res.locals.user = await db.query(
           `SELECT * FROM users WHERE phone_number = '${req.params.phone_number}'`,
         );
-        console.log(res.locals.user);
         return next();
       } catch (error) {
         return next({

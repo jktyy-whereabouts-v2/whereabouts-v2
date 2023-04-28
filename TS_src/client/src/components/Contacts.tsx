@@ -113,7 +113,8 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 			if (res.status === 204) {
 				console.log('status is 200, redirect to MyTripCard');
 				clickSubmitted(true);
-			}
+			};
+      const notifRequest = await axios.get(`/api/notif/startNotif?phone_number=${userInfo.phone_number}&name=${userInfo.name}`)
 		} catch (error) {
 			if (error) {
 				alert('Please check contacts information and try again');
@@ -123,12 +124,12 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 
 	// initially receiving user's contact list from the database
 	useEffect(() => {
-		axios.get(`/api/contacts/${userInfo.phone_number}`)
+		axios.get(`/api/contacts/?phone_number=${userInfo.phone_number}&name=${userInfo.name}`)
 			.then(response => {
 				setContacts(response.data);
 			})
 			.catch(err => console.log(err.message));
-	}, []);
+	}, [userInfo]);
 
 	useEffect(() => {
 		if (submitted) {

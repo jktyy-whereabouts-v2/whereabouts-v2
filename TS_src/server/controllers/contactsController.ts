@@ -5,12 +5,13 @@ const contactsController = {
    //get contacts of current user
   getContacts: async (req: Request, res: Response, next: NextFunction) => {
     try {
-    const { phone_number } = req.params;
+    const { phone_number } = req.query;
     res.locals.contacts = await db.query(
       `select u.phone_number, u.name from users u 
         inner join contacts_join cj on u.phone_number = cj.contact_phone_number
         where cj.traveler_phone_number = '${phone_number}'`
       );
+      res.locals.contacts = res.locals.contacts.rows
       return next();
     } catch (error) {
       return next({
