@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -24,9 +24,11 @@ interface MyTripCard {
 	userTrip: any;
 	setUserTrip: React.Dispatch<React.SetStateAction<any>>;
 	logout: Function;
+	endTrip: boolean;
+	setEndTrip: React.Dispatch<SetStateAction<any>>;
 }
 
-const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout }: MyTripCard) => {
+const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout, endTrip, setEndTrip }: MyTripCard) => {
 	const trip = {
 		start_lat: '',
 		start_lng: '',
@@ -41,44 +43,48 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout }: My
 		},
 	});
 
-	const [endTrip, setEndTrip] = useState(false);
-
-	const handleClick = async (name: any) => {
+	const handleClickSos = async (event: any) => {
 		try {
 			const response = await axios.post(`https://www.googleapis.com/geolocation/v1/geolocate?key=${googleURL}`);
-			// const { lat, lng } = response.data.location;
-			// update state with sos position, if sos was clicked
 			const { lat, lng } = response.data.location;
-
-			if (name !== 'end-trip') {
+			if (response.data) {
 				setsosLocation(response.data);
 			}
-
-			const body = name === 'end-trip' ? { tripId: userTrip[0].trips_id } : { tripId: userTrip[0].trips_id, lat: lat, lng: lng };
-			const url = name === 'end-trip' ? '/api/trips/reached' : '/api/trips/sos';
-
+			const url = '/api/trips/sos';
+			const body = { tripId: userTrip[0].trips_id, lat: lat, lng: lng };
 			if (body && url) {
 				try {
-					console.log(body);
 					const postResponse = await axios.post(url, body);
-					console.log('confirmed End Trip or SOS');
-
-					try {
-						const deleteResponse = await axios.delete(`/api/trips/reached/${userInfo.phone_number}`);
-						console.log(deleteResponse.data);
-					} catch (error) {
-						toast.error('Server did not delete location');
-					}
-
-					setEndTrip(true);
+					console.log('confirmed SOS');
 				} catch (error) {
-					toast.error('End Trip or SOS not working');
+					toast.error('Body and URL was not set appropriately.');
 				}
 			}
 		} catch (error) {
-			toast.error('SOS not alerted.');
+			toast.error('SOS did not work appropriately.');
 		}
 	};
+
+	const handleClickEnd = async (event: any) => {
+		const body = { tripId: userTrip[0].trips_id };
+		const url = '/api/trips/reached';
+
+		if (body && url) {
+			try {
+				const postResponse = await axios.post(url, body);
+				console.log('confirmed End Trip');
+				setEndTrip(true);
+				localStorage.setItem('EndTrip', JSON.stringify(true));
+			} catch (error) {
+				toast.error('End Trip not working');
+			}
+		}
+	};
+
+	useEffect(() => {
+		setEndTrip(JSON.parse(localStorage.getItem('EndTrip')));
+	}, [userInfo]);
+	console.log(endTrip);
 
 	useEffect(() => {
 		setUserTrip({
@@ -114,21 +120,6 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout }: My
 		}
 	}, [userInfo]);
 
-	console.log(userTrip);
-
-	// useEffect(() => {
-	// 	console.log('here');
-	// 	const deleteMyLocation = async () => {
-	// 		try {
-	// 			const response = await axios.delete(`/api/trips/reached/${userInfo.phone_number}`);
-	// 			console.log(response.data);
-	// 		} catch (error) {
-	// 			toast.error('Server did not retrieve data appropriately');
-	// 		}
-	// 		deleteMyLocation();
-	// 	};
-	// }, [endTrip]);
-
 	return (
 		<>
 			<Divider sx={{ width: '85%', margin: 'auto' }} variant="middle"></Divider>
@@ -146,7 +137,11 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout }: My
 						marginTop: '10px',
 					}}>
 					<>
-						{userTrip.start_lat && userTrip.start_lng ? (
+						{endTrip === true || endTrip === null ? (
+							<>
+								<Typography variant="h5">Start your trip...</Typography>
+							</>
+						) : (
 							<>
 								<Card sx={{ maxWidth: 700 }}>
 									<div className="map-container">
@@ -164,7 +159,7 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout }: My
 											color="primary"
 											name="end-trip"
 											onClick={(e: any) => {
-												handleClick(e.target.name);
+												handleClickEnd(e.target.value);
 											}}>
 											End this Trip
 										</Button>
@@ -174,16 +169,12 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout }: My
 											color="error"
 											name="sos"
 											onClick={(e: any) => {
-												handleClick(e.target.name);
+												handleClickSos(e.target.value);
 											}}>
 											ALERT CONTACTS FOR HELP
 										</Button>
 									</CardActions>
-								</Card>
-							</>
-						) : (
-							<>
-								<Typography variant="h5">Start your trip...</Typography>
+								</Card>{' '}
 							</>
 						)}
 					</>
@@ -194,9 +185,3 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout }: My
 };
 
 export default MyTripCard;
-
-// {endTrip ? (
-// 	<>
-// 		<Typography>Your trip has ended. Start another trip...</Typography>
-// 	</>
-// ) : (
