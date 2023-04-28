@@ -58,12 +58,12 @@ function App() {
 
 	// initially receiving user's contact list from the database
 
-	// useEffect(() => {
-	// 	if (!JSON.parse(localStorage.getItem('user'))) {
-	// 		localStorage.setItem('user', JSON.stringify(userInfo));
-	// 	}
-	// 	setUserInfo(JSON.parse(localStorage.getItem('user')));
-	// }, []);
+	useEffect(() => {
+		if (!JSON.parse(localStorage.getItem('user'))) {
+			localStorage.setItem('user', JSON.stringify(userInfo));
+		}
+		setUserInfo(JSON.parse(localStorage.getItem('user')));
+	}, []);
 
 	return (
 		<>

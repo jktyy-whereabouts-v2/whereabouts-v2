@@ -4,7 +4,6 @@ import { Box, styled, Typography, Stack, CssBaseline, InputBase } from '@mui/mat
 import { Container } from '@mui/system';
 import Sidebar from '../Sidebar';
 import Divider from '@mui/material/Divider';
-import axios from 'axios';
 
 interface DashboardProps {
 	userInfo: User;

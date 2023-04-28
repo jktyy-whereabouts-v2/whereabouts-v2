@@ -47,7 +47,7 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 
 			// check if contact is already in user's contact list
 			const contactShown = contacts.reduce((acc: number, user: User) => {
-				if (user.phone_number === contactData.phone_number) ++acc;
+				if (user.phone_number === contactData.phone_number || userInfo.phone_number === contactData.phone_number) ++acc;
 				return acc;
 			}, 0);
 
