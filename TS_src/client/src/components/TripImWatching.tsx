@@ -141,14 +141,3 @@ const TripImWatching: React.FC<{ userInfo: User; logout: Function }> = ({
 };
 
 export default TripImWatching;
-
-// {
-// 	<Card sx={{ maxWidth: 700 }}>
-// 		{trips.map((trip) => (
-// 			<div key={trip.trips_id} className="view-card">
-// 				<br></br>
-// 				<TripViewingCard trip={trip} />
-// 			</div>
-// 		))}
-// 	</Card>;
-// }
