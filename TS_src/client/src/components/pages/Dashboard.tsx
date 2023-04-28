@@ -34,15 +34,3 @@ function Dashboard({ userInfo, setUserInfo, logout, setContacts}: DashboardProps
 }
 
 export default Dashboard;
-
-// {/* <div className="dashboard-container">
-// {/* SSE - Render trips */}
-// {/* <div>
-//   {trips.map((trip) => (
-//     <div>Trip Id: {trip.id} | Trip Start Time: {trip.start_timestamp} ||</div>
-//   ))}
-// </div> */}
-// <div className="sidebar-container">
-//   <Sidebar logout={logout} />
-// </div>
-// </div> */}

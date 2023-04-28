@@ -11,12 +11,17 @@ export interface UserProps {
 
 export interface Trip {
 	active: boolean;
-	start_timestamp: string;
-	start_lat: string;
-	start_lng: string;
-	sos_timestamp: string;
+	id: string;
 	sos_lat: string;
 	sos_lng: string;
+	sos_timestamp: string;
+	start_timestamp: string;
+	end_timestamp: string;
+	start_lat: string;
+	start_lng: string;
+	trips_id: any;
+	user_is_traveler: any;
+	user_phone_number: any;
 }
 
 export interface TripProps {
