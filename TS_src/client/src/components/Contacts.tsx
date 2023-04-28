@@ -30,6 +30,19 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 	// hook to set status on whether trips has started, for navigation purposes
 	const [submitted, clickSubmitted] = useState<boolean>(false);
 
+	useEffect(() => {
+		if (submitted) {
+			navigate('/myTrip');
+		}
+	}, [submitted]);
+	useEffect(() => {
+		axios.get(`/api/contacts/${userInfo.phone_number}`)
+		.then(response => {
+			setContacts(response.data);
+		})
+		.catch(err => console.log(err.message));
+	}, [userInfo]);
+
 	// Fetch GET request for contact and add to list:
 	const handleSubmit = async (event: any) => {
 		event.preventDefault();
@@ -120,20 +133,6 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 			}
 		}
 	};
-
-	useEffect(() => {
-		if (submitted) {
-			navigate('/myTrip');
-		}
-	}, [submitted]);
-
-	useEffect(() => {
-		axios.get(`/api/contacts/${userInfo.phone_number}`)
-		.then(response => {
-			setContacts(response.data);
-		})
-		.catch(err => console.log(err.message));
-	}, [userInfo]);
 
 	return (
 		<>
