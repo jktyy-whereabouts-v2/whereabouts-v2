@@ -71,38 +71,15 @@ const TripImWatching: React.FC<{ userInfo: User; logout: Function }> = ({ userIn
 						marginTop: '10px',
 					}}>
 					<Typography>Trips I'm Watching</Typography>
-					<TabContext value={value}>
-						<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-							<TabList onChange={handleChange} aria-label="lab API tabs example">
-								<Tab label="SOS" value="1" />
-								<Tab label="Ongoing" value="2" />
-								<Tab label="Finished" value="3" />
-							</TabList>
-						</Box>
-						<TabPanel value="1">
-							<Card sx={{ maxWidth: 700 }}>
-								{trips.map((trip) => (
-									<div key={trip.trips_id} className="view-card">
-										<br></br>
-										<TripViewingCard trip={trip} />
-									</div>
-								))}
-							</Card>
-						</TabPanel>
-						<TabPanel value="2">
-							<Card sx={{ maxWidth: 700 }}>{trip[0].end_timestamp === null && trip[0].sos_lat === null ? <></> : <></>}</Card>
-						</TabPanel>
-						<TabPanel value="3">
-							<Card sx={{ maxWidth: 700 }}>
-								{trips.map((trip) => (
-									<div key={trip.trips_id} className="view-card">
-										<br></br>
-										<TripViewingCard trip={trip} />
-									</div>
-								))}
-							</Card>
-						</TabPanel>
-					</TabContext>
+					<Card sx={{ maxWidth: 700 }}>
+						{trips.map((trip) => (
+							<div key={trip.trips_id} className="view-card">
+								<br></br>
+								<TripViewingCard trip={trip} />
+							</div>
+						))}
+					</Card>
+					;
 				</Container>
 			</Box>
 		</>
@@ -110,16 +87,3 @@ const TripImWatching: React.FC<{ userInfo: User; logout: Function }> = ({ userIn
 };
 
 export default TripImWatching;
-
-// {
-// 	<Card sx={{ maxWidth: 700 }}>
-// 		{trips.map((trip) => (
-// 			<div key={trip.trips_id} className="view-card">
-// 				<br></br>
-// 				<TripViewingCard trip={trip} />
-// 			</div>
-// 		))}
-// 	</Card>;
-// }
-
-trip[0].end_timestamp === null && trip[0].sos_lat === null;
