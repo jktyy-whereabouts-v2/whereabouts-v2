@@ -19,7 +19,7 @@ const twilioController = {
                     // send twilio message
                     console.log(`sending a message to ${contacts[i]}`)
                     const message = await client.messages.create({
-                        body: `${name} started a trip! Reply STOP to opt-out`,
+                        body: `${name} has started a trip with Whereabouts!`,
                         from: process.env.TWILIO_NUMBER,
                         to: contacts[i]
                     })
@@ -50,7 +50,7 @@ const twilioController = {
                     // send twilio message
                     console.log(`sending a message to ${contacts[i]}`)
                     const message = await client.messages.create({
-                        body: `${name} arrived safely at their destination. Reply STOP to opt-out`,
+                        body: `${name} has arrived safely at their destination with Whereabouts.`,
                         from: process.env.TWILIO_NUMBER,
                         to: contacts[i]
                     })
@@ -80,7 +80,7 @@ const twilioController = {
                     // send twilio message
                     console.log(`sending a message to ${contacts[i]}`)
                     const message = await client.messages.create({
-                        body: `${name} is send an SOS! Reply STOP to opt-out`,
+                        body: `${name} is sending an SOS on Whereabouts!`,
                         from: process.env.TWILIO_NUMBER,
                         to: contacts[i]
                     })

@@ -60,6 +60,7 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout, endT
 					toast.error('Body and URL was not set appropriately.');
 				}
 			}
+			await axios.get(`/api/notif/sosNotif/?phone_number=${userInfo.phone_number}&name=${userInfo.name}`)
 		} catch (error) {
 			toast.error('SOS did not work appropriately.');
 		}
@@ -79,6 +80,7 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout, endT
 				toast.error('End Trip not working');
 			}
 		}
+		await axios.get(`/api/notif/endNotif/?phone_number=${userInfo.phone_number}&name=${userInfo.name}`)
 	};
 
 	useEffect(() => {
@@ -139,7 +141,7 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout, endT
 					<>
 						{endTrip === true || endTrip === null ? (
 							<>
-								<Typography variant="h5">You haven't started your trip. Start your trip...</Typography>
+								<Typography variant="h5">You have no active trips. Go to contacts to start your trip...</Typography>
 							</>
 						) : (
 							<>
