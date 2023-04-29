@@ -53,7 +53,7 @@ export default function ChatPage ({ userInfo, contacts, setContacts, logout } : 
 
   // getting contacts of user to display
   useEffect(() => {
-    if(userInfo?.phone_number) axios.get(`/api/contacts/${userInfo.phone_number}`)
+    if(userInfo?.phone_number) axios.get(`/api/contacts?phone_number=${userInfo.phone_number}`)
     .then(response => {
       setContacts(response.data);
     })

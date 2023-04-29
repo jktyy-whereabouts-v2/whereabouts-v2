@@ -23,7 +23,7 @@ interface Props {
 
 const googleURL = process.env.GOOGLEMAPSAPIKEY;
 
-function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout, setUserTrip} : Props) {
+function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout, setUserTrip, setEndTrip, endTrip } : Props) {
 	const navigate = useNavigate();
 
 	// hook to manage contacts checked from list
@@ -38,8 +38,9 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 			navigate('/myTrip');
 		}
 	}, [submitted]);
+
 	useEffect(() => {
-		axios.get(`/api/contacts/${userInfo.phone_number}`)
+		if(userInfo?.phone_number) axios.get(`/api/contacts?phone_number=${userInfo.phone_number}`)
 		.then(response => {
 			setContacts(response.data);
 		})
@@ -137,21 +138,6 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 			}
 		}
 	};
-
-	// initially receiving user's contact list from the database
-	useEffect(() => {
-		axios.get(`/api/contacts/${userInfo.phone_number}`)
-			.then(response => {
-				setContacts(response.data);
-			})
-			.catch(err => console.log(err.message));
-	}, []);
-
-	useEffect(() => {
-		if (submitted) {
-			navigate('/myTrip');
-		}
-	}, [submitted]);
 
 	return (
 		<>
