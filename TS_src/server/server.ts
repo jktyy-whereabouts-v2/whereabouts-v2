@@ -1,6 +1,5 @@
 // required modules
 require("dotenv").config("./.env");
-const http = require("http");
 import express, {
   Express,
   NextFunction,
@@ -8,15 +7,13 @@ import express, {
   Response,
   ErrorRequestHandler,
 } from "express";
-const cors = require("cors");
-// initialize Server instance of socket.io by passing it HTTP server obj on which to mount the socket server
-import { Server } from 'socket.io';
 // import routers
 const loginRouter = require('./routers/loginRouter');
 const registerRouter = require('./routers/registerRouter');
 const contactsRouter = require('./routers/contactsRouter');
 const usersRouter = require('./routers/usersRouter');
 const tripsRouter = require('./routers/tripsRouter');
+const chatRouter = require('./routers/chatRouter');
 import authRouter from './routers/authRouter'
 import notifRouter from './routers/notifRouter'
 // db connection
@@ -26,6 +23,7 @@ const PORT = 3500;
 // import db queries
 const dbQuery = require('./models/dbQueries');
 
+const cors = require("cors");
 // create express server instance
 const app: Express = express();
 
@@ -45,6 +43,7 @@ app.use('/api/register', registerRouter);
 app.use('/api/contacts', contactsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/trips', tripsRouter);
+app.use('/api/chat', chatRouter);
 app.use('/auth', authRouter);
 app.use('/api/notif', notifRouter);
 
@@ -88,48 +87,82 @@ app.use((err: ErrorRequestHandler, req: Request, res: Response, next: NextFuncti
 	return res.status(errorObj.status).json(errorObj.message);
 });
 
-/* START Implement chat with Socket.io */
-// create HTTP server instance
-const httpServer = http.createServer(app);
-// const httpServer = require('http').Server(app); // app is a handler function supplied to HTTP server
 
-const io = new Server(httpServer, {
-  // pingTimeout: 30000, // https://socket.io/docs/v4/troubleshooting-connection-issues/#the-browser-tab-was-minimized-and-heartbeat-has-failed
-  cors: {
-    origin: ["http://localhost:8080"],
-    methods: ["GET", "POST"],
-  },
-  // path: '/chat',
-});
-
-// on connection event (i.e. on connecting to socket server instance), listening for incoming sockets + connecting with React app
-io.on("connection", (socket) => {
-  console.log("server side connected!");
-  // socket.emit sends a message to only the connecting client
-  socket.emit("autoMsg", "This message will contain the SOS GMap");
-  // broadcast flag will send a message to everyone but the connecting client
-  // broadcast when a new user connects to the chat
-  socket.broadcast.emit("autoMsg", "I have joined the SOS chat");
-  // server listens for new message from any client typing into chat
-  socket.on("chatMsg", (msg) => {
-    // io.emit sends a message to ALL users on chat
-    io.emit("disperseMsg", msg);
-    // go to ChatPage.jsx, socket.on('disperseMsg')
-  });
-  // run when a user disconnects from the chat
-  socket.on("disconnect", () => {
-    console.log("server side disconnected!");
-    // io.emit sends a message to all remaining chat users
-    io.emit("autoMsg", "I have left the SOS chat");
-    // refreshing chat page disconnects and reconnects socket
-    //https://socket.io/docs/v4/troubleshooting-connection-issues/#problem-the-socket-gets-disconnected
-  });
-});
-/* END Implement chat with Socket.io */
-
-// listening on HTTP server!
-httpServer.listen(PORT, () =>
-  console.log(`Currently listening on port: ${PORT}`)
-);
+app.listen(PORT);
 
 module.exports = app;
+
+// socket.io for chatPage
+
+const http = require("http");
+// initialize Server instance of socket.io by passing it HTTP server obj on which to mount the socket server
+import { Server, Socket } from 'socket.io';
+import { Message } from '../client/src/components/types';
+
+interface SocketUser {
+  phoneNumber: string;
+  socketId: string;
+};
+
+const httpServer = http.createServer();
+let users: SocketUser[] = [];
+
+// adding user to the array of active users, if not already added
+const addUser = (phoneNumber: string, socketId: string) => {
+  let userFound = false;
+  users.forEach((user: SocketUser) => {
+    // if user found, update socketId
+    if(user.phoneNumber === phoneNumber) {
+      user.socketId = socketId;
+      userFound = true;
+    }
+  })
+  if(!userFound) users.push({
+    phoneNumber,
+    socketId
+  })
+};
+
+// removing user from the array of active users
+const deleteUser = (socketId: string) => {
+  users = users.filter((user: SocketUser) => {
+    return user.socketId !== socketId;
+  });
+};
+
+// retrieving the socketId of the user upon receipt of their phone number
+const getUser = (phoneNumber: string) => {
+  for(let user of users) {
+    if(user.phoneNumber === phoneNumber) return user;
+  }
+};
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: ['http://localhost:3000'],
+    methods: ['GET', 'POST'],
+  },
+});
+
+io.on("connection", (socket: Socket) => {
+  socket.on('addUser', phoneNumber => {
+    addUser(phoneNumber, socket.id);
+  });
+  socket.on('sendMessage', ({ sendername, senderphone, receivername, receiverphone, text, convid, timestamp }: Message) => {
+    const user = getUser(receiverphone);
+    if(user) io.to(user.socketId).emit('getMessage', {
+      sendername,
+      senderphone,
+      receivername,
+      receiverphone,
+      text,
+      convid,
+      timestamp
+    })
+  });
+  socket.on('disconnect', () => {
+    deleteUser(socket.id)
+  });
+});
+
+httpServer.listen(3001);

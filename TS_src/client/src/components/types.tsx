@@ -28,3 +28,24 @@ export interface TripProps {
 	userTrip: Trip;
 	setUserTrip: React.Dispatch<React.SetStateAction<Trip>>;
 }
+
+export type Nullable<T> = T | null;
+export type Undefinable<T> = T | undefined;
+
+export interface Conversation {
+  convid: number;
+  member1name: string;
+	member1phone: string;
+  member2name: string;
+	member2phone: string;
+}
+
+export interface Message {
+  sendername: string;
+	senderphone: string;
+  text: string;
+  receivername: string;
+	receiverphone: string;
+  convid: number | undefined;
+	timestamp: number;
+}

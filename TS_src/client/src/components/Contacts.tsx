@@ -4,10 +4,10 @@ import '@fontsource/roboto/300.css';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import ContactList from './ContactList';
-import { User, Trip } from './types';
-import Sidebar from './Sidebar';
-import Divider from '@mui/material/Divider';
-import { useNavigate } from 'react-router-dom';
+import { User, Trip } from "./types";
+import Sidebar from "./Sidebar";
+import Divider from "@mui/material/Divider";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
 	userInfo: User;
@@ -23,7 +23,7 @@ interface Props {
 
 const googleURL = process.env.GOOGLEMAPSAPIKEY;
 
-function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout, userTrip, setUserTrip, endTrip, setEndTrip }: Props) {
+function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout, setUserTrip, setEndTrip, endTrip } : Props) {
 	const navigate = useNavigate();
 
 	// hook to manage contacts checked from list
@@ -32,6 +32,20 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 	const [buttonDisabled, setButtonDisabled] = useState<boolean>(true);
 	// hook to set status on whether trips has started, for navigation purposes
 	const [submitted, clickSubmitted] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (submitted) {
+			navigate('/myTrip');
+		}
+	}, [submitted]);
+
+	useEffect(() => {
+		if(userInfo?.phone_number) axios.get(`/api/contacts?phone_number=${userInfo.phone_number}`)
+		.then(response => {
+			setContacts(response.data);
+		})
+		.catch(err => console.log(err.message));
+	}, [userInfo]);
 
 	// Fetch GET request for contact and add to list:
 	const handleSubmit = async (event: any) => {
@@ -50,7 +64,7 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 
 			// check if contact is already in user's contact list
 			const contactShown = contacts.reduce((acc: number, user: User) => {
-				if (user.phone_number === contactData.phone_number) ++acc;
+				if (user.phone_number === contactData.phone_number || userInfo.phone_number === contactData.phone_number) ++acc;
 				return acc;
 			}, 0);
 
@@ -124,24 +138,6 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 			}
 		}
 	};
-
-	// initially receiving user's contact list from the database
-	useEffect(() => {
-		if (userInfo.name) {
-			axios
-				.get(`/api/contacts/?phone_number=${userInfo.phone_number}&name=${userInfo.name}`)
-				.then((response) => {
-					setContacts(response.data);
-				})
-				.catch((err) => console.log(err.message));
-		}
-	}, [userInfo]);
-
-	useEffect(() => {
-		if (submitted) {
-			navigate('/myTrip');
-		}
-	}, [submitted]);
 
 	return (
 		<>

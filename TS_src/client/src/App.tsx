@@ -7,7 +7,6 @@ import Registration from './components/pages/Registration';
 import Dashboard from './components/pages/Dashboard';
 import ChatPage from './components/ChatPage';
 import { User, Trip } from './components/types';
-import socket from './main';
 import { Toaster } from 'react-hot-toast';
 import Contacts from './components/Contacts';
 import MyTripCard from './components/MyTripCard';
@@ -78,6 +77,8 @@ function App() {
 		console.log('logged out confirmed');
 	};
 
+	// initially receiving user's contact list from the database
+
 	useEffect(() => {
 		if (!JSON.parse(localStorage.getItem('user'))) {
 			localStorage.setItem('user', JSON.stringify(userInfo));
@@ -93,8 +94,8 @@ function App() {
 					<Route path="/" element={<StartPage userInfo={userInfo} setUserInfo={setUserInfo} login={login} />} />
 					<Route path="/login" element={<Login userInfo={userInfo} setUserInfo={setUserInfo} login={login} />} />
 					<Route path="/register" element={<Registration userInfo={userInfo} setUserInfo={setUserInfo} login={login} />} />
-					<Route path="/dashboard" element={<Dashboard userInfo={userInfo} setUserInfo={setUserInfo} logout={logout} />} />
-					<Route path="/chat" element={<ChatPage userInfo={userInfo} setUserInfo={setUserInfo} path="/chat" socket={socket} logout={logout} />} />
+					<Route path="/dashboard" element={<Dashboard userInfo={userInfo} setUserInfo={setUserInfo} logout={logout} setContacts={setContacts} />} />
+					<Route path="/chat" element={<ChatPage userInfo={userInfo} contacts={contacts} setContacts={setContacts} logout={logout}/>} />
 					<Route
 						path="/contacts"
 						element={
