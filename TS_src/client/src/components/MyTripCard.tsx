@@ -139,7 +139,7 @@ const MyTripCard = ({ userInfo, setUserInfo, userTrip, setUserTrip, logout, endT
 					<>
 						{endTrip === true || endTrip === null ? (
 							<>
-								<Typography variant="h5">Start your trip...</Typography>
+								<Typography variant="h5">You haven't started your trip. Start your trip...</Typography>
 							</>
 						) : (
 							<>
