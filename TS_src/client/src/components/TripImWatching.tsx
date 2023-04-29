@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import ProgressBar from "./ProgressBar";
 import TripViewingCard from './TripViewingCard';
-import { Box, styled, Typography, Stack, CssBaseline, InputBase, Tab } from '@mui/material';
+import { Box, styled, Typography, Stack, CssBaseline, InputBase, Tab, Badge } from '@mui/material';
 import { Container } from '@mui/system';
 import Sidebar from './Sidebar';
 import Divider from '@mui/material/Divider';
@@ -12,6 +12,9 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 
 interface Trips {
+	end_timestamp: string | null;
+	sos_lat: string | null;
+	sos_lng: string | null;
 	trips_id: string;
 	start_lat: number;
 	start_lng: number;
@@ -54,6 +57,19 @@ const TripImWatching: React.FC<{ userInfo: User; logout: Function }> = ({ userIn
 	}, []);
 	console.log(trips);
 
+	const sosResult = trips.filter((trip) => trip.sos_lat !== null && trip.end_timestamp === null);
+	const ongoingResult = trips.filter((trip) => trip.end_timestamp === null && trip.sos_lat === null);
+	const finishedResult = trips.filter((trip) => trip.end_timestamp !== null);
+
+	const StyledBadge = styled(Badge)(({ theme }) => ({
+		'& .MuiBadge-badge': {
+			right: -12,
+			top: 9,
+			border: `2px solid ${theme.palette.background.paper}`,
+			padding: '0 4px',
+		},
+	}));
+
 	return (
 		<>
 			<Divider sx={{ width: '85%', margin: 'auto' }} variant="middle"></Divider>
@@ -71,15 +87,60 @@ const TripImWatching: React.FC<{ userInfo: User; logout: Function }> = ({ userIn
 						marginTop: '10px',
 					}}>
 					<Typography>Trips I'm Watching</Typography>
-					<Card sx={{ maxWidth: 700 }}>
-						{trips.map((trip) => (
-							<div key={trip.trips_id} className="view-card">
-								<br></br>
-								<TripViewingCard trip={trip} />
-							</div>
-						))}
-					</Card>
-					;
+					<TabContext value={value}>
+						<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+							<TabList onChange={handleChange} aria-label="lab API tabs example">
+								<Tab
+									sx={{ pr: 4 }}
+									label={
+										<StyledBadge badgeContent={sosResult.length} color="error">
+											SOS
+										</StyledBadge>
+									}
+									value="1"
+								/>
+								<Tab
+									sx={{ pr: 4 }}
+									label={
+										<StyledBadge badgeContent={ongoingResult.length} color="primary">
+											Ongoing
+										</StyledBadge>
+									}
+									value="2"
+								/>
+								<Tab
+									sx={{ pr: 4 }}
+									label={
+										<StyledBadge badgeContent={finishedResult.length} color="success">
+											Finished
+										</StyledBadge>
+									}
+									value="3"
+								/>
+							</TabList>
+						</Box>
+						<TabPanel value="1">
+							<Card sx={{ maxWidth: 700 }}>
+								{sosResult.map((filteredTrip) => (
+									<TripViewingCard trip={filteredTrip} />
+								))}
+							</Card>
+						</TabPanel>
+						<TabPanel value="2">
+							<Card sx={{ maxWidth: 700 }}>
+								{ongoingResult.map((filteredTrip) => (
+									<TripViewingCard key={ongoingResult.length} trip={filteredTrip} />
+								))}
+							</Card>
+						</TabPanel>
+						<TabPanel value="3">
+							<Card sx={{ maxWidth: 700 }}>
+								{finishedResult.map((filteredTrip) => (
+									<TripViewingCard trip={filteredTrip} />
+								))}
+							</Card>
+						</TabPanel>
+					</TabContext>
 				</Container>
 			</Box>
 		</>

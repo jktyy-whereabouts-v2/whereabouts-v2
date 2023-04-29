@@ -15,6 +15,7 @@ const usersRouter = require('./routers/usersRouter');
 const tripsRouter = require('./routers/tripsRouter');
 const chatRouter = require('./routers/chatRouter');
 import authRouter from './routers/authRouter'
+import notifRouter from './routers/notifRouter'
 // db connection
 const db = require("./models/whereaboutsModel");
 // define server port
@@ -44,6 +45,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/trips', tripsRouter);
 app.use('/api/chat', chatRouter);
 app.use('/auth', authRouter);
+app.use('/api/notif', notifRouter);
 
 app.get("/stream/:phone_number", (req: Request, res: Response) => {
   const phoneNumber = req.params.phone_number;
@@ -56,10 +58,7 @@ app.get("/stream/:phone_number", (req: Request, res: Response) => {
       // 'Access-Control-Allow-Origin': '*',
     });
     setInterval(async () => {
-      console.log("before rows");
       const rows = await dbQuery(phoneNumber);
-      console.log(rows);
-      console.log("after rows");
       res.write(`data: ${JSON.stringify(rows)}\n\n`);
     }, 1000);
   } else {

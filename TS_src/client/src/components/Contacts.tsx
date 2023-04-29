@@ -4,7 +4,7 @@ import '@fontsource/roboto/300.css';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import ContactList from './ContactList';
-import { User, Trip, Nullable } from "./types";
+import { User, Trip } from "./types";
 import Sidebar from "./Sidebar";
 import Divider from "@mui/material/Divider";
 import { useNavigate } from "react-router-dom";
@@ -15,12 +15,15 @@ interface Props {
 	setContacts: Dispatch<SetStateAction<any>>;
 	setActiveComponent: Dispatch<SetStateAction<string>>;
 	logout: Function;
+	userTrip: any;
 	setUserTrip: Dispatch<SetStateAction<Trip>>;
+	endTrip: boolean;
+	setEndTrip: Dispatch<SetStateAction<any>>;
 }
 
 const googleURL = process.env.GOOGLEMAPSAPIKEY;
 
-function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout, setUserTrip, } : Props) {
+function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout, setUserTrip} : Props) {
 	const navigate = useNavigate();
 
 	// hook to manage contacts checked from list
@@ -46,7 +49,7 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 	// Fetch GET request for contact and add to list:
 	const handleSubmit = async (event: any) => {
 		event.preventDefault();
-	
+
 		const phone_number = event.target[0].value.replaceAll(/[^0-9]/g, '');
 		event.target[0].value = '';
 
@@ -70,7 +73,7 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 				// also updating contact list in the database
 				await axios.post('/api/contacts', {
 					traveler_phone_number: userInfo.phone_number,
-					contact_phone_number: contactData.phone_number
+					contact_phone_number: contactData.phone_number,
 				});
 			}
 		} catch (err: any) {
@@ -80,7 +83,6 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 
 	// function to delete contact from list, pass to contacts list
 	const deleteContact = async (index: number, contact: User) => {
-
 		// delete contact from the contact list
 		const newContacts = [...contacts];
 		const newCheckedContacts = [...checkedContacts];
@@ -100,7 +102,6 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 	const extractPhoneNumbers = (array: any) => {
 		return array.map((obj: any) => obj.phone_number);
 	};
-
 
 	// declare variable to contain proper info to send backend
 	const tripData = {
@@ -126,13 +127,31 @@ function Contacts({ userInfo, contacts, setContacts, setActiveComponent, logout,
 			if (res.status === 204) {
 				console.log('status is 200, redirect to MyTripCard');
 				clickSubmitted(true);
-			}
+			};
+			setEndTrip(false);
+			localStorage.setItem('EndTrip', JSON.stringify(false));
+      const notifRequest = await axios.get(`/api/notif/startNotif?phone_number=${userInfo.phone_number}&name=${userInfo.name}`)
 		} catch (error) {
 			if (error) {
 				alert('Please check contacts information and try again');
 			}
 		}
 	};
+
+	// initially receiving user's contact list from the database
+	useEffect(() => {
+		axios.get(`/api/contacts/${userInfo.phone_number}`)
+			.then(response => {
+				setContacts(response.data);
+			})
+			.catch(err => console.log(err.message));
+	}, []);
+
+	useEffect(() => {
+		if (submitted) {
+			navigate('/myTrip');
+		}
+	}, [submitted]);
 
 	return (
 		<>
