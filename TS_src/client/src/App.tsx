@@ -19,6 +19,8 @@ function App() {
 	// hook for conditionally rendering components
 	const [activeComponent, setActiveComponent] = useState('');
 
+	const [endTrip, setEndTrip] = useState(null);
+
 	// toggle components in sidebar
 	const handleClick = (componentName: string) => {
 		setActiveComponent(componentName);
@@ -26,12 +28,17 @@ function App() {
 
 	const [userTrip, setUserTrip] = useState<Trip>({
 		active: true,
-		start_timestamp: '',
-		start_lat: '',
-		start_lng: '',
-		sos_timestamp: '',
+		id: '',
 		sos_lat: '',
 		sos_lng: '',
+		sos_timestamp: '',
+		start_timestamp: '',
+		end_timestamp: '',
+		start_lat: '',
+		start_lng: '',
+		trips_id: null,
+		user_is_traveler: null,
+		user_phone_number: null,
 	});
 
 	const [userInfo, setUserInfo] = useState<User>({
@@ -53,6 +60,20 @@ function App() {
 
 	const logout = () => {
 		setUserInfo({ name: '', phone_number: '', password: '' });
+		setUserTrip({
+			active: false,
+			id: '',
+			sos_lat: '',
+			sos_lng: '',
+			sos_timestamp: '',
+			start_timestamp: '',
+			end_timestamp: '',
+			start_lat: '',
+			start_lng: '',
+			trips_id: null,
+			user_is_traveler: null,
+			user_phone_number: null,
+		});
 		localStorage.clear();
 		console.log('logged out confirmed');
 	};
@@ -77,10 +98,23 @@ function App() {
 					<Route
 						path="/contacts"
 						element={
-							<Contacts userInfo={userInfo} contacts={contacts} setContacts={setContacts} setActiveComponent={setActiveComponent} userTrip={userTrip} setUserTrip={setUserTrip} logout={logout} />
+							<Contacts
+								userInfo={userInfo}
+								contacts={contacts}
+								setContacts={setContacts}
+								setActiveComponent={setActiveComponent}
+								userTrip={userTrip}
+								setUserTrip={setUserTrip}
+								logout={logout}
+								endTrip={endTrip}
+								setEndTrip={setEndTrip}
+							/>
 						}
 					/>
-					<Route path="/myTrip" element={<MyTripCard userInfo={userInfo} setUserInfo={setUserInfo} userTrip={userTrip} setUserTrip={setUserTrip} logout={logout} />} />
+					<Route
+						path="/myTrip"
+						element={<MyTripCard userInfo={userInfo} setUserInfo={setUserInfo} userTrip={userTrip} setUserTrip={setUserTrip} logout={logout} endTrip={endTrip} setEndTrip={setEndTrip} />}
+					/>
 					<Route path="/trips" element={<TripImWatching userInfo={userInfo} logout={logout} />} />
 				</Routes>
 			</Router>

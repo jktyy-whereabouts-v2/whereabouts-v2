@@ -1,6 +1,6 @@
-const db = require('../models/whereaboutsModel');
-const axios = require('axios');
-import { Request, Response, NextFunction } from 'express';
+const db = require("../models/whereaboutsModel");
+const axios = require("axios");
+import { Request, Response, NextFunction } from "express";
 
 const tripsController = {
   //gets current location, stores new trip with current location and stores traveler/watcher relation after user clicks 'start new trip'
@@ -20,7 +20,7 @@ const tripsController = {
         `INSERT INTO trips (start_timestamp, start_lat, start_lng)
         VALUES (NOW(), ${lat}, ${lng})
         RETURNING id`
-        );
+      );
       const tripId = rows[0].id;
       //store traveler in join table
       const traveler = req.body.traveler;
@@ -47,7 +47,7 @@ const tripsController = {
       });
     }
   },
-    
+
   //updates trip with sos timestamp, sos lat and sos lng
   sendSos: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -72,9 +72,9 @@ const tripsController = {
       });
     }
   },
-    
-   //updates trip with end timestamp
-   endTrip: async (req: Request, res: Response, next: NextFunction) => {
+
+  //updates trip with end timestamp
+  endTrip: async (req: Request, res: Response, next: NextFunction) => {
     try {
       //update trip end details
       await db.query(
@@ -85,7 +85,7 @@ const tripsController = {
       return next();
     } catch (error) {
       return next({
-        log: "Express error handler caught tripsController.sendSos error",
+        log: "Express error handler caught tripsController.endTrip error",
         status: 500,
         message: { error: "Error storing sos details" },
       });
