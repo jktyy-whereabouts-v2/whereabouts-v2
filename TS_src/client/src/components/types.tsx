@@ -30,16 +30,22 @@ export interface TripProps {
 }
 
 export type Nullable<T> = T | null;
+export type Undefinable<T> = T | undefined;
 
 export interface Conversation {
-  id: number;
-  member1: string;
-  member2: string;
+  convid: number;
+  member1name: string;
+	member1phone: string;
+  member2name: string;
+	member2phone: string;
 }
 
 export interface Message {
-  senderPhone: string;
+  sendername: string;
+	senderphone: string;
   text: string;
-  receiverPhone: string;
-  convId: number;
+  receivername: string;
+	receiverphone: string;
+  convid: number | undefined;
+	timestamp: number;
 }
