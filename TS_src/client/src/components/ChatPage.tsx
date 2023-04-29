@@ -133,53 +133,54 @@ export default function ChatPage ({ userInfo, contacts, setContacts, logout } : 
   };
   return (
     <>
-    <Divider sx={{ width: '85%', margin: 'auto' }} variant='middle'></Divider>
+    <Divider sx={{ width: '85%', margin: 'auto' }} variant='middle' />
     <CssBaseline />
     <Box sx={{ display: 'flex', mt: '30px' }}>
       <Container sx={{ width: '40%', ml: '30px' }}>
-        <Sidebar logout={logout} />
-      </Container>    
-    </Box>
-    <Container sx={{ width: '20%', ml: '30px' }}>
-      <List>
-        {
-        contacts?.map((contact: User, index: number) => (
-        <Conversations key={'conv'+index} userInfo={userInfo} contactName={contact.name} contactPhone={contact.phone_number} setCurrentConv={setCurrentConv} setReceiverName={setReceiverName} setReceiverPhone={setReceiverPhone} />
-        ))
-        }
-        {
-        otherConv?.map((conv, index: number) => {
-          const contactName = conv.member1phone === userInfo.phone_number? conv.member2name : conv.member1name;
-          const contactPhone = conv.member1phone === userInfo.phone_number? conv.member2phone : conv.member1phone;
-          return <Conversations key={'convs'+index} userInfo={userInfo} contactName={contactName} contactPhone={contactPhone} setCurrentConv={setCurrentConv} setReceiverName={setReceiverName} setReceiverPhone={setReceiverPhone}/> 
-        })
-        }
-        </List>
-    </Container>
-    <Container sx={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '10px', marginTop: '20px' }}>
-      {
-      currentConv && <Box>
-        <Box sx={{ borderStyle: 'solid', borderColor: '#DCDCDC', width: '50%', height: '50vh', display: 'flex', overflowY: 'scroll', flexDirection: 'column', margin: '3px' }}>
+        <Sidebar logout={logout} />    
+      </Container>
+      <Container sx={{ width: '20%', ml: '30px' }}>
+        <List>
           {
-          messages?.map((message: Message, index: number) => (
-          <div ref={scrollRef}><Messages key={'msg'+index} userInfo={userInfo} message={message}/></div>
+          contacts?.map((contact: User, index: number) => (
+          <Conversations key={'conv'+index} userInfo={userInfo} contactName={contact.name} contactPhone={contact.phone_number} setCurrentConv={setCurrentConv} setReceiverName={setReceiverName} setReceiverPhone={setReceiverPhone} />
           ))
-          }  
+          }
+          {
+          otherConv?.map((conv, index: number) => {
+            const contactName = conv.member1phone === userInfo.phone_number? conv.member2name : conv.member1name;
+            const contactPhone = conv.member1phone === userInfo.phone_number? conv.member2phone : conv.member1phone;
+            return <Conversations key={'convs'+index} userInfo={userInfo} contactName={contactName} contactPhone={contactPhone} setCurrentConv={setCurrentConv} setReceiverName={setReceiverName} setReceiverPhone={setReceiverPhone}/> 
+          })
+          }
+          </List>
+      </Container>
+      <Container sx={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '10px', marginTop: '20px' }}>
+        {
+        currentConv && <Box>
+          <Box sx={{ borderStyle: 'solid', borderColor: '#DCDCDC', width: '50%', height: '50vh', display: 'flex', overflowY: 'scroll', flexDirection: 'column', margin: '3px' }}>
+            {
+            messages?.map((message: Message, index: number) => (
+            <div ref={scrollRef}><Messages key={'msg'+index} userInfo={userInfo} message={message}/></div>
+            ))
+            }
+          </Box>
+          <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <TextField sx={{ width: '50%' }}  placeholder='Message...' id='MessageField' name='sendMessage' InputProps={{
+              endAdornment: (
+              <InputAdornment position='end'>
+                <IconButton type='submit' edge='end'>
+                  <SendIcon />
+                </IconButton>
+              </InputAdornment>
+              ),
+            }}/>
+          </Box>
         </Box>
-        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <TextField sx={{ width: '50%' }}  placeholder='Message...' id='MessageField' name='sendMessage' InputProps={{
-            endAdornment: (
-            <InputAdornment position='end'>
-              <IconButton type='submit' edge='end'>
-                <SendIcon />
-              </IconButton>
-            </InputAdornment>
-            ),
-          }}/>
-        </Box>
-      </Box>
-      }
-    </Container>
+        }
+      </Container>  
+    </Box>
+
     </>
   );
 }
