@@ -54,14 +54,14 @@ function Login({ userInfo, setUserInfo, login }: LoginProps) {
 	useEffect(() => {
 		// setUserInfo(JSON.parse(localStorage.getItem('user') || ''));
 		if (userInfo.name.length > 0) {
-			navigate('/dashboard');
+			navigate('/contacts');
 		}
 	}, []);
 
 	// once user is logged in, they can no longer go back to the login page
 	useEffect(() => {
 		if (redirect) {
-			navigate('/dashboard');
+			navigate('/contacts');
 		}
 	});
 
@@ -85,7 +85,7 @@ function Login({ userInfo, setUserInfo, login }: LoginProps) {
 						<Typography sx={{ mb: 3 }} variant="h5">
 							Login
 						</Typography>
-						<Link to='http://localhost:3500/auth/google/oauth' style={{ textDecoration: 'none' }}>
+						<Link to="http://localhost:3500/auth/google/oauth" style={{ textDecoration: 'none' }}>
 							<GoogleButton />
 						</Link>
 						<Typography sx={{ mt: 3 }}>- or -</Typography>

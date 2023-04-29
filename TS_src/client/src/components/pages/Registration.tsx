@@ -90,13 +90,13 @@ function Registration({ userInfo, setUserInfo, login }: RegistrationProps) {
 	useEffect(() => {
 		// setUserInfo(JSON.parse(localStorage.getItem('user') || ''));
 		if (userInfo.name.length > 0) {
-			navigate('/dashboard');
+			navigate('/contacts');
 		}
 	}, []);
 
 	useEffect(() => {
 		if (redirect) {
-			navigate('/dashboard');
+			navigate('/contacts');
 		}
 	});
 
@@ -112,7 +112,7 @@ function Registration({ userInfo, setUserInfo, login }: RegistrationProps) {
 			setTimeout(() => {
 				window.close();
 			}, 1000);
-			navigate('/dashboard');
+			navigate('/contacts');
 		}
 	}, []);
 
