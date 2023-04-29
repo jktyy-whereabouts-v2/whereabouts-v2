@@ -19,6 +19,8 @@ function App() {
 	// hook for conditionally rendering components
 	const [activeComponent, setActiveComponent] = useState('');
 
+	const [endTrip, setEndTrip] = useState(null);
+
 	// toggle components in sidebar
 	const handleClick = (componentName: string) => {
 		setActiveComponent(componentName);
@@ -96,10 +98,23 @@ function App() {
 					<Route
 						path="/contacts"
 						element={
-							<Contacts userInfo={userInfo} contacts={contacts} setContacts={setContacts} setActiveComponent={setActiveComponent} userTrip={userTrip} setUserTrip={setUserTrip} logout={logout} />
+							<Contacts
+								userInfo={userInfo}
+								contacts={contacts}
+								setContacts={setContacts}
+								setActiveComponent={setActiveComponent}
+								userTrip={userTrip}
+								setUserTrip={setUserTrip}
+								logout={logout}
+								endTrip={endTrip}
+								setEndTrip={setEndTrip}
+							/>
 						}
 					/>
-					<Route path="/myTrip" element={<MyTripCard userInfo={userInfo} setUserInfo={setUserInfo} userTrip={userTrip} setUserTrip={setUserTrip} logout={logout} />} />
+					<Route
+						path="/myTrip"
+						element={<MyTripCard userInfo={userInfo} setUserInfo={setUserInfo} userTrip={userTrip} setUserTrip={setUserTrip} logout={logout} endTrip={endTrip} setEndTrip={setEndTrip} />}
+					/>
 					<Route path="/trips" element={<TripImWatching userInfo={userInfo} logout={logout} />} />
 				</Routes>
 			</Router>
