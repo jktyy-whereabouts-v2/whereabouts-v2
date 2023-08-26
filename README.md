@@ -25,10 +25,6 @@
 <p align="left">
 WhereAbouts
 </p>
-<p>
-  <div>Landing Page</div>
-  <img  src="/" width=90% >
-</p>
 
 ## <b>Installation / Getting Started</b>
 
@@ -50,7 +46,7 @@ npm install && cd TS_src/client && npm install && cd ../server && npm install
 
 ## <b>Tech Stack</b>
 
-- [JavaScript](https://www.javascript.com/)
+- [TypeScript]( https://www.typescriptlang.org/)
 - [React](https://react.dev/)
 - [Vite](https://vitejs.dev/)
 - [Material-UI](https://mui.com/material-ui/)
@@ -58,7 +54,7 @@ npm install && cd TS_src/client && npm install && cd ../server && npm install
 - [Node.js](https://nodejs.org)
 - [Express](https://expressjs.com/)
 - [Socket.io](https://socket.io/)
-- [Twilio](https://www.twilio.com/en-us)
+- [Twilio]( https://www.twilio.com/en-us)
 
 ## <b>Contributing</b>
 
@@ -69,14 +65,14 @@ As part of the open source community, we'd like to welcome those who'd like to c
 Thank you!
 
   <p align="left">
-      <a href="https://github.com/FriendsRecCollaborative/FriendsRec/issues">Report Bug / Request Feature</a>
+      <a href="https://github.com/jktyy-whereabouts-v2/whereabouts-v2/issues">Report Bug / Request Feature</a>
   </p>
 
 ## <b>Meet Our Team</b>
 
-- Jenny Schmalz • [LinkedIn](https://www.linkedin.com/in/featherstone-kevin/) • [Github](https://github.com/kevin-featherstone)
+- Jenny Schmalz • [LinkedIn](https://www.linkedin.com/in/jennyschmalz/) • [Github](https://github.com/jennyschmalz)
 - Kevin Yoon • [LinkedIn](https://www.linkedin.com/in/kevinjyoon/) • [Github](https://github.com/kyoon0)
 - Ted Chu • [LinkedIn](https://www.linkedin.com/in/tedcchu/) • [Github](https://github.com/tcchu)
-- Yeong Sil Yoon • [LinkedIn](https://www.linkedin.com/in/scott-a-deutsch/) • [Github](https://github.com/scottdeutsch40)
-- Yourui Ruan • [LinkedIn](https://www.linkedin.com/in/scott-a-deutsch/) • [Github](https://github.com/scottdeutsch40)
+- Yeong Sil Yoon • [LinkedIn](https://www.linkedin.com/in/yeong-sil-yoon/) • [Github](https://github.com/wendyys96)
+- Yourui Ruan • [LinkedIn](https://www.linkedin.com/in/youruir/) • [Github](https://github.com/YouruiR)
 
