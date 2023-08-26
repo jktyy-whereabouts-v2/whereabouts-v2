@@ -1,0 +1,478 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+  font-family: "Poppins", sans-serif;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #ef8e48;
+}
+
+/****** Start of Header styling ******/
+.header-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+}
+
+header img {
+  height: 165px;
+}
+
+/****** End of Header styling ******/
+
+/****** Start of Login styling ******/
+
+.login-container {
+  width: 350px;
+  height: 500px;
+  padding: 10px 0 0 0;
+  margin: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+  background-color: whitesmoke;
+  border-color: #59656f;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 2%;
+}
+
+.login-container a {
+  text-decoration: none;
+  color: black;
+}
+
+.login-container a:hover {
+  color: #ef8e48;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-color: #59656f;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  background-color: whitesmoke;
+}
+
+.input-container {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  justify-content: flex-start;
+}
+
+/****** End of Login styling ******/
+
+.registration-container {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: whitesmoke;
+  margin: 20px;
+  border-radius: 2%;
+}
+.registration-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 2%;
+}
+/****** End of Registration styling ******/
+
+/****** Start of Dashboard styling ******/
+
+.dashboard-container {
+  display: grid;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-style: solid;
+  border-radius: 5px;
+  grid-template-columns: 1fr 8fr;
+  border-color: #59656f;
+}
+
+/****** End of Dashboard styling ******/
+
+/****** Start of Sidebar styling ******/
+
+.sidebar-container {
+  display: flex;
+  border-style: solid;
+  grid-column: 1;
+  height: 100%;
+  border-radius: 5px;
+  padding: 10px;
+  justify-content: center;
+  border-color: #3d405b;
+  background-color: #db2955;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fffffc;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.sidebar-item {
+  color: #fffffc;
+  margin: 15px;
+  cursor: pointer;
+}
+
+/****** End of Side styling ******/
+
+/****** Start of Contacts styling ******/
+
+.contacts-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-style: solid;
+  border-color: black;
+}
+
+.add-contact-container {
+  border-style: solid;
+  border-color: #59656f;
+  border-radius: 10px;
+  width: 400px;
+  height: 100px;
+  background-color: whitesmoke;
+}
+
+.add-contact-form {
+  margin: 3px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-contact-form p,
+.add-contact-form input,
+.add-contact-form button {
+  margin: 3px;
+}
+
+.add-contact-input {
+  width: 300px;
+}
+
+.add-contact-btn {
+  width: 150px;
+}
+
+.valid-contacts-container {
+  display: flex;
+  align-items: center;
+  border-style: solid;
+  width: 800px;
+  height: 500px;
+  border-color: #59656f;
+  display: grid;
+  background-color: #00a676;
+}
+
+.titles-row {
+  display: flex;
+  margin: 15px;
+  height: 100px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  column-gap: 10px;
+}
+
+.contact-title {
+  width: 250px;
+  height: 75px;
+  background-color: whitesmoke;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-style: solid;
+  border-color: #59656f;
+  border-radius: 5px;
+}
+
+.contacts-display {
+  margin: 15px;
+  padding: 10px;
+  border-style: solid;
+  border-color: #59656f;
+  border-radius: 5px;
+  height: 300px;
+  overflow: auto;
+}
+
+.start-trip-button {
+  margin-top: 10px;
+  margin: 10px;
+  padding: 10px;
+  padding: 15px 30px;
+  width: 500px;
+  height: 100px;
+  text-align: center;
+  /* text-transform: uppercase; */
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  border-radius: 10px;
+  display: block;
+  border: 0px;
+  font-family: "Inter", sans-serif;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: x-large;
+  box-shadow: 0px 0px 14px -7px #f09819;
+  background-image: linear-gradient(
+    45deg,
+    #ff512f 0%,
+    #f09819 51%,
+    #ff512f 100%
+  );
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  align-items: center;
+}
+
+.start-trip-button:hover {
+  background-position: right center;
+  /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.start-trip-button:active {
+  transform: scale(0.95);
+}
+
+/****** End of Contacts styling ******/
+
+/****** Start of Trip Watching Container styling ******/
+
+.trip-watching-container {
+  display: flex;
+  margin: 30px;
+  flex-direction: column;
+  align-items: center;
+}
+
+/****** End of Trip Watching Container styling ******/
+
+/****** Start of ChatPage + subcomponent styling ******/
+
+.home__container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.home__container > * {
+  margin-bottom: 10px;
+}
+.home__header {
+  margin-bottom: 30px;
+}
+.username__input {
+  padding: 10px;
+  width: 50%;
+}
+.home__cta {
+  width: 200px;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #607eaa;
+  color: #f9f5eb;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+}
+.chat {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+.chat__sidebar {
+  height: 100%;
+  background-color: #59656f;
+  color: #fffffc;
+  flex: 0.2;
+  padding: 20px;
+  border-right: 1px solid #fdfdfd;
+}
+.chat__main {
+  height: 100%;
+  flex: 0.8;
+}
+.chat__header {
+  margin: 30px 0 20px 0;
+}
+.chat__users > * {
+  margin-bottom: 10px;
+  color: #fffffc;
+  font-size: 14px;
+}
+.online__users > * {
+  margin-bottom: 10px;
+  color: rgb(238, 102, 102);
+  font-style: italic;
+}
+.chat__mainHeader {
+  width: 100%;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #59656f;
+}
+.leaveChat__btn {
+  padding: 10px;
+  width: 150px;
+  border: none;
+  outline: none;
+  background-color: #db2955;
+  cursor: pointer;
+  color: #fff;
+  font-weight: bold;
+}
+.message__container {
+  width: 100vh;
+  height: 80vh;
+  background-color: #fff;
+  padding: 20px;
+  overflow-y: scroll;
+}
+
+.message__container > * {
+  margin-bottom: 10px;
+}
+.chat__footer {
+  padding: 10px;
+  background-color: #59656f;
+  height: 10vh;
+}
+.form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.message {
+  width: 80%;
+  height: 100%;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  outline: none;
+  padding: 15px;
+}
+.sendBtn {
+  width: 40%;
+  background-color: #00a676;
+  padding: 10px;
+  margin: 0 10px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #fff;
+  font-weight: bold;
+}
+.leaveChat__btn:hover,
+.sendBtn:hover {
+  box-shadow: inset 0 -3em 3em rgba(0, 0, 0, 0.1);
+}
+.message__recipient {
+  background-color: #f5ccc2;
+  width: 300px;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 15px;
+}
+.message__sender {
+  background-color: rgb(194, 243, 194);
+  max-width: 300px;
+  padding: 10px;
+  border-radius: 10px;
+  margin-left: auto;
+  font-size: 15px;
+}
+.message__chats > p {
+  font-size: 13px;
+}
+.sender__name {
+  text-align: right;
+}
+.message__status {
+  position: fixed;
+  bottom: 50px;
+  font-size: 13px;
+  font-style: italic;
+}
+
+/****** End of ChatPage + subcomponent styling ******/
+
+/****** Start of My Trip Component styling ******/
+
+.my-trip-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/****** End of My Trip Component styling ******/
+
+/****** Start of Map Container styling ******/
+
+/* specifically just for the renderind of the map within the map container component */
+.map {
+  width: 700px;
+  height: 300px;
+}
+/* map-container can be adjusted depending on what additonal input fields/info we need to render with Map */
+.map-container {
+  width: 700px;
+  height: 375px;
+}
+
+.combobox-input {
+  width: 100%;
+  padding: 0.5rem;
+}
+/****** End of Map styling ******/
+/****** End of Map Container styling ******/
+
+/****** Start of ADD COMPONENT HERE styling ******/
+
+/****** End of ADD COMPONENT HERE styling ******/
