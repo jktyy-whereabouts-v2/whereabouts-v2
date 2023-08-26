@@ -51,7 +51,7 @@ Users can search and add other users to their contacts list by phone number. Use
 
 In the "Trips I'm Watching" tab, users can monitor the status of trips their contacts have shared with them. Trips are sorted into three status types and each trip shows the designated destination. Trip updates, such as the start of a trip, the end of a trip, and SOS alerts, are also sent as text notifications to their contact's phone.
 
-![](./assets/Ongoing.png)
+![](./assets/UpdatedOngoing.png)
 
 ### Chat Messaging
 
