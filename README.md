@@ -21,7 +21,7 @@
 ## <b>Overview</b>
 
 <p align="left">
-WhereAbouts
+Whereabouts is a social safety check application that users can use to alert family and friends of their physical geolocation. Through the application, users can follow each other via  phone numbers and share locations via Google Maps, providing live updates through their shared coordinates and the chat room functionality.
 </p>
 
 ## <b>Installation / Getting Started</b>
