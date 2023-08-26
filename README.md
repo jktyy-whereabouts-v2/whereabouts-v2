@@ -1,9 +1,9 @@
 <p align="center">
   <h1 align="center"><b>WhereAbouts</b></h1>
 </p>
-  <h2 align="center">
-    An application that allows subscription of friend’s trips providing real time communication SMS alerts, chat messages, and geolocations.
-  </h2>
+<h2 align="center">
+  An application that allows subscription of friend’s trips providing real time communication SMS alerts, chat messages, and geolocations.
+</h2>
   
 <!-- TABLE OF CONTENTS -->
 <details open="open">
