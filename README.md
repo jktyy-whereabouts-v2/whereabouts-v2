@@ -1,5 +1,3 @@
-# whereabouts-v2
-
 <p align="center">
   <h1 align="center"><b>WhereAbouts</b></h1>
 </p>
